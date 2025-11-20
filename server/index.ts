@@ -1,8 +1,21 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import createMemoryStore from "memorystore";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { seedDatabase } from "./seed";
 
 const app = express();
+const MemoryStore = createMemoryStore(session);
+
+declare module 'express-session' {
+  interface SessionData {
+    userId: string;
+    username: string;
+    role: string;
+    name: string;
+  }
+}
 
 declare module 'http' {
   interface IncomingMessage {
@@ -15,6 +28,22 @@ app.use(express.json({
   }
 }));
 app.use(express.urlencoded({ extended: false }));
+
+app.use(
+  session({
+    store: new MemoryStore({
+      checkPeriod: 86400000
+    }),
+    secret: process.env.SESSION_SECRET || 'inventory-management-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production'
+    }
+  })
+);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -47,6 +76,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  await seedDatabase();
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
