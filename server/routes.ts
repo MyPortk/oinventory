@@ -1327,6 +1327,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Damage Reports routes
+  app.get('/api/damage-reports', requireAuth, async (req, res) => {
+    try {
+      const reports = await storage.getAllDamageReports();
+      res.json(reports);
+    } catch (error) {
+      console.error('Get damage reports error:', error);
+      res.status(500).json({ error: 'Failed to fetch damage reports' });
+    }
+  });
+
+  app.post('/api/damage-reports', requireAuth, async (req, res) => {
+    try {
+      const validatedData = insertDamageReportSchema.parse(req.body);
+      const report = await storage.createDamageReport(validatedData);
+      res.status(201).json(report);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: 'Invalid damage report data', details: error.errors });
+      }
+      console.error('Create damage report error:', error);
+      res.status(500).json({ error: 'Failed to create damage report' });
+    }
+  });
+
+  app.patch('/api/damage-reports/:id', requireAuth, async (req, res) => {
+    try {
+      const { status, resolutionNotes } = req.body;
+      const report = await storage.updateDamageReport(req.params.id, { status, resolutionNotes });
+      if (!report) {
+        return res.status(404).json({ error: 'Report not found' });
+      }
+      res.json(report);
+    } catch (error) {
+      console.error('Update damage report error:', error);
+      res.status(500).json({ error: 'Failed to update damage report' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

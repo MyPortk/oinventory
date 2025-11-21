@@ -108,6 +108,19 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
     } else {
       updateData.status = 'completed';
       updateData.itemConditionOnReturn = data.itemConditionOnReturn;
+      
+      // Create damage report for admin return inspection
+      const reservation = reservations.find(r => r.id === actionDialog.reservationId);
+      if (reservation && data.itemConditionOnReturn) {
+        api.damageReports.create({
+          itemId: reservation.itemId,
+          reportedBy: userId,
+          reportType: 'admin-damage',
+          severity: 'medium',
+          description: `Equipment return inspection by admin: ${data.itemConditionOnReturn}`,
+          status: 'open'
+        }).catch(err => console.error('Failed to create return report:', err));
+      }
     }
 
     updateReservationMutation.mutate({
@@ -137,6 +150,16 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
       toast({ title: "Please add equipment condition notes", variant: "destructive" });
       return;
     }
+    // Create damage report for user pickup
+    api.damageReports.create({
+      itemId: checkoutReservation.itemId,
+      reportedBy: userId,
+      reportType: 'user-damage',
+      severity: 'low',
+      description: `Equipment received by user: ${checkoutNotes.trim()}`,
+      status: 'open'
+    }).catch(err => console.error('Failed to create report:', err));
+
     updateReservationMutation.mutate({
       id: checkoutReservation.id,
       data: { 
@@ -341,17 +364,24 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                 )}
                 {reservation.status === 'approved' && (
                   <div className="flex gap-2 flex-col">
-                    {userRole !== 'admin' && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
-                        onClick={() => handleCheckout(reservation)}
-                      >
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        Receive Equipment
-                      </Button>
-                    )}
+                    {userRole !== 'admin' && (() => {
+                      const today = new Date();
+                      const startDate = new Date(reservation.startDate);
+                      const isPickupDay = today.toDateString() === startDate.toDateString();
+                      return (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                          onClick={() => handleCheckout(reservation)}
+                          disabled={!isPickupDay}
+                          title={isPickupDay ? "Click to confirm receipt" : `Available on ${format(startDate, "MMM dd, yyyy")}`}
+                        >
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                          Receive Equipment {!isPickupDay && "(Not Available)"}
+                        </Button>
+                      );
+                    })()}
                     {userRole === 'admin' && (
                       <Button
                         size="sm"
