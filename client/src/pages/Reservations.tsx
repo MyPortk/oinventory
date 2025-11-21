@@ -98,7 +98,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
     setActionDialog({ open: true, action: 'complete', reservationId: id, itemName });
   };
 
-  const handleActionSubmit = (data: { rejectionReason?: string; itemConditionOnReturn?: string }) => {
+  const handleActionSubmit = (data: { rejectionReason?: string; itemConditionOnReturn?: string; returnCondition?: 'good' | 'damage' }) => {
     const updateData: any = {
       approvalDate: new Date()
     };
@@ -108,19 +108,25 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
       updateData.rejectionReason = data.rejectionReason;
     } else {
       updateData.status = 'completed';
-      updateData.itemConditionOnReturn = data.itemConditionOnReturn;
-      
-      // Create damage report for admin return inspection
       const reservation = reservations.find(r => r.id === actionDialog.reservationId);
-      if (reservation && data.itemConditionOnReturn) {
-        api.damageReports.create({
-          itemId: reservation.itemId,
-          reportedBy: userId,
-          reportType: 'admin-damage',
-          severity: 'medium',
-          description: `Equipment return inspection by admin: ${data.itemConditionOnReturn}`,
-          status: 'open'
-        }).catch(err => console.error('Failed to create return report:', err));
+      
+      if (data.returnCondition === 'good') {
+        updateData.itemConditionOnReturn = 'Equipment returned in good condition';
+      } else if (data.returnCondition === 'damage') {
+        const damageDescription = `Equipment returned with damage/missing items: ${data.itemConditionOnReturn}`;
+        updateData.itemConditionOnReturn = damageDescription;
+        
+        // Create damage report for admin return inspection
+        if (reservation) {
+          api.damageReports.create({
+            itemId: reservation.itemId,
+            reportedBy: userId,
+            reportType: 'admin-damage',
+            severity: 'medium',
+            description: damageDescription,
+            status: 'open'
+          }).catch(err => console.error('Failed to create return report:', err));
+        }
       }
     }
 
