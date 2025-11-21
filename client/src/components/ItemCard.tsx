@@ -115,83 +115,112 @@ export default function ItemCard({
                 <span className="font-medium">Notes:</span> {notes}
               </p>
             )}
-            {userRole === 'admin' && (
-              <div className="flex gap-2 pt-2 flex-wrap">
-                {status === 'Available' && (
-                  <Button
-                    onClick={onCheckout}
-                    variant="default"
-                    size="sm"
-                    className="bg-blue-600 hover:bg-blue-700 flex-1"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Check Out
-                  </Button>
+            
+            {isEquipment ? (
+              <>
+                {userRole === 'admin' && (
+                  <div className="flex gap-2 pt-2 flex-wrap">
+                    {status === 'Available' && (
+                      <Button
+                        onClick={onCheckout}
+                        variant="default"
+                        size="sm"
+                        className="bg-blue-600 hover:bg-blue-700 flex-1"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Check Out
+                      </Button>
+                    )}
+                    {status === 'In Use' && (
+                      <Button
+                        onClick={onCheckin}
+                        variant="default"
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 flex-1"
+                      >
+                        <LogIn className="w-4 h-4 mr-2" />
+                        Check In
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => setShowQRDialog(true)}
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                    >
+                      <QrCode className="w-4 h-4 mr-2" />
+                      QR Code
+                    </Button>
+                    <Button
+                      onClick={onEdit}
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={onDelete}
+                      variant="destructive"
+                      size="sm"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
                 )}
-                {status === 'In Use' && (
-                  <Button
-                    onClick={onCheckin}
-                    variant="default"
-                    size="sm"
-                    className="bg-green-600 hover:bg-green-700 flex-1"
-                  >
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Check In
-                  </Button>
+                {userRole !== 'admin' && (
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onScan}
+                      className="flex-1"
+                      data-testid={`button-scan-${id}`}
+                      disabled={status !== 'Available' || !onScan}
+                    >
+                      <QrCode className="w-4 h-4 mr-2" />
+                      {status === 'Available' ? 'Scan to Checkout' : 'Not Available'}
+                    </Button>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={onReserve}
+                      className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2]"
+                      data-testid={`button-reserve-${id}`}
+                      disabled={status === 'Maintenance' || !onReserve}
+                    >
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Reserve
+                    </Button>
+                  </div>
                 )}
-                <Button
-                  onClick={() => setShowQRDialog(true)}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  <QrCode className="w-4 h-4 mr-2" />
-                  QR Code
-                </Button>
-                <Button
-                  onClick={onEdit}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit
-                </Button>
-                <Button
-                  onClick={onDelete}
-                  variant="destructive"
-                  size="sm"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete
-                </Button>
-              </div>
-            )}
-            {userRole !== 'admin' && (
-              <div className="flex gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onScan}
-                  className="flex-1"
-                  data-testid={`button-scan-${id}`}
-                  disabled={status !== 'Available' || !onScan}
-                >
-                  <QrCode className="w-4 h-4 mr-2" />
-                  {status === 'Available' ? 'Scan to Checkout' : 'Not Available'}
-                </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={onReserve}
-                  className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2]"
-                  data-testid={`button-reserve-${id}`}
-                  disabled={status === 'Maintenance' || !onReserve}
-                >
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Reserve
-                </Button>
-              </div>
+              </>
+            ) : (
+              <>
+                {userRole === 'admin' && (
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      onClick={onEdit}
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={onDelete}
+                      variant="destructive"
+                      size="sm"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </CardContent>
