@@ -23,19 +23,22 @@ interface ItemFormDialogProps {
     status: string;
     location?: string;
     notes?: string;
+    isEquipment?: boolean;
   };
   mode: 'add' | 'edit';
   userRole?: string;
+  isEquipment?: boolean;
 }
 
-export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, userRole }: ItemFormDialogProps) {
+export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, userRole, isEquipment = true }: ItemFormDialogProps) {
   const [formData, setFormData] = useState({
     barcode: item?.barcode || '',
     productName: item?.productName || '',
     productType: item?.productType || '',
     status: item?.status || 'Available',
     location: item?.location || '',
-    notes: item?.notes || ''
+    notes: item?.notes || '',
+    isEquipment: item?.isEquipment !== undefined ? item.isEquipment : isEquipment
   });
 
   const [showAddType, setShowAddType] = useState(false);
@@ -65,7 +68,8 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
         productType: item.productType,
         status: item.status,
         location: item.location || '',
-        notes: item.notes || ''
+        notes: item.notes || '',
+        isEquipment: item.isEquipment !== undefined ? item.isEquipment : isEquipment
       });
     } else {
       setFormData({
@@ -74,10 +78,11 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
         productType: '',
         status: 'Available',
         location: '',
-        notes: ''
+        notes: '',
+        isEquipment: isEquipment
       });
     }
-  }, [item, open]);
+  }, [item, open, isEquipment]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
