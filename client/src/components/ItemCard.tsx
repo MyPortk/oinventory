@@ -22,6 +22,7 @@ interface ItemCardProps {
   onCheckout?: () => void;
   onCheckin?: () => void;
   userRole: string;
+  isEquipment?: boolean;
 }
 
 const statusColors: Record<string, string> = {
@@ -46,6 +47,7 @@ export default function ItemCard({
   onCheckout,
   onCheckin,
   userRole,
+  isEquipment = true,
 }: ItemCardProps) {
   const [showQRDialog, setShowQRDialog] = useState(false);
 

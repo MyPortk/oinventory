@@ -453,7 +453,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                   {viewMode === 'card' ? <TableIcon className="w-4 h-4 mr-2" /> : <LayoutGrid className="w-4 h-4 mr-2" />}
                   {viewMode === 'card' ? t('tableView') : t('cardView')}
                 </Button>
-                {userRole === 'admin' && (
+                {userRole === 'admin' && itemTypeFilter === 'equipment' && (
                   <>
                     <Button
                       onClick={() => setShowQRScanner(true)}
@@ -479,7 +479,25 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-6 space-y-4">
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setItemTypeFilter('equipment')}
+                  variant={itemTypeFilter === 'equipment' ? 'default' : 'outline'}
+                  data-testid="button-filter-equipment"
+                  className={itemTypeFilter === 'equipment' ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2]' : ''}
+                >
+                  Equipment
+                </Button>
+                <Button
+                  onClick={() => setItemTypeFilter('assets')}
+                  variant={itemTypeFilter === 'assets' ? 'default' : 'outline'}
+                  data-testid="button-filter-assets"
+                  className={itemTypeFilter === 'assets' ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2]' : ''}
+                >
+                  Assets
+                </Button>
+              </div>
               <div className="relative max-w-md">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
@@ -505,17 +523,18 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     location={item.location || undefined}
                     notes={item.notes || undefined}
                     userRole={userRole}
+                    isEquipment={item.isEquipment}
                     onEdit={userRole === 'admin' ? () => {
                       setEditingItem(item);
                       setShowItemForm(true);
                     } : undefined}
                     onDelete={userRole === 'admin' ? () => handleDeleteItem(item.id) : undefined}
-                    onScan={userRole !== 'admin' ? () => {
+                    onScan={item.isEquipment && userRole !== 'admin' ? () => {
                       setShowQRScanner(true);
                     } : undefined}
-                    onReserve={userRole !== 'admin' ? () => handleReserveItem(item) : undefined}
-                    onCheckout={userRole === 'admin' ? () => handleCheckout(item) : undefined}
-                    onCheckin={userRole === 'admin' ? () => handleCheckin(item) : undefined}
+                    onReserve={item.isEquipment && userRole !== 'admin' ? () => handleReserveItem(item) : undefined}
+                    onCheckout={item.isEquipment && userRole === 'admin' ? () => handleCheckout(item) : undefined}
+                    onCheckin={item.isEquipment && userRole === 'admin' ? () => handleCheckin(item) : undefined}
                   />
                 ))}
               </div>
