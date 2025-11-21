@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Search, Plus, CheckCircle, XCircle, Clock, ArrowLeft, Calendar, User } from "lucide-react";
+import { Search, Plus, CheckCircle, XCircle, Clock, ArrowLeft, Calendar, User, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { api, type Reservation, type Item } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -52,6 +52,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
 
   const [showCheckoutDialog, setShowCheckoutDialog] = useState(false);
   const [checkoutReservation, setCheckoutReservation] = useState<any>(null);
+  const [checkoutCondition, setCheckoutCondition] = useState<'good' | 'damage' | ''>("");
   const [checkoutNotes, setCheckoutNotes] = useState("");
 
   const createReservationMutation = useMutation({
@@ -141,30 +142,42 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
 
   const handleCheckout = (reservation: any) => {
     setCheckoutReservation(reservation);
+    setCheckoutCondition("");
     setCheckoutNotes("");
     setShowCheckoutDialog(true);
   };
 
   const handleConfirmCheckout = () => {
-    if (!checkoutNotes.trim()) {
-      toast({ title: "Please add equipment condition notes", variant: "destructive" });
+    if (!checkoutCondition) {
+      toast({ title: "Please select equipment condition", variant: "destructive" });
       return;
     }
+    if (checkoutCondition === 'damage' && !checkoutNotes.trim()) {
+      toast({ title: "Please describe the damage or missing items", variant: "destructive" });
+      return;
+    }
+
+    const conditionDescription = checkoutCondition === 'good' 
+      ? 'Equipment received in good condition'
+      : `Equipment received with damage/missing items: ${checkoutNotes.trim()}`;
+
     // Create damage report for user pickup
-    api.damageReports.create({
-      itemId: checkoutReservation.itemId,
-      reportedBy: userId,
-      reportType: 'user-damage',
-      severity: 'low',
-      description: `Equipment received by user: ${checkoutNotes.trim()}`,
-      status: 'open'
-    }).catch(err => console.error('Failed to create report:', err));
+    if (checkoutCondition === 'damage') {
+      api.damageReports.create({
+        itemId: checkoutReservation.itemId,
+        reportedBy: userId,
+        reportType: 'user-damage',
+        severity: 'medium',
+        description: conditionDescription,
+        status: 'open'
+      }).catch(err => console.error('Failed to create report:', err));
+    }
 
     updateReservationMutation.mutate({
       id: checkoutReservation.id,
       data: { 
         checkoutDate: new Date().toISOString(),
-        itemConditionOnReceive: checkoutNotes.trim()
+        itemConditionOnReceive: conditionDescription
       }
     });
     setShowCheckoutDialog(false);
@@ -368,6 +381,23 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                       const today = new Date();
                       const startDate = new Date(reservation.startDate);
                       const isPickupDay = today.toDateString() === startDate.toDateString();
+                      const hasReceivedEquipment = reservation.checkoutDate || reservation.itemConditionOnReceive;
+                      
+                      if (hasReceivedEquipment) {
+                        return (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-gray-100 text-gray-600 border-gray-300 cursor-not-allowed"
+                            disabled
+                            title="Equipment already received"
+                          >
+                            <CheckCircle className="w-4 h-4 mr-1" />
+                            Equipment Received ✓
+                          </Button>
+                        );
+                      }
+                      
                       return (
                         <Button
                           size="sm"
@@ -432,24 +462,64 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
             <DialogTitle>Confirm Equipment Pickup</DialogTitle>
           </DialogHeader>
           {checkoutReservation && (
-            <div className="space-y-4">
-              <div className="bg-muted p-4 rounded-lg space-y-2">
+            <div className="space-y-6">
+              <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg space-y-2 border border-blue-200 dark:border-blue-800">
                 <div><strong>Equipment:</strong> {getItemName(checkoutReservation.itemId)}</div>
                 <div><strong>Pickup Date & Time:</strong> {format(new Date(checkoutReservation.startDate), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
                 <div><strong>Return Date & Time:</strong> {format(new Date(checkoutReservation.returnDate), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
                 <div><strong>Purpose:</strong> {checkoutReservation.purposeOfUse}</div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="condition">Equipment Condition (Optional)</Label>
-                <Textarea
-                  id="condition"
-                  value={checkoutNotes}
-                  onChange={(e) => setCheckoutNotes(e.target.value)}
-                  placeholder="e.g., Equipment received in good condition."
-                  rows={2}
-                />
+
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Equipment Condition *</Label>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50" onClick={() => setCheckoutCondition('good')}>
+                    <input 
+                      type="radio" 
+                      name="condition" 
+                      value="good"
+                      checked={checkoutCondition === 'good'}
+                      onChange={() => setCheckoutCondition('good')}
+                      className="w-4 h-4"
+                    />
+                    <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      Good
+                    </Label>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50" onClick={() => setCheckoutCondition('damage')}>
+                    <input 
+                      type="radio" 
+                      name="condition" 
+                      value="damage"
+                      checked={checkoutCondition === 'damage'}
+                      onChange={() => setCheckoutCondition('damage')}
+                      className="w-4 h-4"
+                    />
+                    <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
+                      <AlertCircle className="w-5 h-5 text-red-600" />
+                      Damage or Missing
+                    </Label>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-3 justify-end">
+
+              {checkoutCondition === 'damage' && (
+                <div className="space-y-2 p-4 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
+                  <Label htmlFor="damage-notes" className="text-base font-semibold">Please describe the damage or missing items *</Label>
+                  <Textarea
+                    id="damage-notes"
+                    value={checkoutNotes}
+                    onChange={(e) => setCheckoutNotes(e.target.value)}
+                    placeholder="Describe what damage or items are missing..."
+                    rows={3}
+                    className="resize-none"
+                  />
+                </div>
+              )}
+
+              <div className="flex gap-3 justify-end pt-4 border-t">
                 <Button variant="outline" onClick={() => setShowCheckoutDialog(false)}>
                   Cancel
                 </Button>
@@ -457,7 +527,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                   onClick={handleConfirmCheckout}
                   className="bg-gradient-to-r from-[#667eea] to-[#764ba2]"
                 >
-                  Confirm Pickup
+                  Confirm Receipt
                 </Button>
               </div>
             </div>
