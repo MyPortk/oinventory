@@ -170,7 +170,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/items/:id", requireAdmin, async (req, res) => {
+  app.patch("/api/items/:id", requireAuth, async (req, res) => {
     try {
       const validatedData = insertItemSchema.partial().parse(req.body);
 
