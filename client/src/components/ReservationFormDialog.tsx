@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 interface ReservationFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: { itemId: string; startDate: Date; returnDate: Date; notes?: string }) => void;
+  onSubmit: (data: { itemId: string; startDate: Date; returnDate: Date; purposeOfUse?: string; notes?: string }) => void;
   items: Item[];
 }
 
@@ -29,6 +29,7 @@ export default function ReservationFormDialog({
   const [itemId, setItemId] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [returnDate, setReturnDate] = useState<Date>();
+  const [purposeOfUse, setPurposeOfUse] = useState("");
   const [notes, setNotes] = useState("");
 
   // Auto-select item if only one item is provided (from reserve button)
@@ -53,7 +54,10 @@ export default function ReservationFormDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!itemId || !startDate || !returnDate) return;
+    if (!itemId || !startDate || !returnDate || !purposeOfUse) {
+      alert("Please fill in all required fields");
+      return;
+    }
     
     if (returnDate < startDate) {
       alert("Return date must be after start date");
@@ -64,12 +68,14 @@ export default function ReservationFormDialog({
       itemId,
       startDate,
       returnDate,
+      purposeOfUse: purposeOfUse.trim(),
       notes: notes.trim() || undefined
     });
     
     setItemId("");
     setStartDate(undefined);
     setReturnDate(undefined);
+    setPurposeOfUse("");
     setNotes("");
   };
 
@@ -77,6 +83,7 @@ export default function ReservationFormDialog({
     setItemId("");
     setStartDate(undefined);
     setReturnDate(undefined);
+    setPurposeOfUse("");
     setNotes("");
     onClose();
   };
@@ -228,6 +235,18 @@ export default function ReservationFormDialog({
               </AlertDescription>
             </Alert>
           )}
+
+          <div className="space-y-2">
+            <Label htmlFor="purpose">Purpose of Use *</Label>
+            <Textarea
+              id="purpose"
+              value={purposeOfUse}
+              onChange={(e) => setPurposeOfUse(e.target.value)}
+              placeholder="e.g., Q4 Advertising Campaign, Product Photography, etc."
+              rows={2}
+              required
+            />
+          </div>
           
           <div className="space-y-2">
             <Label htmlFor="notes">Request Notes (Optional)</Label>
