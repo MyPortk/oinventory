@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, CheckCircle, XCircle, Clock, ArrowLeft, Calendar } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Search, Plus, CheckCircle, XCircle, Clock, ArrowLeft, Calendar, User } from "lucide-react";
 import { format } from "date-fns";
-import { api, type Reservation, type Item } from "@/lib/api";
+import { api, type Reservation, type Item, type User } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import ReservationFormDialog from "@/components/ReservationFormDialog";
 import ReservationActionDialog from "@/components/ReservationActionDialog";
@@ -45,6 +48,15 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
     queryKey: ['/api/items'],
     queryFn: () => api.items.getAll(),
   });
+
+  const { data: users = [] } = useQuery({
+    queryKey: ['/api/users'],
+    queryFn: () => api.users.getAll(),
+  });
+
+  const [showCheckoutDialog, setShowCheckoutDialog] = useState(false);
+  const [checkoutReservation, setCheckoutReservation] = useState<any>(null);
+  const [checkoutNotes, setCheckoutNotes] = useState("");
 
   const createReservationMutation = useMutation({
     mutationFn: (data: { itemId: string; startDate: Date; returnDate: Date; startTime?: string; returnTime?: string; purposeOfUse?: string; notes?: string }) => api.reservations.create(data),
@@ -113,13 +125,38 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
     return item?.productName || 'Unknown Item';
   };
 
-  const filteredReservations = reservations.filter(res => {
-    const itemName = getItemName(res.itemId).toLowerCase();
-    const matchesSearch = searchQuery === "" || itemName.includes(searchQuery.toLowerCase());
-    const matchesFilter = filterStatus === "all" || res.status === filterStatus;
-    const matchesUser = userRole === 'admin' || res.userId === userId; // Correctly filter by userId
-    return matchesSearch && matchesFilter && matchesUser;
-  });
+  const getUserName = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    return user?.name || 'Unknown User';
+  };
+
+  const handleCheckout = (reservation: any) => {
+    setCheckoutReservation(reservation);
+    setCheckoutNotes("");
+    setShowCheckoutDialog(true);
+  };
+
+  const handleConfirmCheckout = () => {
+    updateReservationMutation.mutate({
+      id: checkoutReservation.id,
+      data: { 
+        status: 'in-use', 
+        checkoutDate: new Date(),
+        itemConditionOnReceive: checkoutNotes || undefined
+      }
+    });
+    setShowCheckoutDialog(false);
+  };
+
+  const filteredReservations = reservations
+    .filter(res => {
+      const itemName = getItemName(res.itemId).toLowerCase();
+      const matchesSearch = searchQuery === "" || itemName.includes(searchQuery.toLowerCase());
+      const matchesFilter = filterStatus === "all" || res.status === filterStatus;
+      const matchesUser = userRole === 'admin' || res.userId === userId;
+      return matchesSearch && matchesFilter && matchesUser;
+    })
+    .sort((a, b) => new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime());
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -240,19 +277,33 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <Calendar className="w-4 h-4" />
+                      <User className="w-4 h-4" />
                       <span>
-                        <strong>{t('start')}:</strong> {format(new Date(reservation.startDate), "PPP")}
+                        <strong>Employee:</strong> {getUserName(reservation.userId)}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="w-4 h-4" />
                       <span>
-                        <strong>{t('return')}:</strong> {format(new Date(reservation.returnDate), "PPP")}
+                        <strong>{t('requested')}:</strong> {format(new Date(reservation.requestDate), "PPP")}
                       </span>
                     </div>
-                    <div className="text-muted-foreground">
-                      <strong>{t('requested')}:</strong> {format(new Date(reservation.requestDate), "PPP")}
+                    {reservation.purposeOfUse && (
+                      <div className="col-span-2 text-muted-foreground">
+                        <strong>Purpose of Use:</strong> {reservation.purposeOfUse}
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="w-4 h-4" />
+                      <span>
+                        <strong>Pickup:</strong> {format(new Date(reservation.startDate), "PPP")} {reservation.startTime || "09:00"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="w-4 h-4" />
+                      <span>
+                        <strong>Return:</strong> {format(new Date(reservation.returnDate), "PPP")} {reservation.returnTime || "17:00"}
+                      </span>
                     </div>
                     {reservation.approvalDate && (
                       <div className="text-muted-foreground">
@@ -288,16 +339,31 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                     </Button>
                   </div>
                 )}
-                {userRole === 'admin' && reservation.status === 'approved' && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                    onClick={() => handleComplete(reservation.id, reservation.itemId)}
-                  >
-                    <CheckCircle className="w-4 h-4 mr-1" />
-                    {t('markReturned')}
-                  </Button>
+                {reservation.status === 'approved' && (
+                  <div className="flex gap-2 flex-col">
+                    {userRole !== 'admin' && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                        onClick={() => handleCheckout(reservation)}
+                      >
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Receive Equipment
+                      </Button>
+                    )}
+                    {userRole === 'admin' && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                        onClick={() => handleComplete(reservation.id, reservation.itemId)}
+                      >
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        {t('markReturned')}
+                      </Button>
+                    )}
+                  </div>
                 )}
               </div>
             </Card>
@@ -329,6 +395,45 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
         action={actionDialog.action}
         itemName={actionDialog.itemName}
       />
+
+      <Dialog open={showCheckoutDialog} onOpenChange={setShowCheckoutDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Confirm Equipment Pickup</DialogTitle>
+          </DialogHeader>
+          {checkoutReservation && (
+            <div className="space-y-4">
+              <div className="bg-muted p-4 rounded-lg space-y-2">
+                <div><strong>Equipment:</strong> {getItemName(checkoutReservation.itemId)}</div>
+                <div><strong>Pickup Date & Time:</strong> {format(new Date(checkoutReservation.startDate), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
+                <div><strong>Return Date & Time:</strong> {format(new Date(checkoutReservation.returnDate), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
+                <div><strong>Purpose:</strong> {checkoutReservation.purposeOfUse}</div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="condition">Equipment Condition (Optional)</Label>
+                <Textarea
+                  id="condition"
+                  value={checkoutNotes}
+                  onChange={(e) => setCheckoutNotes(e.target.value)}
+                  placeholder="e.g., Equipment received in good condition."
+                  rows={2}
+                />
+              </div>
+              <div className="flex gap-3 justify-end">
+                <Button variant="outline" onClick={() => setShowCheckoutDialog(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleConfirmCheckout}
+                  className="bg-gradient-to-r from-[#667eea] to-[#764ba2]"
+                >
+                  Confirm Pickup
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
