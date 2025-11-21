@@ -35,10 +35,16 @@ export const reservations = pgTable("reservations", {
   approvalDate: timestamp("approval_date"),
   startDate: date("start_date").notNull(),
   returnDate: date("return_date").notNull(),
+  startTime: text("start_time"),
+  returnTime: text("return_time"),
+  purposeOfUse: text("purpose_of_use"),
   notes: text("notes"),
   rejectionReason: text("rejection_reason"),
   itemConditionOnReceive: text("item_condition_on_receive"),
-  itemConditionOnReturn: text("item_condition_on_return")
+  itemConditionOnReturn: text("item_condition_on_return"),
+  returnNotes: text("return_notes"),
+  checkoutDate: timestamp("checkout_date"),
+  returnedDate: timestamp("returned_date")
 });
 
 export const categories = pgTable("categories", {

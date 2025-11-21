@@ -1,0 +1,55 @@
+Reservation Process
+👤 Employee
+1.	The employee logs into the application and sees the list of available equipment. They can also use the search bar to filter and find the equipment they need.
+2.	They select a specific piece of equipment (e.g., “Camera Machine No. 3”). Multiple items can be selected.
+3.	They specify the reservation period. When placing a reservation, the system shows a form containing:
+• 📅 Pickup date and time
+• 📅 Return date and time
+4.	They click the “Request Reservation” button.
+5.	They write the purpose of use, meaning what the equipment will be used for.
+Example: Project: “Q4 Advertising Campaign”
+6.	The system automatically checks:
+• Whether the equipment is available
+• Whether there is any conflict with another reservation
+7.	If no conflict exists, a notification appears:
+“Your request has been sent for approval.”
+________________________________________
+🧑‍💼 Administrator
+1.	The administrator logs into the dashboard and sees all new requests (status = pending).
+2.	They open each request and see:
+• Employee name
+• The requested reservation period
+• Purpose of use (the admin can verify that the equipment is required for an actual registered project and not for personal purposes)
+3.	Upon approval:
+• The status becomes approved
+• Notifications are sent to the employee via email and the website:
+“Your request to reserve Camera Machine from October 10 to 12 has been approved.”
+All reservation requests appear to the administrator sorted by timestamp in milliseconds — the oldest request appears first.
+________________________________________
+Checkout (Receiving the Equipment)
+👤 Employee
+Step 3: When receiving the items, the employee clicks on “Receive Equipment” in the application.
+1.	A receipt card appears showing:
+• Project name
+• List of reserved equipment
+• Scheduled pickup and return date/time
+• A final confirmation button: “Confirm Equipment Pickup”
+2.	After clicking the button, an optional comment field appears:
+“Equipment received in good condition.”
+3.	Then they click “Confirm Pickup”.
+The system updates the equipment status to In Use.
+Notifications are sent to the administrator:
+“The equipment has been received by [Employee Name] at the specified location.”
+________________________________________
+Return Process
+👤 Employee
+1.	After finishing the usage, the employee returns the equipment to the storage room.
+🧑‍💼 Administrator
+1.	The administrator scans the equipment using the barcode/QR scanner; the status instantly changes to In Storage, and the employee receives a notification confirming the return.
+2.	The administrator inspects the equipment manually (condition, cleanliness, functionality).
+3.	The return process must only occur through actual scanning, not from the list, to ensure the equipment is physically present.
+4.	The system asks the admin to confirm the condition:
+1.	Is the equipment in good condition? ✅
+2.	Are there any notes? (Yes / No)
+If yes, the administrator writes the notes.
+
