@@ -131,8 +131,6 @@ export const translations = {
     return: 'Return',
     requested: 'Requested',
     responded: 'Responded',
-    approve: 'Approve',
-    decline: 'Decline',
     markReturned: 'Mark Returned',
     
     // User Management
