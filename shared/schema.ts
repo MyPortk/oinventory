@@ -99,6 +99,30 @@ export const reservationStatusHistory = pgTable("reservation_status_history", {
   timestamp: timestamp("timestamp").notNull().default(sql`CURRENT_TIMESTAMP`)
 });
 
+export const damageReports = pgTable("damage_reports", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  itemId: varchar("item_id").notNull().references(() => items.id),
+  reportedBy: varchar("reported_by").notNull().references(() => users.id),
+  reportType: text("report_type").notNull(),
+  severity: text("severity").notNull().default('medium'),
+  description: text("description").notNull(),
+  status: text("status").notNull().default('open'),
+  resolutionNotes: text("resolution_notes"),
+  createdAt: timestamp("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
+  resolvedAt: timestamp("resolved_at")
+});
+
+export const damageReportsRelations = relations(damageReports, ({ one }) => ({
+  reportedByUser: one(users, {
+    fields: [damageReports.reportedBy],
+    references: [users.id]
+  }),
+  item: one(items, {
+    fields: [damageReports.itemId],
+    references: [items.id]
+  })
+}));
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true
 });
@@ -143,6 +167,12 @@ export const insertReservationStatusHistorySchema = createInsertSchema(reservati
   timestamp: true
 });
 
+export const insertDamageReportSchema = createInsertSchema(damageReports).omit({
+  id: true,
+  createdAt: true,
+  resolvedAt: true
+});
+
 export const itemEditHistoryRelations = relations(itemEditHistory, ({ one }) => ({
   item: one(items, {
     fields: [itemEditHistory.itemId],
@@ -181,6 +211,8 @@ export type InsertItemEditHistory = z.infer<typeof insertItemEditHistorySchema>;
 export type ItemEditHistory = typeof itemEditHistory.$inferSelect;
 export type InsertReservationStatusHistory = z.infer<typeof insertReservationStatusHistorySchema>;
 export type ReservationStatusHistory = typeof reservationStatusHistory.$inferSelect;
+export type InsertDamageReport = z.infer<typeof insertDamageReportSchema>;
+export type DamageReport = typeof damageReports.$inferSelect;
 
 export const ITEM_STATUSES = ['Available', 'In Use', 'Reserved', 'Maintenance', 'Disabled'] as const;
 

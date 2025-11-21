@@ -10,9 +10,10 @@ import ActivityLogs from "@/pages/ActivityLogs";
 import QRCodes from "@/pages/QRCodes";
 import Maintenance from "@/pages/Maintenance";
 import UserManagement from "@/pages/UserManagement";
+import Reports from "@/pages/Reports";
 import type { Language } from "@/lib/translations";
 
-type View = 'login' | 'inventory' | 'reservations' | 'activity-logs' | 'qr-codes' | 'maintenance' | 'users';
+type View = 'login' | 'inventory' | 'reservations' | 'activity-logs' | 'qr-codes' | 'maintenance' | 'users' | 'reports';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -58,6 +59,10 @@ function App() {
     setCurrentView('inventory');
   };
 
+  const handleNavigateToReports = () => {
+    setCurrentView('reports');
+  };
+
   const checkSession = async () => {
     try {
       const response = await fetch('/api/auth/session');
@@ -83,6 +88,7 @@ function App() {
     }
     // Expose navigate functions for header
     (window as any).navigateToUsers = () => setCurrentView('users');
+    (window as any).navigateToReports = () => setCurrentView('reports');
   }, []);
 
   const handleLanguageChange = (newLanguage: Language) => {
@@ -158,6 +164,20 @@ function App() {
             onNavigateToActivityLogs={handleNavigateToActivityLogs}
             onNavigateToQRCodes={handleNavigateToQRCodes}
             currentLanguage={language}
+            onLanguageChange={handleLanguageChange}
+          />
+        ) : currentView === 'reports' ? (
+          <Reports
+            userName={currentUser?.name || ''}
+            userRole={currentUser?.role || ''}
+            userId={currentUser?.id || ''}
+            onLogout={handleLogout}
+            onNavigateToInventory={handleNavigateToInventory}
+            onNavigateToReservations={handleNavigateToReservations}
+            onNavigateToActivityLogs={handleNavigateToActivityLogs}
+            onNavigateToQRCodes={handleNavigateToQRCodes}
+            onNavigateToMaintenance={handleNavigateToMaintenance}
+            language={language}
             onLanguageChange={handleLanguageChange}
           />
         ) : currentView === 'users' && currentUser && currentUser.role === 'admin' ? (

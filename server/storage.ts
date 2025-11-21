@@ -1,9 +1,9 @@
-import { type User, type InsertUser, type Item, type Reservation, type InsertReservation, type InsertActivityLog, type ActivityLog, type InsertCategory, type Category, type Notification, type InsertNotification } from "@shared/schema";
+import { type User, type InsertUser, type Item, type Reservation, type InsertReservation, type InsertActivityLog, type ActivityLog, type InsertCategory, type Category, type Notification, type InsertNotification, type InsertDamageReport, type DamageReport } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from './db';
 import { 
   items, users, reservations, categories, notifications, activityLogs,
-  itemEditHistory, reservationStatusHistory,
+  itemEditHistory, reservationStatusHistory, damageReports,
   type InsertItem, type InsertItemEditHistory, type InsertReservationStatusHistory
 } from "@shared/schema";
 import { eq, and, gte, lte, or, desc, asc } from 'drizzle-orm';
@@ -55,6 +55,11 @@ export interface IStorage {
   getItemEditHistory(itemId: string): Promise<any[]>;
   createReservationStatusHistory(data: InsertReservationStatusHistory): Promise<any>;
   getReservationStatusHistory(reservationId: string): Promise<any[]>;
+
+  createDamageReport(data: InsertDamageReport): Promise<DamageReport>;
+  getAllDamageReports(): Promise<any[]>;
+  getDamageReportById(id: string): Promise<DamageReport | undefined>;
+  updateDamageReport(id: string, data: Partial<InsertDamageReport>): Promise<DamageReport | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -447,6 +452,55 @@ export class MemStorage implements IStorage {
       userName: h.user.name,
       userRole: h.user.role
     }));
+  }
+
+  async createDamageReport(data: InsertDamageReport): Promise<DamageReport> {
+    const [report] = await db.insert(damageReports).values(data).returning();
+    return report;
+  }
+
+  async getAllDamageReports(): Promise<any[]> {
+    const reports = await db.query.damageReports.findMany({
+      orderBy: [desc(damageReports.createdAt)],
+      with: {
+        reportedByUser: {
+          columns: {
+            id: true,
+            name: true,
+            role: true
+          }
+        }
+      }
+    });
+
+    return reports.map(r => ({
+      id: r.id,
+      itemId: r.itemId,
+      reportedBy: r.reportedBy,
+      reportType: r.reportType,
+      severity: r.severity,
+      description: r.description,
+      status: r.status,
+      resolutionNotes: r.resolutionNotes,
+      createdAt: r.createdAt,
+      resolvedAt: r.resolvedAt,
+      reportedByName: r.reportedByUser?.name,
+      reportedByRole: r.reportedByUser?.role
+    }));
+  }
+
+  async getDamageReportById(id: string): Promise<DamageReport | undefined> {
+    return await db.query.damageReports.findFirst({
+      where: eq(damageReports.id, id)
+    });
+  }
+
+  async updateDamageReport(id: string, data: Partial<InsertDamageReport>): Promise<DamageReport | undefined> {
+    const [report] = await db.update(damageReports)
+      .set({ ...data, resolvedAt: data.status === 'resolved' ? new Date() : undefined })
+      .where(eq(damageReports.id, id))
+      .returning();
+    return report;
   }
 }
 

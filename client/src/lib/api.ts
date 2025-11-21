@@ -205,5 +205,29 @@ export const api = {
       });
       return handleResponse(response);
     }
+  },
+  damageReports: {
+    getAll: async (): Promise<any[]> => {
+      const response = await fetch('/api/damage-reports', { credentials: 'include' });
+      return handleResponse(response);
+    },
+    create: async (report: any) => {
+      const response = await fetch('/api/damage-reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(report),
+        credentials: 'include'
+      });
+      return handleResponse(response);
+    },
+    resolve: async (id: string, notes: string) => {
+      const response = await fetch(`/api/damage-reports/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'resolved', resolutionNotes: notes }),
+        credentials: 'include'
+      });
+      return handleResponse(response);
+    }
   }
 };
