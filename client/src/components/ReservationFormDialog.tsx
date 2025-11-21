@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 interface ReservationFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: { itemId: string; startDate: Date; returnDate: Date; purposeOfUse?: string; notes?: string }) => void;
+  onSubmit: (data: { itemId: string; startDate: Date; returnDate: Date; startTime?: string; returnTime?: string; purposeOfUse?: string; notes?: string }) => void;
   items: Item[];
 }
 
@@ -29,6 +29,8 @@ export default function ReservationFormDialog({
   const [itemId, setItemId] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [returnDate, setReturnDate] = useState<Date>();
+  const [startTime, setStartTime] = useState("09:00");
+  const [returnTime, setReturnTime] = useState("17:00");
   const [purposeOfUse, setPurposeOfUse] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -68,6 +70,8 @@ export default function ReservationFormDialog({
       itemId,
       startDate,
       returnDate,
+      startTime: startTime || undefined,
+      returnTime: returnTime || undefined,
       purposeOfUse: purposeOfUse.trim(),
       notes: notes.trim() || undefined
     });
@@ -75,6 +79,8 @@ export default function ReservationFormDialog({
     setItemId("");
     setStartDate(undefined);
     setReturnDate(undefined);
+    setStartTime("09:00");
+    setReturnTime("17:00");
     setPurposeOfUse("");
     setNotes("");
   };
@@ -83,6 +89,8 @@ export default function ReservationFormDialog({
     setItemId("");
     setStartDate(undefined);
     setReturnDate(undefined);
+    setStartTime("09:00");
+    setReturnTime("17:00");
     setPurposeOfUse("");
     setNotes("");
     onClose();
@@ -159,72 +167,90 @@ export default function ReservationFormDialog({
           )}
           
           <div className="space-y-2">
-            <Label>Start Date *</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {startDate ? format(startDate, "PPP") : <span>Pick a start date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={startDate}
-                  onSelect={setStartDate}
-                  disabled={(date) => {
-                    const today = new Date(new Date().setHours(0, 0, 0, 0));
-                    return date < today || isDateBlocked(date);
-                  }}
-                  modifiers={{
-                    blocked: (date) => isDateBlocked(date)
-                  }}
-                  modifiersClassNames={{
-                    blocked: "bg-red-100 text-red-900 line-through"
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <Label>Pickup Date & Time *</Label>
+            <div className="flex gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex-1 justify-start text-left font-normal"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {startDate ? format(startDate, "PPP") : <span>Pick date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={setStartDate}
+                    disabled={(date) => {
+                      const today = new Date(new Date().setHours(0, 0, 0, 0));
+                      return date < today || isDateBlocked(date);
+                    }}
+                    modifiers={{
+                      blocked: (date) => isDateBlocked(date)
+                    }}
+                    modifiersClassNames={{
+                      blocked: "bg-red-100 text-red-900 line-through"
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <input
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="border rounded-md px-3 py-2 text-sm"
+                required
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label>Return Date *</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {returnDate ? format(returnDate, "PPP") : <span>Pick a return date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={returnDate}
-                  onSelect={setReturnDate}
-                  disabled={(date) => {
-                    const today = new Date(new Date().setHours(0, 0, 0, 0));
-                    if (startDate) {
-                      return date < startDate || date < today || isDateBlocked(date);
-                    }
-                    return date < today || isDateBlocked(date);
-                  }}
-                  modifiers={{
-                    blocked: (date) => isDateBlocked(date)
-                  }}
-                  modifiersClassNames={{
-                    blocked: "bg-red-100 text-red-900 line-through"
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <Label>Return Date & Time *</Label>
+            <div className="flex gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex-1 justify-start text-left font-normal"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {returnDate ? format(returnDate, "PPP") : <span>Pick date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={returnDate}
+                    onSelect={setReturnDate}
+                    disabled={(date) => {
+                      const today = new Date(new Date().setHours(0, 0, 0, 0));
+                      if (startDate) {
+                        return date < startDate || date < today || isDateBlocked(date);
+                      }
+                      return date < today || isDateBlocked(date);
+                    }}
+                    modifiers={{
+                      blocked: (date) => isDateBlocked(date)
+                    }}
+                    modifiersClassNames={{
+                      blocked: "bg-red-100 text-red-900 line-through"
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <input
+                type="time"
+                value={returnTime}
+                onChange={(e) => setReturnTime(e.target.value)}
+                className="border rounded-md px-3 py-2 text-sm"
+                required
+              />
+            </div>
           </div>
 
           {hasDateConflict() && (

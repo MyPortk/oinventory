@@ -47,7 +47,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
   });
 
   const createReservationMutation = useMutation({
-    mutationFn: (data: { itemId: string; startDate: Date; returnDate: Date; purposeOfUse?: string; notes?: string }) => api.reservations.create(data),
+    mutationFn: (data: { itemId: string; startDate: Date; returnDate: Date; startTime?: string; returnTime?: string; purposeOfUse?: string; notes?: string }) => api.reservations.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/reservations'] });
       queryClient.invalidateQueries({ queryKey: ['/api/items'] });
