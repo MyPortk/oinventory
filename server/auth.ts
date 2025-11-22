@@ -30,7 +30,8 @@ export async function loginUser(username: string, password: string) {
       username: user.username,
       role: user.role,
       email: user.email,
-      name: user.name
+      name: user.name,
+      department: user.department
     }
   };
 }

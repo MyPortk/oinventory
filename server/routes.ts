@@ -36,6 +36,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         req.session.username = result.user!.username;
         req.session.role = result.user!.role;
         req.session.name = result.user!.name;
+        req.session.department = result.user!.department;
 
         res.json({
           user: result.user
@@ -1183,7 +1184,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           username: true,
           email: true,
           name: true,
-          role: true
+          role: true,
+          department: true
         }
       });
       res.json(allUsers);
@@ -1219,13 +1221,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         password: hashedPassword,
         email: validatedData.email,
         name: validatedData.name,
-        role: validatedData.role
+        role: validatedData.role,
+        department: validatedData.department || null
       }).returning({
         id: users.id,
         username: users.username,
         email: users.email,
         name: users.name,
-        role: users.role
+        role: users.role,
+        department: users.department
       });
 
       res.status(201).json(newUser);

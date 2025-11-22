@@ -128,12 +128,17 @@ export default function ActivityLogs({ userName, userRole, onLogout, onNavigateT
                               {t('editHistory')}
                             </Button>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
                             <User className="w-4 h-4" />
                             <span>{log.userName}</span>
                             <Badge variant="secondary" className="text-xs">
                               {log.userRole}
                             </Badge>
+                            {log.userDepartment && (
+                              <Badge variant="outline" className="text-xs">
+                                {log.userDepartment}
+                              </Badge>
+                            )}
                           </div>
                         </div>
                         <div className="text-right">

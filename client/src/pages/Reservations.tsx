@@ -325,6 +325,11 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
+                      <span>
+                        <strong>Department:</strong> {users.find(u => u.id === reservation.userId)?.department || '-'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="w-4 h-4" />
                       <span>
                         <strong>{t('requested')}:</strong> {format(new Date(reservation.requestDate), "PPP")}
