@@ -14,6 +14,7 @@ declare module 'express-session' {
     username: string;
     role: string;
     name: string;
+    department?: string;
   }
 }
 
