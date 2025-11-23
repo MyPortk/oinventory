@@ -327,11 +327,19 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   };
 
   const getPendingReturnReservation = (itemId: string) => {
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    
     return reservations.find(res => {
       if (res.itemId !== itemId || res.status !== 'approved') return false;
       if (!res.checkoutDate || res.itemConditionOnReceive === undefined) return false;
       if (res.itemConditionOnReturn !== undefined) return false; // Already marked as returned
-      return true;
+      
+      // Check if return date has started (today >= returnDate)
+      const returnDate = new Date(res.returnDate);
+      const returnDateStr = `${returnDate.getFullYear()}-${String(returnDate.getMonth() + 1).padStart(2, '0')}-${String(returnDate.getDate()).padStart(2, '0')}`;
+      
+      return todayStr >= returnDateStr;
     });
   };
 

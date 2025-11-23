@@ -432,17 +432,43 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                         </Button>
                       );
                     })()}
-                    {userRole === 'admin' && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                        onClick={() => handleComplete(reservation.id, reservation.itemId)}
-                      >
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        {t('markReturned')}
-                      </Button>
-                    )}
+                    {userRole === 'admin' && (() => {
+                      const today = new Date();
+                      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                      
+                      const returnDate = new Date(reservation.returnDate);
+                      const returnDateStr = `${returnDate.getFullYear()}-${String(returnDate.getMonth() + 1).padStart(2, '0')}-${String(returnDate.getDate()).padStart(2, '0')}`;
+                      
+                      // Only show button if:
+                      // - Equipment has been received (has checkoutDate and itemConditionOnReceive)
+                      // - Return date has started (today >= returnDate)
+                      // - Not already marked as returned
+                      const canMarkReturned = reservation.checkoutDate && 
+                                             reservation.itemConditionOnReceive !== undefined && 
+                                             !reservation.itemConditionOnReturn &&
+                                             todayStr >= returnDateStr;
+                      
+                      const isReturnDatePassed = todayStr >= returnDateStr;
+                      const hasBeenReceived = reservation.checkoutDate && reservation.itemConditionOnReceive !== undefined;
+                      
+                      if (!hasBeenReceived) {
+                        return null;
+                      }
+                      
+                      return (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                          onClick={() => handleComplete(reservation.id, reservation.itemId)}
+                          disabled={!isReturnDatePassed}
+                          title={isReturnDatePassed ? "Click to confirm return" : `Available on ${format(new Date(reservation.returnDate), "MMM dd, yyyy")}`}
+                        >
+                          <CheckCircle className="w-4 h-4 mr-1" />
+                          {t('markReturned')} {!isReturnDatePassed && "(Not Available)"}
+                        </Button>
+                      );
+                    })()}
                   </div>
                 )}
               </div>
