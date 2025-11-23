@@ -930,7 +930,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             title: 'New Reservation Request',
             message: `${user?.name || 'A user'} has requested ${item?.productName || 'an item'} from ${new Date(validatedData.startDate).toLocaleDateString()} to ${new Date(validatedData.returnDate).toLocaleDateString()}`,
             relatedId: reservation.id,
-            isRead: 'false'
+            isRead: 'false',
+            notificationFor: 'admin'
           });
 
           // Send email notification to admin
@@ -1021,7 +1022,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             title: 'Reservation Rejected',
             message: `Your reservation for ${item?.productName || 'item'} has been rejected${validatedData.rejectionReason ? `: ${validatedData.rejectionReason}` : '.'}`,
             relatedId: reservation.id,
-            isRead: 'false'
+            isRead: 'false',
+            notificationFor: 'user'
           });
 
           // Send rejection email
@@ -1088,7 +1090,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to log receipt confirmation:', logError);
         }
 
-        // Create notification for admin
+        // Create notification for user
         try {
           await storage.createNotification({
             userId: reservation.userId,
@@ -1096,7 +1098,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             title: 'Equipment Received',
             message: `You have successfully received ${item?.productName || 'equipment'}. Return by ${format(new Date(reservation.returnDate), 'MMM dd, yyyy')} at ${reservation.returnTime || '17:00'}`,
             relatedId: reservation.id,
-            isRead: 'false'
+            isRead: 'false',
+            notificationFor: 'user'
           });
         } catch (notifError) {
           console.error('Failed to create checkout notification:', notifError);
@@ -1112,7 +1115,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             title: 'Reservation Approved',
             message: `Your reservation for ${item?.productName || 'item'} has been approved!`,
             relatedId: reservation.id,
-            isRead: 'false'
+            isRead: 'false',
+            notificationFor: 'user'
           });
 
           // Send approval email

@@ -66,6 +66,7 @@ export const notifications = pgTable("notifications", {
   message: text("message").notNull(),
   isRead: text("is_read").notNull().default('false'),
   relatedId: varchar("related_id"),
+  notificationFor: text("notification_for").notNull().default('user'),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`)
 });
 
