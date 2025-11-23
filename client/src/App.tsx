@@ -162,7 +162,8 @@ function App() {
             onNavigateToActivityLogs={handleNavigateToActivityLogs}
             onNavigateToQRCodes={handleNavigateToQRCodes}
             onNavigateToMaintenance={handleNavigateToMaintenance}
-            currentLanguage={language}
+            onNavigateToReports={handleNavigateToReports}
+            language={language}
             onLanguageChange={handleLanguageChange}
           />
         ) : currentView === 'activity-logs' ? (
@@ -226,7 +227,8 @@ function App() {
             onNavigateToActivityLogs={handleNavigateToActivityLogs}
             onNavigateToQRCodes={handleNavigateToQRCodes}
             onNavigateToMaintenance={handleNavigateToMaintenance}
-            currentLanguage={language}
+            onNavigateToReports={handleNavigateToReports}
+            language={language}
             onLanguageChange={handleLanguageChange}
           />
         ) : null}

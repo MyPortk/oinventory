@@ -24,11 +24,12 @@ interface UserManagementProps {
   onNavigateToActivityLogs?: () => void;
   onNavigateToQRCodes?: () => void;
   onNavigateToMaintenance?: () => void;
+  onNavigateToReports?: () => void;
   language: Language;
   onLanguageChange: (language: Language) => void;
 }
 
-export default function UserManagement({ userName, userRole, onLogout, onNavigateToInventory, onNavigateToReservations, onNavigateToActivityLogs, onNavigateToQRCodes, onNavigateToMaintenance, language = 'en', onLanguageChange = () => {} }: UserManagementProps) {
+export default function UserManagement({ userName, userRole, onLogout, onNavigateToInventory, onNavigateToReservations, onNavigateToActivityLogs, onNavigateToQRCodes, onNavigateToMaintenance, onNavigateToReports, language = 'en', onLanguageChange = () => {} }: UserManagementProps) {
   const { toast } = useToast();
   const t = useTranslation(language || 'en');
   const [showAddUser, setShowAddUser] = useState(false);
@@ -155,6 +156,7 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
         onNavigateToActivityLogs={onNavigateToActivityLogs}
         onNavigateToQRCodes={onNavigateToQRCodes}
         onNavigateToMaintenance={onNavigateToMaintenance}
+        onNavigateToReports={onNavigateToReports}
         hideViewToggle={true}
         language={language}
         onLanguageChange={onLanguageChange}
