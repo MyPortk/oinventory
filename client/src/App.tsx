@@ -177,6 +177,7 @@ function App() {
             onNavigateToMaintenance={handleNavigateToMaintenance}
             currentLanguage={language}
             onLanguageChange={handleLanguageChange}
+            onNavigateToReports={handleNavigateToReports}
           />
         ) : currentView === 'qr-codes' ? (
           <QRCodes
@@ -187,7 +188,7 @@ function App() {
             onNavigateToReservations={handleNavigateToReservations}
             onNavigateToActivityLogs={handleNavigateToActivityLogs}
             onNavigateToMaintenance={handleNavigateToMaintenance}
-            currentLanguage={language}
+            language={language}
             onLanguageChange={handleLanguageChange}
           />
         ) : currentView === 'maintenance' ? (

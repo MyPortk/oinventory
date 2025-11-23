@@ -87,7 +87,7 @@ export default function InventoryHeader({
               </div>
             )}
 
-            <NotificationBell />
+            <NotificationBell language={language} />
 
             {/* Language Toggle */}
             <DropdownMenu>

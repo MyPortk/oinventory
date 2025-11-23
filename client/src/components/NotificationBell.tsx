@@ -10,9 +10,16 @@ import { Bell, Check, Trash2, CheckCheck } from "lucide-react";
 import { api, type Notification } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import type { Language } from "@/lib/translations";
+import { useTranslation } from "@/lib/translations";
 
-export default function NotificationBell() {
+interface NotificationBellProps {
+  language?: Language;
+}
+
+export default function NotificationBell({ language = 'en' }: NotificationBellProps) {
   const { toast } = useToast();
+  const t = useTranslation(language);
   const [open, setOpen] = useState(false);
 
   const { data: notifications = [] } = useQuery({
@@ -75,7 +82,7 @@ export default function NotificationBell() {
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="font-semibold">Notifications</h3>
+          <h3 className="font-semibold">{t('notifications')}</h3>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
@@ -84,7 +91,7 @@ export default function NotificationBell() {
               className="text-xs"
             >
               <CheckCheck className="w-4 h-4 mr-1" />
-              Mark all read
+              {t('markAllRead')}
             </Button>
           )}
         </div>
@@ -92,7 +99,7 @@ export default function NotificationBell() {
           {notifications.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
               <Bell className="w-12 h-12 mx-auto mb-2 opacity-50" />
-              <p>No notifications</p>
+              <p>{t('noNotifications')}</p>
             </div>
           ) : (
             <div className="divide-y">

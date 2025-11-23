@@ -200,6 +200,11 @@ export const translations = {
     damageOrMissing: 'Damage or Missing',
     describeDamageDetails: 'Describe what damage or items are missing...',
     all_items: 'All Items',
+    
+    // Notifications
+    notifications: 'Notifications',
+    markAllRead: 'Mark all read',
+    noNotifications: 'No notifications',
   },
   ar: {
     // Header
@@ -400,6 +405,11 @@ export const translations = {
     damageOrMissing: 'تالفة أو مفقودة',
     describeDamageDetails: 'صف الضرر أو العناصر المفقودة...',
     all_items: 'جميع العناصر',
+    
+    // Notifications
+    notifications: 'الإشعارات',
+    markAllRead: 'تحديد الكل كمقروء',
+    noNotifications: 'لا توجد إشعارات',
   }
 };
 
