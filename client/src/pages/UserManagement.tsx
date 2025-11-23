@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserPlus, Trash2, Users, ArrowLeft } from "lucide-react";
+import { UserPlus, Trash2, Users, ArrowLeft, Edit } from "lucide-react";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import InventoryHeader from "@/components/InventoryHeader";
@@ -32,9 +32,17 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
   const { toast } = useToast();
   const t = useTranslation(language || 'en');
   const [showAddUser, setShowAddUser] = useState(false);
+  const [showEditUser, setShowEditUser] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
+    email: '',
+    name: '',
+    role: 'user' as 'admin' | 'user',
+    department: ''
+  });
+  const [editFormData, setEditFormData] = useState({
     email: '',
     name: '',
     role: 'user' as 'admin' | 'user',
@@ -70,6 +78,24 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
     }
   });
 
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: typeof editFormData }) => api.users.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/users'] });
+      setShowEditUser(false);
+      setEditingUserId(null);
+      setEditFormData({ email: '', name: '', role: 'user', department: '' });
+      toast({ title: "User updated successfully" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Failed to update user", 
+        description: error.message || "Please try again",
+        variant: "destructive" 
+      });
+    }
+  });
+
   const deleteUserMutation = useMutation({
     mutationFn: (id: string) => api.users.delete(id),
     onSuccess: () => {
@@ -88,6 +114,27 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createUserMutation.mutate(formData);
+  };
+
+  const handleEditUser = (user: any) => {
+    setEditingUserId(user.id);
+    setEditFormData({
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      department: user.department || ''
+    });
+    setShowEditUser(true);
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingUserId && editFormData.email && editFormData.name) {
+      updateUserMutation.mutate({
+        id: editingUserId,
+        data: editFormData
+      });
+    }
   };
 
   const handleDeleteUser = (id: string, username: string) => {
@@ -176,13 +223,22 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDeleteUser(user.id, user.username)}
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditUser(user)}
+                        >
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteUser(user.id, user.username)}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -280,6 +336,77 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
                 disabled={createUserMutation.isPending}
               >
                 {createUserMutation.isPending ? t('creating') : t('createUser')}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showEditUser} onOpenChange={setShowEditUser}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('editUser')}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">{t('fullName')} *</Label>
+              <Input
+                id="edit-name"
+                value={editFormData.name}
+                onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                placeholder="e.g., John Smith"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-email">{t('email')} *</Label>
+              <Input
+                id="edit-email"
+                type="email"
+                value={editFormData.email}
+                onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                placeholder="e.g., jsmith@company.com"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-department">{t('department')}</Label>
+              <Input
+                id="edit-department"
+                value={editFormData.department}
+                onChange={(e) => setEditFormData({ ...editFormData, department: e.target.value })}
+                placeholder="e.g., Production"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-role">{t('role')} *</Label>
+              <Select
+                value={editFormData.role}
+                onValueChange={(value: 'admin' | 'user') => setEditFormData({ ...editFormData, role: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">{t('user')}</SelectItem>
+                  <SelectItem value="admin">{t('admin')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setShowEditUser(false)}>
+                {t('cancel')}
+              </Button>
+              <Button 
+                type="submit" 
+                className="bg-gradient-to-r from-[#667eea] to-[#764ba2]"
+                disabled={updateUserMutation.isPending}
+              >
+                {updateUserMutation.isPending ? 'Updating...' : 'Update User'}
               </Button>
             </DialogFooter>
           </form>

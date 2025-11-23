@@ -1287,6 +1287,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.patch("/api/users/:id", requireAdmin, async (req, res) => {
+    try {
+      const validatedData = z.object({
+        email: z.string().email("Valid email is required").optional(),
+        name: z.string().min(1, "Name is required").optional(),
+        role: z.enum(['admin', 'user']).optional(),
+        department: z.string().optional()
+      }).parse(req.body);
+
+      const updateData: any = {};
+      if (validatedData.email) updateData.email = validatedData.email;
+      if (validatedData.name) updateData.name = validatedData.name;
+      if (validatedData.role) updateData.role = validatedData.role;
+      if (validatedData.department !== undefined) updateData.department = validatedData.department || null;
+
+      const [updatedUser] = await db.update(users)
+        .set(updateData)
+        .where(eq(users.id, req.params.id))
+        .returning({
+          id: users.id,
+          username: users.username,
+          email: users.email,
+          name: users.name,
+          role: users.role,
+          department: users.department
+        });
+
+      res.json(updatedUser);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          error: 'Invalid user data', 
+          details: error.errors.map(e => ({ field: e.path.join('.'), message: e.message }))
+        });
+      }
+      console.error('Update user error:', error);
+      res.status(500).json({ error: 'Failed to update user' });
+    }
+  });
+
   app.delete("/api/users/:id", requireAdmin, async (req, res) => {
     try {
       // Prevent deleting self

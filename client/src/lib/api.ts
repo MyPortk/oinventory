@@ -198,6 +198,15 @@ export const api = {
       });
       return handleResponse(response);
     },
+    update: async (id: string, userData: any) => {
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+        credentials: 'include'
+      });
+      return handleResponse(response);
+    },
     delete: async (id: string) => {
       const response = await fetch(`/api/users/${id}`, {
         method: 'DELETE',
