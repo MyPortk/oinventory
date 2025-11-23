@@ -312,6 +312,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else if (oldStatus === 'In Use') {
         newStatus = 'Available';
         action = 'Checked In';
+      } else if (oldStatus === 'Reserved') {
+        // Allow scanning of reserved items - they stay reserved, but record the action
+        // Admin is either confirming pickup or checking return
+        newStatus = 'Reserved';
+        action = 'Reserved Item Scanned';
       } else {
         return res.json({
           success: false,
@@ -395,6 +400,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         newStatus = 'Available';
         action = 'Checked In';
         statusColor = '#10b981';
+      } else if (oldStatus === 'Reserved') {
+        // Allow scanning of reserved items for pickup/return confirmation
+        newStatus = 'Reserved';
+        action = 'Reserved Item Scanned';
+        statusColor = '#8b5cf6';
       } else {
         return res.send(`
           <!DOCTYPE html>
@@ -1039,16 +1049,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to log reservation status change:', logError);
         }
       } else if (validatedData.status === 'completed') {
-        // Only record the return condition - do NOT change item status
-        // Log activity for return confirmation (condition only, no status change)
+        // Update item status back to Available when reservation is completed
+        await storage.updateItem(reservation.itemId, { status: 'Available' });
+
+        // Log activity for return confirmation
         try {
           await storage.createActivityLog({
             itemId: reservation.itemId,
             userId: req.session.userId!,
             action: 'Equipment Return Confirmed',
             oldStatus: item?.status || 'Reserved',
-            newStatus: item?.status || 'Reserved',
-            notes: `${item?.productName || 'Item'} return confirmed by ${req.session.name}. Condition: ${validatedData.itemConditionOnReturn || 'No notes provided'}. Status remains: ${item?.status || 'Reserved'}. Returned at ${new Date().toLocaleString()}`
+            newStatus: 'Available',
+            notes: `${item?.productName || 'Item'} return confirmed by ${req.session.name}. Condition: ${validatedData.itemConditionOnReturn || 'No notes provided'}. Status: Reserved → Available. Returned at ${new Date().toLocaleString()}`
           });
         } catch (logError) {
           console.error('Failed to log return confirmation:', logError);
