@@ -51,22 +51,18 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
     enabled: open
   });
 
-  // Combine subTypes from default and custom categories - ONLY for the selected equipment type
-  const allSubTypes = [
-    // Include default categories of the same type
-    ...Object.values(CATEGORIES)
-      .filter(cat => {
-        // Filter based on equipment type
-        const isEquipmentCategory = Object.values(EQUIPMENT_CATEGORIES).some(c => c.name === cat.name);
-        return isEquipment === isEquipmentCategory;
-      })
-      .flatMap(cat => cat.subTypes),
-    // Include ONLY custom categories matching the equipment type
-    ...categories
-      .filter(cat => cat.isCustom && cat.isEquipment === isEquipment)
-      .flatMap(cat => cat.subTypes)
-  ];
+  // Get all subTypes ONLY from the API-returned categories (which are already filtered by isEquipment)
+  // This ensures complete separation between Equipment and Assets
+  const allSubTypes = categories
+    .flatMap(cat => cat.subTypes);
+  
   const uniqueSubTypes = Array.from(new Set(allSubTypes)).sort();
+  
+  console.log(`✅ ItemFormDialog (isEquipment=${isEquipment}):`, {
+    categoriesCount: categories.length,
+    subTypesCount: uniqueSubTypes.length,
+    subTypes: uniqueSubTypes
+  });
 
   useEffect(() => {
     if (item) {

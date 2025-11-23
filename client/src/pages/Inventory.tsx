@@ -485,14 +485,11 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     <CategoryCard
                       {...category}
                       onClick={() => {
-                        console.log('Category clicked:', category.name);
-                        console.log('Category subTypes:', category.subTypes);
+                        console.log('Category clicked:', category.name, 'isEquipment:', category.isEquipment);
                         setSelectedCategory(category.name);
                         setCurrentView('inventory');
-                        // Auto-lock filter based on category type
-                        const equipmentCategories = ['Cameras', 'Lenses', 'Tripods & Stands', 'Grips', 'Audio', 'Lighting', 'Studio Accessories', 'Bags & Cases', 'Batteries & Power', 'Cables & Adapters', 'Monitors & Displays', 'Storage Devices'];
-                        const isEquipmentCategory = equipmentCategories.includes(category.name);
-                        setItemTypeFilter(isEquipmentCategory ? 'equipment' : 'assets');
+                        // Use isEquipment flag from API (works for both default and custom categories)
+                        setItemTypeFilter(category.isEquipment ? 'equipment' : 'assets');
                       }}
                     />
                     {userRole === 'admin' && (
