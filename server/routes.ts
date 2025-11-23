@@ -693,6 +693,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Show all default categories (even with 0 items) and custom categories
       const allCategories = [...defaultCategories, ...customCategories];
+      
+      console.log(`📋 GET /api/categories (isEquipment=${isEquipmentParam}):`, {
+        shouldShowEquipment,
+        defaultCategoriesCount: defaultCategories.length,
+        customCategoriesCount: customCategories.length,
+        totalCategoriesCount: allCategories.length,
+        customCategories: customCategories.map(c => ({ name: c.name, isEquipment: c.isEquipment }))
+      });
 
       res.json(allCategories);
     } catch (error) {
@@ -704,6 +712,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Category management routes (admin only)
   app.post("/api/custom-categories", requireAdmin, async (req, res) => {
     try {
+      console.log('📝 POST body:', JSON.stringify(req.body, null, 2));
       const validatedData = z.object({
         name: z.string().min(1, "Category name is required"),
         image: z.string().url("Valid image URL is required"),
