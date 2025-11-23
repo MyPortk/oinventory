@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, MapPin, FileText, QrCode, Download, Pencil, Calendar, LogOut, LogIn } from "lucide-react";
+import { Edit, Trash2, MapPin, FileText, QrCode, Download, Pencil, Calendar, LogOut, LogIn, CheckCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useState } from "react";
@@ -21,6 +21,7 @@ interface ItemCardProps {
   onReserve?: () => void;
   onCheckout?: () => void;
   onCheckin?: () => void;
+  onReceiveEquipment?: () => void;
   userRole: string;
   isEquipment?: boolean;
 }
@@ -46,6 +47,7 @@ export default function ItemCard({
   onReserve,
   onCheckout,
   onCheckin,
+  onReceiveEquipment,
   userRole,
   isEquipment = true,
 }: ItemCardProps) {
@@ -171,29 +173,43 @@ export default function ItemCard({
                   </div>
                 )}
                 {userRole !== 'admin' && (
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={onScan}
-                      className="flex-1"
-                      data-testid={`button-scan-${id}`}
-                      disabled={status !== 'Available' || !onScan}
-                    >
-                      <QrCode className="w-4 h-4 mr-2" />
-                      {status === 'Available' ? 'Scan to Checkout' : 'Not Available'}
-                    </Button>
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={onReserve}
-                      className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2]"
-                      data-testid={`button-reserve-${id}`}
-                      disabled={status === 'Maintenance' || !onReserve}
-                    >
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Reserve
-                    </Button>
+                  <div className="flex gap-2 pt-2 flex-col">
+                    {onReceiveEquipment && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onReceiveEquipment}
+                        className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200 w-full"
+                        data-testid={`button-receive-equipment-${id}`}
+                      >
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Receive Equipment
+                      </Button>
+                    )}
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onScan}
+                        className="flex-1"
+                        data-testid={`button-scan-${id}`}
+                        disabled={status !== 'Available' || !onScan}
+                      >
+                        <QrCode className="w-4 h-4 mr-2" />
+                        {status === 'Available' ? 'Scan to Checkout' : 'Not Available'}
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={onReserve}
+                        className="flex-1 bg-gradient-to-r from-[#667eea] to-[#764ba2]"
+                        data-testid={`button-reserve-${id}`}
+                        disabled={status === 'Maintenance' || !onReserve}
+                      >
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Reserve
+                      </Button>
+                    </div>
                   </div>
                 )}
               </>

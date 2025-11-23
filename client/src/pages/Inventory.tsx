@@ -10,13 +10,17 @@ import ScanResultDialog from "@/components/ScanResultDialog";
 import CategoryFormDialog from "@/components/CategoryFormDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Search, FolderPlus, Pencil, Trash2, LayoutGrid, TableIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plus, Search, FolderPlus, Pencil, Trash2, LayoutGrid, TableIcon, CheckCircle, AlertCircle } from "lucide-react";
 import { api, type Item } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import ReservationFormDialog from "@/components/ReservationFormDialog";
 import type { Language } from "@/lib/translations";
 import { useTranslation } from "@/lib/translations";
+import { format } from "date-fns";
 
 interface InventoryPageProps {
   userName: string;
@@ -48,6 +52,10 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [reservingItem, setReservingItem] = useState<Item | null>(null);
   const [itemTypeFilter, setItemTypeFilter] = useState<'all' | 'equipment' | 'assets'>('equipment');
+  const [showCheckoutDialog, setShowCheckoutDialog] = useState(false);
+  const [checkoutReservation, setCheckoutReservation] = useState<any>(null);
+  const [checkoutCondition, setCheckoutCondition] = useState<'good' | 'damage'>('good');
+  const [checkoutNotes, setCheckoutNotes] = useState("");
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories', itemTypeFilter],
@@ -62,6 +70,12 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
       return api.items.getAll(selectedCategory || undefined, itemTypeFilter === 'all' ? undefined : itemTypeFilter === 'equipment');
     },
     enabled: currentView === 'inventory'
+  });
+
+  const { data: reservations = [] } = useQuery({
+    queryKey: ['/api/reservations'],
+    queryFn: () => api.reservations.getAll(),
+    enabled: currentView === 'inventory' && userRole !== 'admin'
   });
 
   const createItemMutation = useMutation({
@@ -254,6 +268,57 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
         id: item.id,
         data: { status: 'Available' }
       });
+    }
+  };
+
+  const getItemName = (itemId: string) => {
+    return items.find(item => item.id === itemId)?.productName || itemId;
+  };
+
+  const getApprovedReservationForPickup = (itemId: string) => {
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    
+    return reservations.find(res => {
+      if (res.itemId !== itemId || res.status !== 'approved') return false;
+      if (res.checkoutDate || res.itemConditionOnReceive) return false;
+      
+      const startDate = new Date(res.startDate);
+      const startDateStr = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-${String(startDate.getDate()).padStart(2, '0')}`;
+      
+      return todayStr === startDateStr;
+    });
+  };
+
+  const handleReceiveEquipment = (item: Item) => {
+    const reservation = getApprovedReservationForPickup(item.id);
+    if (reservation) {
+      setCheckoutReservation(reservation);
+      setCheckoutCondition('good');
+      setCheckoutNotes("");
+      setShowCheckoutDialog(true);
+    }
+  };
+
+  const handleConfirmCheckout = async () => {
+    if (checkoutCondition === 'damage' && !checkoutNotes.trim()) {
+      toast({ title: "Please describe the damage or missing items", variant: "destructive" });
+      return;
+    }
+
+    try {
+      await api.reservations.update(checkoutReservation.id, {
+        checkoutDate: new Date().toISOString(),
+        itemConditionOnReceive: checkoutCondition,
+        damageNotes: checkoutNotes || undefined
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ['/api/reservations'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/items'] });
+      setShowCheckoutDialog(false);
+      toast({ title: "Equipment receipt confirmed successfully" });
+    } catch (error) {
+      toast({ title: "Failed to confirm equipment receipt", variant: "destructive" });
     }
   };
 
@@ -542,6 +607,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     onReserve={item.isEquipment && userRole !== 'admin' ? () => handleReserveItem(item) : undefined}
                     onCheckout={item.isEquipment && userRole === 'admin' ? () => handleCheckout(item) : undefined}
                     onCheckin={item.isEquipment && userRole === 'admin' ? () => handleCheckin(item) : undefined}
+                    onReceiveEquipment={item.isEquipment && userRole !== 'admin' && getApprovedReservationForPickup(item.id) ? () => handleReceiveEquipment(item) : undefined}
                   />
                 ))}
               </div>
@@ -666,6 +732,85 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
         onSubmit={(data) => createReservationMutation.mutate({ ...data, userId })}
         items={reservingItem ? [reservingItem] : []}
       />
+
+      <Dialog open={showCheckoutDialog} onOpenChange={setShowCheckoutDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Confirm Equipment Pickup</DialogTitle>
+          </DialogHeader>
+          {checkoutReservation && (
+            <div className="space-y-6">
+              <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg space-y-2 border border-blue-200 dark:border-blue-800">
+                <div><strong>Equipment:</strong> {getItemName(checkoutReservation.itemId)}</div>
+                <div><strong>Pickup Date & Time:</strong> {format(new Date(checkoutReservation.startDate), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
+                <div><strong>Return Date & Time:</strong> {format(new Date(checkoutReservation.returnDate), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
+                <div><strong>Purpose:</strong> {checkoutReservation.purposeOfUse}</div>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Equipment Condition *</Label>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50" onClick={() => setCheckoutCondition('good')}>
+                    <input 
+                      type="radio" 
+                      name="condition" 
+                      value="good"
+                      checked={checkoutCondition === 'good'}
+                      onChange={() => setCheckoutCondition('good')}
+                      className="w-4 h-4"
+                    />
+                    <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      Good
+                    </Label>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50" onClick={() => setCheckoutCondition('damage')}>
+                    <input 
+                      type="radio" 
+                      name="condition" 
+                      value="damage"
+                      checked={checkoutCondition === 'damage'}
+                      onChange={() => setCheckoutCondition('damage')}
+                      className="w-4 h-4"
+                    />
+                    <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
+                      <AlertCircle className="w-5 h-5 text-red-600" />
+                      Damage or Missing
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              {checkoutCondition === 'damage' && (
+                <div className="space-y-2 p-4 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
+                  <Label htmlFor="damage-notes" className="text-base font-semibold">Please describe the damage or missing items *</Label>
+                  <Textarea
+                    id="damage-notes"
+                    value={checkoutNotes}
+                    onChange={(e) => setCheckoutNotes(e.target.value)}
+                    placeholder="Describe what damage or items are missing..."
+                    rows={3}
+                    className="resize-none"
+                  />
+                </div>
+              )}
+
+              <div className="flex gap-3 justify-end pt-4 border-t">
+                <Button variant="outline" onClick={() => setShowCheckoutDialog(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleConfirmCheckout}
+                  className="bg-gradient-to-r from-[#667eea] to-[#764ba2]"
+                >
+                  Confirm Receipt
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
