@@ -348,13 +348,13 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="w-4 h-4" />
                       <span>
-                        <strong>Pickup:</strong> {format(new Date(reservation.startDate + 'Z'), "PPP")} {reservation.startTime || "09:00"}
+                        <strong>Pickup:</strong> {format(new Date(new Date(reservation.startDate).getTime() + (3 * 60 * 60 * 1000)), "PPP")} {reservation.startTime || "09:00"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="w-4 h-4" />
                       <span>
-                        <strong>Return:</strong> {format(new Date(reservation.returnDate + 'Z'), "PPP")} {reservation.returnTime || "17:00"}
+                        <strong>Return:</strong> {format(new Date(new Date(reservation.returnDate).getTime() + (3 * 60 * 60 * 1000)), "PPP")} {reservation.returnTime || "17:00"}
                       </span>
                     </div>
                     {reservation.approvalDate && (
@@ -394,11 +394,16 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                 {reservation.status === 'approved' && (
                   <div className="flex gap-2 flex-col">
                     {userRole !== 'admin' && (() => {
+                      // Get today's date in Qatar timezone (UTC+3)
                       const today = new Date();
-                      today.setUTCHours(0, 0, 0, 0);
-                      const startDate = new Date(reservation.startDate + 'Z');
-                      startDate.setUTCHours(0, 0, 0, 0);
-                      const isPickupDay = today.getTime() === startDate.getTime();
+                      const qatarNow = new Date(today.getTime() + (3 * 60 * 60 * 1000));
+                      const qatarToday = new Date(qatarNow.getFullYear(), qatarNow.getMonth(), qatarNow.getDate());
+                      
+                      const startDateUtc = new Date(reservation.startDate);
+                      const qatarStart = new Date(startDateUtc.getTime() + (3 * 60 * 60 * 1000));
+                      const qatarStartDate = new Date(qatarStart.getFullYear(), qatarStart.getMonth(), qatarStart.getDate());
+                      
+                      const isPickupDay = qatarToday.getTime() === qatarStartDate.getTime();
                       const hasReceivedEquipment = reservation.checkoutDate || reservation.itemConditionOnReceive;
                       
                       if (hasReceivedEquipment) {
@@ -423,7 +428,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                           className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
                           onClick={() => handleCheckout(reservation)}
                           disabled={!isPickupDay}
-                          title={isPickupDay ? "Click to confirm receipt" : `Available on ${format(new Date(reservation.startDate + 'Z'), "MMM dd, yyyy")}`}
+                          title={isPickupDay ? "Click to confirm receipt" : `Available on ${format(new Date(new Date(reservation.startDate).getTime() + (3 * 60 * 60 * 1000)), "MMM dd, yyyy")}`}
                         >
                           <CheckCircle className="w-4 h-4 mr-1" />
                           Receive Equipment {!isPickupDay && "(Not Available)"}
@@ -483,8 +488,8 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
             <div className="space-y-6">
               <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg space-y-2 border border-blue-200 dark:border-blue-800">
                 <div><strong>Equipment:</strong> {getItemName(checkoutReservation.itemId)}</div>
-                <div><strong>Pickup Date & Time:</strong> {format(new Date(checkoutReservation.startDate + 'Z'), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
-                <div><strong>Return Date & Time:</strong> {format(new Date(checkoutReservation.returnDate + 'Z'), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
+                <div><strong>Pickup Date & Time:</strong> {format(new Date(new Date(checkoutReservation.startDate).getTime() + (3 * 60 * 60 * 1000)), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
+                <div><strong>Return Date & Time:</strong> {format(new Date(new Date(checkoutReservation.returnDate).getTime() + (3 * 60 * 60 * 1000)), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
                 <div><strong>Purpose:</strong> {checkoutReservation.purposeOfUse}</div>
               </div>
 

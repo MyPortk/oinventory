@@ -66,17 +66,18 @@ export default function ReservationFormDialog({
       return;
     }
     
-    // Convert dates to noon UTC to avoid timezone shifts
-    const startDateUTC = new Date(startDate);
-    startDateUTC.setUTCHours(12, 0, 0, 0);
+    // Convert dates to Qatar timezone (UTC+3)
+    // Create dates at midnight Qatar time
+    const startDateQatar = new Date(startDate);
+    startDateQatar.setUTCHours(21, 0, 0, 0); // Midnight Qatar time is 21:00 UTC (00:00 + 3 hours = 21:00 previous day UTC)
     
-    const returnDateUTC = new Date(returnDate);
-    returnDateUTC.setUTCHours(12, 0, 0, 0);
+    const returnDateQatar = new Date(returnDate);
+    returnDateQatar.setUTCHours(21, 0, 0, 0);
     
     onSubmit({
       itemId,
-      startDate: startDateUTC,
-      returnDate: returnDateUTC,
+      startDate: startDateQatar,
+      returnDate: returnDateQatar,
       startTime: startTime || undefined,
       returnTime: returnTime || undefined,
       purposeOfUse: purposeOfUse.trim(),
