@@ -188,6 +188,7 @@ function App() {
             onNavigateToReservations={handleNavigateToReservations}
             onNavigateToActivityLogs={handleNavigateToActivityLogs}
             onNavigateToMaintenance={handleNavigateToMaintenance}
+            onNavigateToReports={handleNavigateToReports}
             language={language}
             onLanguageChange={handleLanguageChange}
           />
