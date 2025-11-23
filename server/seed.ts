@@ -13,6 +13,13 @@ export async function seedDatabase() {
 
   const users = [
     {
+      username: 'developer',
+      password: await hashPassword('omg'),
+      role: 'developer',
+      email: 'developer@company.com',
+      name: 'System Developer'
+    },
+    {
       username: 'admin',
       password: await hashPassword('omg'),
       role: 'admin',
