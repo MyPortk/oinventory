@@ -313,10 +313,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         newStatus = 'Available';
         action = 'Checked In';
       } else if (oldStatus === 'Reserved') {
-        // Allow scanning of reserved items - they stay reserved, but record the action
-        // Admin is either confirming pickup or checking return
-        newStatus = 'Reserved';
-        action = 'Reserved Item Scanned';
+        // When admin scans a reserved item, they're confirming pickup - change to In Use
+        newStatus = 'In Use';
+        action = 'Checked Out';
       } else {
         return res.json({
           success: false,
@@ -401,10 +400,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         action = 'Checked In';
         statusColor = '#10b981';
       } else if (oldStatus === 'Reserved') {
-        // Allow scanning of reserved items for pickup/return confirmation
-        newStatus = 'Reserved';
-        action = 'Reserved Item Scanned';
-        statusColor = '#8b5cf6';
+        // When item is scanned while reserved, confirm pickup - change to In Use
+        newStatus = 'In Use';
+        action = 'Checked Out';
+        statusColor = '#f59e0b';
       } else {
         return res.send(`
           <!DOCTYPE html>
