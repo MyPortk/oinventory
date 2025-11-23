@@ -60,6 +60,8 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   const [returnReservation, setReturnReservation] = useState<any>(null);
   const [returnCondition, setReturnCondition] = useState<'good' | 'damage'>('good');
   const [returnNotes, setReturnNotes] = useState("");
+  const [showQuantityColumn, setShowQuantityColumn] = useState(true);
+  const [showLocationColumn, setShowLocationColumn] = useState(true);
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories', itemTypeFilter],
@@ -608,6 +610,26 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                   {viewMode === 'card' ? <TableIcon className="w-4 h-4 mr-2" /> : <LayoutGrid className="w-4 h-4 mr-2" />}
                   {viewMode === 'card' ? t('tableView') : t('cardView')}
                 </Button>
+                {viewMode === 'table' && (
+                  <>
+                    <Button
+                      onClick={() => setShowQuantityColumn(!showQuantityColumn)}
+                      variant={showQuantityColumn ? 'default' : 'outline'}
+                      size="sm"
+                      data-testid="button-toggle-quantity-column"
+                    >
+                      Qty
+                    </Button>
+                    <Button
+                      onClick={() => setShowLocationColumn(!showLocationColumn)}
+                      variant={showLocationColumn ? 'default' : 'outline'}
+                      size="sm"
+                      data-testid="button-toggle-location-column"
+                    >
+                      Location
+                    </Button>
+                  </>
+                )}
                 {userRole === 'admin' && (
                   <>
                     {itemTypeFilter === 'equipment' && (
@@ -661,6 +683,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     status={item.status}
                     location={item.location || undefined}
                     notes={item.notes || undefined}
+                    quantity={(item as any)?.quantity || 1}
                     userRole={userRole}
                     isEquipment={item.isEquipment}
                     onEdit={userRole === 'admin' ? () => {
@@ -688,7 +711,8 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                       <TableHead>{t('name')}</TableHead>
                       <TableHead>{t('type')}</TableHead>
                       <TableHead>{t('status')}</TableHead>
-                      <TableHead>{t('location')}</TableHead>
+                      {showQuantityColumn && <TableHead>Quantity</TableHead>}
+                      {showLocationColumn && <TableHead>{t('location')}</TableHead>}
                       {userRole === 'admin' && <TableHead className="text-right">{t('actions')}</TableHead>}
                     </TableRow>
                   </TableHeader>
@@ -708,7 +732,8 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                             {item.status}
                           </span>
                         </TableCell>
-                        <TableCell>{item.location || '-'}</TableCell>
+                        {showQuantityColumn && <TableCell className="font-medium">{(item as any)?.quantity || 1}</TableCell>}
+                        {showLocationColumn && <TableCell>{item.location || '-'}</TableCell>}
                         {userRole === 'admin' && (
                           <TableCell className="text-right">
                             <div className="flex gap-2 justify-end">

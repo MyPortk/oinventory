@@ -15,6 +15,7 @@ interface ItemCardProps {
   status: string;
   location?: string;
   notes?: string;
+  quantity?: number;
   onEdit?: () => void;
   onDelete?: () => void;
   onScan?: () => void;
@@ -42,6 +43,7 @@ export default function ItemCard({
   status,
   location,
   notes,
+  quantity = 1,
   onEdit,
   onDelete,
   onScan,
@@ -106,6 +108,10 @@ export default function ItemCard({
               <div>
                 <span className="text-muted-foreground">Type:</span>
                 <span className="ml-2 font-medium" data-testid={`text-type-${id}`}>{productType}</span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Quantity:</span>
+                <span className="ml-2 font-medium" data-testid={`text-quantity-${id}`}>{quantity}</span>
               </div>
               {location && (
                 <div>

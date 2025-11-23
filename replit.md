@@ -12,6 +12,9 @@ A full-stack inventory management system built for equipment tracking and reserv
 - Activity and audit logging
 - User management with role-based access control (admin/user)
 - Maintenance status tracking
+- **Quantity tracking** - Items can have multiple quantities in stock
+- **Column visibility toggles** - Toggle Quantity and Location columns in table view
+- **Card view enhancements** - Display quantity on every item card
 
 ## User Preferences
 
@@ -37,6 +40,7 @@ Preferred communication style: Simple, everyday language.
 - Session-based authentication state
 - React Query for API data caching and synchronization with 5-10 second polling intervals for real-time updates
 - Local state for UI interactions (dialogs, forms, view modes)
+- Column visibility state (showQuantityColumn, showLocationColumn) for table view customization
 
 **Design System:**
 - Custom CSS variables for theming (light/dark mode support)
@@ -60,7 +64,7 @@ Preferred communication style: Simple, everyday language.
 
 **Key API Routes:**
 - `/api/auth/*` - Authentication (login/logout)
-- `/api/items/*` - Item CRUD operations
+- `/api/items/*` - Item CRUD operations (includes quantity field)
 - `/api/categories/*` - Category management
 - `/api/reservations/*` - Reservation workflow
 - `/api/users/*` - User management (admin only)
@@ -84,11 +88,11 @@ Preferred communication style: Simple, everyday language.
 
 **Schema Design (from shared/schema.ts):**
 - **users** - Authentication and user profiles (id, username, password, email, name, role, department)
-- **items** - Inventory items (id, barcode, productName, productType, status, location, notes, qrCode)
-- **categories** - Equipment categories (id, name, image, subTypes array)
+- **items** - Inventory items (id, barcode, productName, productType, status, location, notes, quantity, qrCode)
+- **categories** - Equipment categories (id, name, image, subTypes array, showQuantity, showLocation, showNotes)
 - **reservations** - Booking system (id, itemId, userId, startDate, returnDate, status, notes, timestamps)
 - **activityLogs** - Audit trail (id, userId, userName, action, itemName, timestamp)
-- **notifications** - User notifications (id, userId, message, type, isRead, timestamp)
+- **notifications** - User notifications (id, userId, message, type, isRead, timestamp, notificationFor)
 - **itemEditHistory** - Item modification tracking
 - **reservationStatusHistory** - Reservation status change tracking
 
@@ -101,45 +105,43 @@ Preferred communication style: Simple, everyday language.
 - Migration files in `./migrations` directory
 - Push-based deployment with `drizzle-kit push`
 
-### External Dependencies
+### Recent Changes (Nov 23, 2025)
 
-**UI Component Libraries:**
-- Radix UI primitives (dialog, dropdown, select, etc.) for accessible components
-- Shadcn UI as the component system layer
-- Lucide React for consistent iconography
-- date-fns for date formatting and manipulation
-- React Hook Form with Zod resolvers for form validation
+**Quantity Tracking Implementation:**
+- Added `quantity` field to items table (defaults to 1)
+- Updated ItemFormDialog to include quantity input with minimum value of 1
+- Items display quantity: "2 cameras" means 1 item with quantity 2 available
+- Checkout/return logic now works with available quantities
 
-**QR Code Integration:**
-- QRCode library (`qrcode` package) for server-side generation
-- QR codes stored as base64 data URLs in database
-- Scanner functionality for check-in/check-out workflows
+**Column Visibility Toggles:**
+- Added `showQuantityColumn` and `showLocationColumn` state to Inventory page
+- Toggle buttons appear in table view header (Qty, Location)
+- Buttons show 'default' variant when column is visible, 'outline' when hidden
+- Table header and rows dynamically show/hide based on toggle state
 
-**Email Service:**
-- Nodemailer for email notifications (optional, requires SMTP configuration)
-- Environment variables: EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS
-- Graceful degradation when email not configured
+**Card View Enhancements:**
+- ItemCard component now accepts and displays `quantity` prop
+- Quantity displayed alongside Type in card grid (2-column layout)
+- Both Equipment (card) and Assets (card) show quantity information
+- Quantity defaults to 1 if not specified
 
-**Development Tools:**
-- Replit-specific plugins for development banner and cartographer
-- Runtime error overlay for debugging
-- ESBuild for production bundling
-- TSX for TypeScript execution in development
+## Features Summary
 
-**Session Management:**
-- express-session with MemoryStore for development
-- Production should use connect-pg-simple for PostgreSQL-backed sessions
-- 24-hour session expiration
-- HTTP-only cookies with CSRF protection
+### Recently Added
+- ✅ Quantity field with input validation (min: 1)
+- ✅ Column visibility toggles for table view (Quantity, Location)
+- ✅ Quantity display on all item cards
+- ✅ Default quantity 1 for all items
+- ✅ Column visibility only appears in table view mode
 
-**Build & Deployment:**
-- Separate build processes for client (Vite) and server (ESBuild)
-- Client builds to `dist/public`
-- Server bundles to `dist/index.js`
-- Static file serving in production mode
-
-**Environment Configuration:**
-- DATABASE_URL - PostgreSQL connection string (required)
-- SESSION_SECRET - Session encryption key (defaults to development key)
-- EMAIL_* - Optional email service configuration
-- NODE_ENV - Environment flag (development/production)
+### Existing Features
+- ✅ Date range filters (This week, Last week, This month, Last month, Custom)
+- ✅ Separate notifications for users and admins
+- ✅ QR code generation and scanning
+- ✅ Equipment reservation with approval workflow
+- ✅ Checkout/check-in with condition tracking
+- ✅ Activity logging with search
+- ✅ Reports page for damage tracking
+- ✅ User management (admin only)
+- ✅ Bilingual support (English/Arabic)
+- ✅ Mobile responsive design
