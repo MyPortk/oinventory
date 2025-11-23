@@ -395,8 +395,10 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                   <div className="flex gap-2 flex-col">
                     {userRole !== 'admin' && (() => {
                       const today = new Date();
+                      today.setHours(0, 0, 0, 0);
                       const startDate = new Date(reservation.startDate);
-                      const isPickupDay = today.toDateString() === startDate.toDateString();
+                      startDate.setHours(0, 0, 0, 0);
+                      const isPickupDay = today.getTime() === startDate.getTime();
                       const hasReceivedEquipment = reservation.checkoutDate || reservation.itemConditionOnReceive;
                       
                       if (hasReceivedEquipment) {
