@@ -168,7 +168,7 @@ export default function InventoryHeader({
                   </DropdownMenuItem>
                 )}
 
-                {userRole === 'developer' && (
+                {(userRole === 'admin' || userRole === 'developer') && (
                   <DropdownMenuItem onClick={() => (window as any).navigateToUsers?.()}>
                     <Users className="w-4 h-4 mr-2" />
                     {t('userManagement')}
