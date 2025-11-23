@@ -613,48 +613,46 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                   {viewMode === 'card' ? <TableIcon className="w-4 h-4 mr-2" /> : <LayoutGrid className="w-4 h-4 mr-2" />}
                   {viewMode === 'card' ? t('tableView') : t('cardView')}
                 </Button>
-                {viewMode === 'table' && (
-                  <Popover open={showColumnSettings} onOpenChange={setShowColumnSettings}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        data-testid="button-column-settings"
-                      >
-                        <Settings className="w-4 h-4" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-56">
-                      <div className="space-y-4">
-                        <h4 className="font-medium text-sm">Column Visibility</h4>
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <label htmlFor="qty-toggle" className="text-sm cursor-pointer">
-                              Quantity
-                            </label>
-                            <Switch
-                              id="qty-toggle"
-                              checked={showQuantityColumn}
-                              onCheckedChange={setShowQuantityColumn}
-                              data-testid="switch-quantity-column"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <label htmlFor="location-toggle" className="text-sm cursor-pointer">
-                              Location
-                            </label>
-                            <Switch
-                              id="location-toggle"
-                              checked={showLocationColumn}
-                              onCheckedChange={setShowLocationColumn}
-                              data-testid="switch-location-column"
-                            />
-                          </div>
+                <Popover open={showColumnSettings} onOpenChange={setShowColumnSettings}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      data-testid="button-column-settings"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-56">
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-sm">Column Visibility</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <label htmlFor="qty-toggle" className="text-sm cursor-pointer">
+                            Quantity
+                          </label>
+                          <Switch
+                            id="qty-toggle"
+                            checked={showQuantityColumn}
+                            onCheckedChange={setShowQuantityColumn}
+                            data-testid="switch-quantity-column"
+                          />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <label htmlFor="location-toggle" className="text-sm cursor-pointer">
+                            Location
+                          </label>
+                          <Switch
+                            id="location-toggle"
+                            checked={showLocationColumn}
+                            onCheckedChange={setShowLocationColumn}
+                            data-testid="switch-location-column"
+                          />
                         </div>
                       </div>
-                    </PopoverContent>
-                  </Popover>
-                )}
+                    </div>
+                  </PopoverContent>
+                </Popover>
                 {userRole === 'admin' && (
                   <>
                     {itemTypeFilter === 'equipment' && (
