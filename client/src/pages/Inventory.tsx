@@ -56,6 +56,10 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   const [checkoutReservation, setCheckoutReservation] = useState<any>(null);
   const [checkoutCondition, setCheckoutCondition] = useState<'good' | 'damage'>('good');
   const [checkoutNotes, setCheckoutNotes] = useState("");
+  const [showReturnDialog, setShowReturnDialog] = useState(false);
+  const [returnReservation, setReturnReservation] = useState<any>(null);
+  const [returnCondition, setReturnCondition] = useState<'good' | 'damage'>('good');
+  const [returnNotes, setReturnNotes] = useState("");
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories', itemTypeFilter],
@@ -75,7 +79,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   const { data: reservations = [] } = useQuery({
     queryKey: ['/api/reservations'],
     queryFn: () => api.reservations.getAll(),
-    enabled: currentView === 'inventory' && userRole !== 'admin'
+    enabled: currentView === 'inventory'
   });
 
   const createItemMutation = useMutation({
@@ -319,6 +323,47 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
       toast({ title: "Equipment receipt confirmed successfully" });
     } catch (error) {
       toast({ title: "Failed to confirm equipment receipt", variant: "destructive" });
+    }
+  };
+
+  const getPendingReturnReservation = (itemId: string) => {
+    return reservations.find(res => {
+      if (res.itemId !== itemId || res.status !== 'approved') return false;
+      if (!res.checkoutDate || res.itemConditionOnReceive === undefined) return false;
+      if (res.itemConditionOnReturn !== undefined) return false; // Already marked as returned
+      return true;
+    });
+  };
+
+  const handleMarkReturned = (item: Item) => {
+    const reservation = getPendingReturnReservation(item.id);
+    if (reservation) {
+      setReturnReservation(reservation);
+      setReturnCondition('good');
+      setReturnNotes("");
+      setShowReturnDialog(true);
+    }
+  };
+
+  const handleConfirmReturn = async () => {
+    if (returnCondition === 'damage' && !returnNotes.trim()) {
+      toast({ title: "Please describe the damage or missing items", variant: "destructive" });
+      return;
+    }
+
+    try {
+      await api.reservations.update(returnReservation.id, {
+        status: 'completed',
+        itemConditionOnReturn: returnCondition,
+        returnNotes: returnNotes || undefined
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ['/api/reservations'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/items'] });
+      setShowReturnDialog(false);
+      toast({ title: "Equipment return confirmed successfully" });
+    } catch (error) {
+      toast({ title: "Failed to confirm equipment return", variant: "destructive" });
     }
   };
 
@@ -608,6 +653,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     onCheckout={item.isEquipment && userRole === 'admin' ? () => handleCheckout(item) : undefined}
                     onCheckin={item.isEquipment && userRole === 'admin' ? () => handleCheckin(item) : undefined}
                     onReceiveEquipment={item.isEquipment && userRole !== 'admin' && getApprovedReservationForPickup(item.id) ? () => handleReceiveEquipment(item) : undefined}
+                    onMarkReturned={item.isEquipment && userRole === 'admin' && getPendingReturnReservation(item.id) ? () => handleMarkReturned(item) : undefined}
                   />
                 ))}
               </div>
@@ -805,6 +851,85 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                   className="bg-gradient-to-r from-[#667eea] to-[#764ba2]"
                 >
                   Confirm Receipt
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showReturnDialog} onOpenChange={setShowReturnDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Confirm Equipment Return</DialogTitle>
+          </DialogHeader>
+          {returnReservation && (
+            <div className="space-y-6">
+              <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg space-y-2 border border-blue-200 dark:border-blue-800">
+                <div><strong>Equipment:</strong> {getItemName(returnReservation.itemId)}</div>
+                <div><strong>Pickup Date & Time:</strong> {format(new Date(returnReservation.startDate), "PPP")} {returnReservation.startTime || "09:00"}</div>
+                <div><strong>Return Date & Time:</strong> {format(new Date(returnReservation.returnDate), "PPP")} {returnReservation.returnTime || "17:00"}</div>
+                <div><strong>Received Condition:</strong> {returnReservation.itemConditionOnReceive}</div>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">Equipment Condition on Return *</Label>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50" onClick={() => setReturnCondition('good')}>
+                    <input 
+                      type="radio" 
+                      name="return-condition" 
+                      value="good"
+                      checked={returnCondition === 'good'}
+                      onChange={() => setReturnCondition('good')}
+                      className="w-4 h-4"
+                    />
+                    <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      Good
+                    </Label>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50" onClick={() => setReturnCondition('damage')}>
+                    <input 
+                      type="radio" 
+                      name="return-condition" 
+                      value="damage"
+                      checked={returnCondition === 'damage'}
+                      onChange={() => setReturnCondition('damage')}
+                      className="w-4 h-4"
+                    />
+                    <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
+                      <AlertCircle className="w-5 h-5 text-red-600" />
+                      Damage or Missing
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              {returnCondition === 'damage' && (
+                <div className="space-y-2 p-4 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
+                  <Label htmlFor="return-damage-notes" className="text-base font-semibold">Please describe the damage or missing items *</Label>
+                  <Textarea
+                    id="return-damage-notes"
+                    value={returnNotes}
+                    onChange={(e) => setReturnNotes(e.target.value)}
+                    placeholder="Describe what damage or items are missing..."
+                    rows={3}
+                    className="resize-none"
+                  />
+                </div>
+              )}
+
+              <div className="flex gap-3 justify-end pt-4 border-t">
+                <Button variant="outline" onClick={() => setShowReturnDialog(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleConfirmReturn}
+                  className="bg-gradient-to-r from-[#667eea] to-[#764ba2]"
+                >
+                  Confirm Return
                 </Button>
               </div>
             </div>

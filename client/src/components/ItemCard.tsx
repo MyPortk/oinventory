@@ -22,6 +22,7 @@ interface ItemCardProps {
   onCheckout?: () => void;
   onCheckin?: () => void;
   onReceiveEquipment?: () => void;
+  onMarkReturned?: () => void;
   userRole: string;
   isEquipment?: boolean;
 }
@@ -48,6 +49,7 @@ export default function ItemCard({
   onCheckout,
   onCheckin,
   onReceiveEquipment,
+  onMarkReturned,
   userRole,
   isEquipment = true,
 }: ItemCardProps) {
@@ -121,55 +123,69 @@ export default function ItemCard({
             {isEquipment ? (
               <>
                 {userRole === 'admin' && (
-                  <div className="flex gap-2 pt-2 flex-wrap">
-                    {status === 'Available' && (
+                  <div className="flex gap-2 pt-2 flex-col">
+                    {onMarkReturned && (
                       <Button
-                        onClick={onCheckout}
-                        variant="default"
+                        variant="outline"
                         size="sm"
-                        className="bg-blue-600 hover:bg-blue-700 flex-1"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Check Out
-                      </Button>
-                    )}
-                    {status === 'In Use' && (
-                      <Button
-                        onClick={onCheckin}
-                        variant="default"
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700 flex-1"
+                        onClick={onMarkReturned}
+                        className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200 w-full"
+                        data-testid={`button-mark-returned-${id}`}
                       >
                         <LogIn className="w-4 h-4 mr-2" />
-                        Check In
+                        Mark Returned
                       </Button>
                     )}
-                    <Button
-                      onClick={() => setShowQRDialog(true)}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                    >
-                      <QrCode className="w-4 h-4 mr-2" />
-                      QR Code
-                    </Button>
-                    <Button
-                      onClick={onEdit}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={onDelete}
-                      variant="destructive"
-                      size="sm"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
-                    </Button>
+                    <div className="flex gap-2 flex-wrap">
+                      {status === 'Available' && (
+                        <Button
+                          onClick={onCheckout}
+                          variant="default"
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700 flex-1"
+                        >
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Check Out
+                        </Button>
+                      )}
+                      {status === 'In Use' && (
+                        <Button
+                          onClick={onCheckin}
+                          variant="default"
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700 flex-1"
+                        >
+                          <LogIn className="w-4 h-4 mr-2" />
+                          Check In
+                        </Button>
+                      )}
+                      <Button
+                        onClick={() => setShowQRDialog(true)}
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                      >
+                        <QrCode className="w-4 h-4 mr-2" />
+                        QR Code
+                      </Button>
+                      <Button
+                        onClick={onEdit}
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit
+                      </Button>
+                      <Button
+                        onClick={onDelete}
+                        variant="destructive"
+                        size="sm"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 )}
                 {userRole !== 'admin' && (
