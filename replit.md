@@ -107,6 +107,21 @@ Preferred communication style: Simple, everyday language.
 
 ### Recent Changes (Nov 23, 2025)
 
+**Email Notification System:**
+- Integrated nodemailer for transactional email sending
+- Created `server/emailService.ts` with three email templates:
+  - **Reservation Request**: Sent to admins when user creates a reservation (includes user details, department, item name, dates, purpose of use)
+  - **Reservation Approved**: Sent to user when admin approves the reservation
+  - **Reservation Rejected**: Sent to user when admin rejects with optional rejection reason
+- Email addresses stored in user table (email field already present in UserManagement)
+- Supports SMTP configuration via environment variables (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM)
+- Falls back to console logging if SMTP not configured (for development)
+
+**Reports Navigation Fix:**
+- Added Reports menu item to all pages (Inventory, Reservations, QR Codes, Maintenance, Activity Logs, User Management)
+- Reports text translated to "Damage Reports" using translation keys
+- Fixed onNavigateToReports prop passing through all pages in App.tsx
+
 **Quantity Tracking Implementation:**
 - Added `quantity` field to items table (defaults to 1)
 - Updated ItemFormDialog to include quantity input with minimum value of 1
@@ -128,6 +143,8 @@ Preferred communication style: Simple, everyday language.
 ## Features Summary
 
 ### Recently Added
+- ✅ Email notification system (reservations, approvals, rejections)
+- ✅ Reports tab visible on all pages for easy navigation
 - ✅ Quantity field with input validation (min: 1)
 - ✅ Column visibility toggles for table view (Quantity, Location)
 - ✅ Quantity display on all item cards
