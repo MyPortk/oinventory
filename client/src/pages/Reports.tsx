@@ -7,6 +7,7 @@ import { Search, ArrowLeft, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { api } from "@/lib/api";
 import InventoryHeader from "@/components/InventoryHeader";
+import DateRangeFilter from "@/components/DateRangeFilter";
 import type { Language } from "@/lib/translations";
 import { useTranslation } from "@/lib/translations";
 
@@ -39,10 +40,29 @@ export default function Reports({
 }: ReportsPageProps) {
   const t = useTranslation(language);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dateRange, setDateRange] = useState<{ startDate: Date; endDate: Date } | null>(null);
+
+  const buildQueryKey = () => {
+    const key = ['/api/damage-reports'];
+    if (dateRange) {
+      key.push(dateRange.startDate.toISOString(), dateRange.endDate.toISOString());
+    }
+    return key;
+  };
 
   const { data: reports = [] } = useQuery({
-    queryKey: ['/api/damage-reports'],
-    queryFn: () => api.damageReports.getAll(),
+    queryKey: buildQueryKey(),
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (dateRange) {
+        params.append('startDate', dateRange.startDate.toISOString());
+        params.append('endDate', dateRange.endDate.toISOString());
+      }
+      const url = `/api/damage-reports${params.toString() ? '?' + params.toString() : ''}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch reports');
+      return response.json();
+    },
   });
 
   const { data: items = [] } = useQuery({
@@ -96,16 +116,20 @@ export default function Reports({
           </p>
         </div>
 
-        <div className="mb-6">
-          <div className="relative max-w-md">
+        <div className="mb-6 flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1 max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
               placeholder="Search by equipment name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-12"
+              data-testid="input-search-reports"
             />
           </div>
+          <DateRangeFilter
+            onDateRangeChange={(range) => setDateRange(range)}
+          />
         </div>
 
         {filteredReports.length === 0 ? (

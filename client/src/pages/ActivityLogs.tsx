@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { api, type ActivityLog } from "@/lib/api";
 import { Clock, User, Package, ArrowRight, History, Trash2, RotateCcw, FileEdit } from "lucide-react";
 import InventoryHeader from "@/components/InventoryHeader";
+import DateRangeFilter from "@/components/DateRangeFilter";
 import type { Language } from "@/lib/translations";
 import { useTranslation } from "@/lib/translations";
 
@@ -30,10 +31,29 @@ export default function ActivityLogs({ userName, userRole, onLogout, onNavigateT
   const t = useTranslation(lang);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [selectedReservation, setSelectedReservation] = useState<string | null>(null);
+  const [dateRange, setDateRange] = useState<{ startDate: Date; endDate: Date } | null>(null);
+
+  const buildQueryKey = () => {
+    const key = ['/api/activity-logs'];
+    if (dateRange) {
+      key.push(dateRange.startDate.toISOString(), dateRange.endDate.toISOString());
+    }
+    return key;
+  };
 
   const { data: logs = [], isLoading, error } = useQuery({
-    queryKey: ['/api/activity-logs'],
-    queryFn: () => api.activityLogs.getAll(),
+    queryKey: buildQueryKey(),
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      if (dateRange) {
+        params.append('startDate', dateRange.startDate.toISOString());
+        params.append('endDate', dateRange.endDate.toISOString());
+      }
+      const url = `/api/activity-logs${params.toString() ? '?' + params.toString() : ''}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch logs');
+      return response.json();
+    },
     refetchInterval: 5000,
   });
 
@@ -82,6 +102,12 @@ export default function ActivityLogs({ userName, userRole, onLogout, onNavigateT
         <div className="mb-6">
           <h1 className="text-3xl font-bold">{t('activityLogHistory')}</h1>
           <p className="text-muted-foreground">{t('completeAuditTrail')}</p>
+        </div>
+
+        <div className="mb-6 flex items-center gap-4">
+          <DateRangeFilter
+            onDateRangeChange={(range) => setDateRange(range)}
+          />
         </div>
 
         <Tabs defaultValue="activity" className="space-y-4">

@@ -1358,7 +1358,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Activity log routes
   app.get("/api/activity-logs", requireAuth, async (req, res) => {
     try {
-      const logs = await storage.getAllActivityLogs();
+      const { startDate, endDate } = req.query;
+      let logs = await storage.getAllActivityLogs();
+      
+      // Filter by date range if provided
+      if (startDate || endDate) {
+        const start = startDate ? new Date(startDate as string) : new Date(0);
+        const end = endDate ? new Date(endDate as string) : new Date(Date.now() + 86400000);
+        
+        logs = logs.filter(log => {
+          const logDate = new Date(log.timestamp);
+          return logDate >= start && logDate <= end;
+        });
+      }
+      
       res.json(logs);
     } catch (error) {
       console.error('Get activity logs error:', error);
@@ -1429,7 +1442,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Damage Reports routes
   app.get('/api/damage-reports', requireAuth, async (req, res) => {
     try {
-      const reports = await storage.getAllDamageReports();
+      const { startDate, endDate } = req.query;
+      let reports = await storage.getAllDamageReports();
+      
+      // Filter by date range if provided
+      if (startDate || endDate) {
+        const start = startDate ? new Date(startDate as string) : new Date(0);
+        const end = endDate ? new Date(endDate as string) : new Date(Date.now() + 86400000);
+        
+        reports = reports.filter(report => {
+          const reportDate = new Date(report.createdAt);
+          return reportDate >= start && reportDate <= end;
+        });
+      }
+      
       res.json(reports);
     } catch (error) {
       console.error('Get damage reports error:', error);
