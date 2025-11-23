@@ -200,7 +200,7 @@ function App() {
             onNavigateToReservations={handleNavigateToReservations}
             onNavigateToActivityLogs={handleNavigateToActivityLogs}
             onNavigateToQRCodes={handleNavigateToQRCodes}
-            currentLanguage={language}
+            language={language}
             onLanguageChange={handleLanguageChange}
           />
         ) : currentView === 'reports' ? (
