@@ -189,6 +189,17 @@ export const translations = {
     damageReports: 'Damage Reports',
     viewAllDamageReports: 'View all damage reports from equipment checkout and return inspections',
     viewDamageReportsReceived: 'View damage reports for equipment you received',
+    
+    // Checkout/Return Dialog
+    equipment: 'Equipment',
+    pickupDateTime: 'Pickup Date & Time',
+    returnDateTime: 'Return Date & Time',
+    purpose: 'Purpose',
+    equipmentCondition: 'Equipment Condition *',
+    good: 'Good',
+    damageOrMissing: 'Damage or Missing',
+    describeDamageDetails: 'Describe what damage or items are missing...',
+    all_items: 'All Items',
   },
   ar: {
     // Header
@@ -378,6 +389,17 @@ export const translations = {
     damageReports: 'تقارير الأضرار',
     viewAllDamageReports: 'عرض جميع تقارير الأضرار من عمليات فحص الاستلام والإرجاع للمعدات',
     viewDamageReportsReceived: 'عرض تقارير الأضرار للمعدات التي استلمتها',
+    
+    // Checkout/Return Dialog
+    equipment: 'المعدات',
+    pickupDateTime: 'تاريخ وقت الالتقاط',
+    returnDateTime: 'تاريخ وقت الإرجاع',
+    purpose: 'الغرض',
+    equipmentCondition: 'حالة المعدات *',
+    good: 'جيدة',
+    damageOrMissing: 'تالفة أو مفقودة',
+    describeDamageDetails: 'صف الضرر أو العناصر المفقودة...',
+    all_items: 'جميع العناصر',
   }
 };
 

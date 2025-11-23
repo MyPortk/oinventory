@@ -862,14 +862,14 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
           {checkoutReservation && (
             <div className="space-y-6">
               <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg space-y-2 border border-blue-200 dark:border-blue-800">
-                <div><strong>Equipment:</strong> {getItemName(checkoutReservation.itemId)}</div>
-                <div><strong>Pickup Date & Time:</strong> {format(new Date(checkoutReservation.startDate), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
-                <div><strong>Return Date & Time:</strong> {format(new Date(checkoutReservation.returnDate), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
-                <div><strong>Purpose:</strong> {checkoutReservation.purposeOfUse}</div>
+                <div><strong>{t('equipment')}:</strong> {getItemName(checkoutReservation.itemId)}</div>
+                <div><strong>{t('pickupDateTime')}:</strong> {format(new Date(checkoutReservation.startDate), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
+                <div><strong>{t('returnDateTime')}:</strong> {format(new Date(checkoutReservation.returnDate), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
+                <div><strong>{t('purpose')}:</strong> {checkoutReservation.purposeOfUse}</div>
               </div>
 
               <div className="space-y-3">
-                <Label className="text-base font-semibold">Equipment Condition *</Label>
+                <Label className="text-base font-semibold">{t('equipmentCondition')}</Label>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50" onClick={() => setCheckoutCondition('good')}>
                     <input 
@@ -882,7 +882,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     />
                     <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
                       <CheckCircle className="w-5 h-5 text-green-600" />
-                      Good
+                      {t('good')}
                     </Label>
                   </div>
 
@@ -897,7 +897,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     />
                     <Label className="cursor-pointer font-medium flex items-center gap-2 mb-0">
                       <AlertCircle className="w-5 h-5 text-red-600" />
-                      Damage or Missing
+                      {t('damageOrMissing')}
                     </Label>
                   </div>
                 </div>
@@ -910,7 +910,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     id="damage-notes"
                     value={checkoutNotes}
                     onChange={(e) => setCheckoutNotes(e.target.value)}
-                    placeholder="Describe what damage or items are missing..."
+                    placeholder={t('describeDamageDetails')}
                     rows={3}
                     className="resize-none"
                   />
@@ -919,7 +919,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
 
               <div className="flex gap-3 justify-end pt-4 border-t">
                 <Button variant="outline" onClick={() => setShowCheckoutDialog(false)}>
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button 
                   onClick={handleConfirmCheckout}
@@ -989,7 +989,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     id="return-damage-notes"
                     value={returnNotes}
                     onChange={(e) => setReturnNotes(e.target.value)}
-                    placeholder="Describe what damage or items are missing..."
+                    placeholder={t('describeDamageDetails')}
                     rows={3}
                     className="resize-none"
                   />
