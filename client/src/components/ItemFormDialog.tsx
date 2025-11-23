@@ -51,7 +51,7 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
     enabled: open
   });
 
-  // Combine subTypes from default and custom categories
+  // Combine subTypes from default and custom categories - ONLY for the selected equipment type
   const allSubTypes = [
     // Include default categories of the same type
     ...Object.values(CATEGORIES)
@@ -61,9 +61,9 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
         return isEquipment === isEquipmentCategory;
       })
       .flatMap(cat => cat.subTypes),
-    // Include custom categories subTypes
+    // Include ONLY custom categories matching the equipment type
     ...categories
-      .filter(cat => cat.isCustom)
+      .filter(cat => cat.isCustom && cat.isEquipment === isEquipment)
       .flatMap(cat => cat.subTypes)
   ];
   const uniqueSubTypes = Array.from(new Set(allSubTypes)).sort();
