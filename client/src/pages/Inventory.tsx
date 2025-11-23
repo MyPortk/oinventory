@@ -14,7 +14,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Search, FolderPlus, Pencil, Trash2, LayoutGrid, TableIcon, CheckCircle, AlertCircle } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Plus, Search, FolderPlus, Pencil, Trash2, LayoutGrid, TableIcon, CheckCircle, AlertCircle, Settings } from "lucide-react";
 import { api, type Item } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import ReservationFormDialog from "@/components/ReservationFormDialog";
@@ -62,6 +64,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   const [returnNotes, setReturnNotes] = useState("");
   const [showQuantityColumn, setShowQuantityColumn] = useState(true);
   const [showLocationColumn, setShowLocationColumn] = useState(true);
+  const [showColumnSettings, setShowColumnSettings] = useState(false);
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories', itemTypeFilter],
@@ -611,24 +614,46 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                   {viewMode === 'card' ? t('tableView') : t('cardView')}
                 </Button>
                 {viewMode === 'table' && (
-                  <>
-                    <Button
-                      onClick={() => setShowQuantityColumn(!showQuantityColumn)}
-                      variant={showQuantityColumn ? 'default' : 'outline'}
-                      size="sm"
-                      data-testid="button-toggle-quantity-column"
-                    >
-                      Qty
-                    </Button>
-                    <Button
-                      onClick={() => setShowLocationColumn(!showLocationColumn)}
-                      variant={showLocationColumn ? 'default' : 'outline'}
-                      size="sm"
-                      data-testid="button-toggle-location-column"
-                    >
-                      Location
-                    </Button>
-                  </>
+                  <Popover open={showColumnSettings} onOpenChange={setShowColumnSettings}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        data-testid="button-column-settings"
+                      >
+                        <Settings className="w-4 h-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-56">
+                      <div className="space-y-4">
+                        <h4 className="font-medium text-sm">Column Visibility</h4>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <label htmlFor="qty-toggle" className="text-sm cursor-pointer">
+                              Quantity
+                            </label>
+                            <Switch
+                              id="qty-toggle"
+                              checked={showQuantityColumn}
+                              onCheckedChange={setShowQuantityColumn}
+                              data-testid="switch-quantity-column"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <label htmlFor="location-toggle" className="text-sm cursor-pointer">
+                              Location
+                            </label>
+                            <Switch
+                              id="location-toggle"
+                              checked={showLocationColumn}
+                              onCheckedChange={setShowLocationColumn}
+                              data-testid="switch-location-column"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 )}
                 {userRole === 'admin' && (
                   <>
