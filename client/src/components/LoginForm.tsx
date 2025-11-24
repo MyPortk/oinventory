@@ -183,6 +183,7 @@ export default function LoginForm({ onLogin, isLoading = false, error }: LoginFo
           </div>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </>
   );
 }
