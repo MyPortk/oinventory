@@ -38,17 +38,20 @@ app.use(
     store: new PostgresStore({
       pool,
       tableName: 'session',
-      createTableIfMissing: true
+      createTableIfMissing: true,
+      ttl: 24 * 60 * 60 * 7 // 7 days in seconds
     }),
     secret: process.env.SESSION_SECRET || 'inventory-management-secret-key',
     resave: false,
     saveUninitialized: false,
+    name: 'sessionId',
+    proxy: isProduction, // Trust proxy on production (Render uses proxy)
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      domain: undefined
+      sameSite: 'lax', // Use lax for cross-site cookie compatibility
+      domain: isProduction ? undefined : undefined // Don't restrict domain
     }
   })
 );
