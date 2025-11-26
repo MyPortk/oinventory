@@ -68,8 +68,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories', itemTypeFilter],
-    queryFn: () => api.categories.getAll(itemTypeFilter === 'equipment'),
-    enabled: currentView === 'categories'
+    queryFn: () => api.categories.getAll(itemTypeFilter === 'equipment')
   });
 
   const { data: items = [] } = useQuery({
