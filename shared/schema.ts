@@ -226,7 +226,7 @@ export const EQUIPMENT_CATEGORIES = {
   cameras: {
     name: 'Cameras',
     subTypes: ['Camera', 'Action Cam'] as const,
-    image: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop'
   },
   lenses: {
     name: 'Lenses',
