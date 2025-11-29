@@ -64,20 +64,6 @@ export default function InventoryHeader({
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-1">
-            {!hideViewToggle && (
-              <div className="flex gap-1 bg-white/10 rounded-lg p-1 mr-2">
-                <Button
-                  variant={currentView === 'categories' ? 'secondary' : 'ghost'}
-                  size="sm"
-                  onClick={() => onViewChange('categories')}
-                  className={currentView === 'categories' ? '' : 'text-white hover:bg-white/20'}
-                  data-testid="button-view-categories"
-                >
-                  {t('categories')}
-                </Button>
-              </div>
-            )}
-
             <NotificationBell language={language} />
 
             {/* Language Toggle */}
@@ -195,22 +181,6 @@ export default function InventoryHeader({
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-3 space-y-2 pb-3 border-t border-white/20 pt-3">
-            {!hideViewToggle && (
-              <div className="flex gap-2 bg-white/10 rounded-lg p-2">
-                <Button
-                  variant={currentView === 'categories' ? 'secondary' : 'ghost'}
-                  size="sm"
-                  onClick={() => {
-                    onViewChange('categories');
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`flex-1 ${currentView === 'categories' ? '' : 'text-white hover:bg-white/20'}`}
-                >
-                  {t('categories')}
-                </Button>
-              </div>
-            )}
-
             <div className="space-y-1">
               {onNavigateToReservations && (
                 <Button
