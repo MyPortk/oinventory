@@ -231,7 +231,7 @@ export const EQUIPMENT_CATEGORIES = {
   lenses: {
     name: 'Lenses',
     subTypes: ['Lenses', 'Filter', 'Digital Filter'] as const,
-    image: 'https://images.unsplash.com/photo-1617005082133-548c4dd27f35?w=800&auto=format&fit=crop'
+    image: 'https://lh3.googleusercontent.com/d/1-DGepObAXbNEhqw0mIP_tyIcfimwrx2C'
   },
   tripods_stands: {
     name: 'Tripods & Stands',
