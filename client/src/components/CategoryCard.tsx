@@ -54,7 +54,7 @@ export default function CategoryCard({
             <Badge 
               key={index} 
               variant="secondary"
-              className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white text-[11px] px-2 py-0.5"
+              className="bg-[#6f6ee6] text-white text-[11px] px-2 py-0.5"
               data-testid={`badge-subtype-${subType.toLowerCase().replace(/\s+/g, '-')}`}
             >
               {subType}
