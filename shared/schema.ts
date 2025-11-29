@@ -225,7 +225,7 @@ export const EQUIPMENT_CATEGORIES = {
   cameras: {
     name: 'Cameras',
     subTypes: ['Camera', 'Action Cam'] as const,
-    image: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1-Z87CTvH0wPvHS9_8kw8mLaKCKXjqil1'
   },
   lenses: {
     name: 'Lenses',
@@ -235,52 +235,52 @@ export const EQUIPMENT_CATEGORIES = {
   tripods_stands: {
     name: 'Tripods & Stands',
     subTypes: ['Stands', 'Monopod', 'Small Tripods', 'Backdrop Stands'] as const,
-    image: 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1FaliGAGLkUnW9KDxxHMvw3KW2DfoH8c1'
   },
   grips: {
     name: 'Grips',
     subTypes: ['Crane', 'Dolly / Wheels Tripod', 'Shoulder Rig', 'Spider Rig', 'Gimbal', 'Slider', 'Rig', 'Rig & Stabilization Gear', 'Camera Support Equipment'] as const,
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1KRw5YhBCA88dYsDDyFZlp6DOnE2Awmfq'
   },
   audio: {
     name: 'Audio',
     subTypes: ['Mic', 'Microphone', 'Wireless Device', 'Recorder', 'Mixer', 'Boom Arm', 'Transmitter', 'Receiver'] as const,
-    image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1gnem5s0ozRwdCf55Nix41RPyhawL6ZGH'
   },
   lighting: {
     name: 'Lighting',
     subTypes: ['LED', 'LED Light', 'LED Ring', 'RGB Lights', 'Soft Box', 'Light', 'Lighting Equipment'] as const,
-    image: 'https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=15BnN5js0c8P5OlBODZuCb8JPAqY3lSOM'
   },
   studio_accessories: {
     name: 'Studio Accessories',
     subTypes: ['Clapper', 'Reflector', 'Kit', 'Background Screen'] as const,
-    image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1YVvQZqFCuLWnmeRrh76Wrt7qjJAoi3kC'
   },
   bags_cases: {
     name: 'Bags & Cases',
     subTypes: ['Bag', 'Bags & Cases', 'Backpacks'] as const,
-    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=18Am1k51Q8O37uMHwZhyo4UtjJbBaVJ8e'
   },
   batteries_power: {
     name: 'Batteries & Power',
     subTypes: ['Battery', 'Charger', 'Power Bank', 'V-Mount Battery', 'Battery Power Tester', 'Power & Accessories', 'Inverter'] as const,
-    image: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1OxWWTanWaURwvd30tdxuIiLkMNJVtdI2'
   },
   cables_adapters: {
     name: 'Cables & Adapters',
     subTypes: ['Cable', 'Socket', 'Extension'] as const,
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1y8yKviZfE6HrOH4AZ3tbO0DlC_wPf4YV'
   },
   monitors_displays: {
     name: 'Monitors & Displays',
     subTypes: ['Monitor', 'Screen', 'Computing & Display'] as const,
-    image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1YbxGiUSJi4evWIAjQ_9KjiZxjV6gRayG'
   },
   storage_devices: {
     name: 'Storage Devices',
     subTypes: ['Storage Devices'] as const,
-    image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1ZIaWGZzBSZcap9GcNWA4mNxD4SSpsVju'
   }
 } as const;
 
@@ -288,37 +288,37 @@ export const ASSET_CATEGORIES = {
   softwares: {
     name: 'Softwares',
     subTypes: ['Editing Software', 'Design Software', 'Office Software'] as const,
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1Alz0ej_MoYq6cRlMhopITCC4Sg8Ot97k'
   },
   office_supplies: {
     name: 'Office Supplies',
     subTypes: ['Stationery', 'Desk Items', 'Printer Supplies'] as const,
-    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1RZriQu75nBvdDofV8tRk1sfwF1Ceujun'
   },
   pantry: {
     name: 'Pantry',
     subTypes: ['Snacks', 'Disposable Items'] as const,
-    image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1wwNa5v7FSsqzHBgO3X1GgVBqQ3Ph9E2E'
   },
   transportation: {
     name: 'Transportation',
     subTypes: ['Vehicles', 'Delivery Equipment', 'Travel Accessories'] as const,
-    image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1B61BfekuF03VybvTy_PrPbN4FOiPDrsR'
   },
   furniture: {
     name: 'Furniture',
     subTypes: ['Chairs', 'Tables', 'Storage Units'] as const,
-    image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1Xf2ofNhcv2ETW-VnE8aNiI15HWTWhMod'
   },
   communication: {
     name: 'Communication',
     subTypes: ['SIM Cards', 'Mobile Devices', 'Internet Devices'] as const,
-    image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1PGXm8SL4bs3v5xYXhoEY5ojpKU1s7dL0'
   },
   uniforms_branding: {
     name: 'Uniforms & Branding',
     subTypes: ['Uniforms', 'Badges', 'Tags', 'T-Shirts', 'Tote Bags', 'Uniform Bags'] as const,
-    image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&auto=format&fit=crop'
+    image: 'https://drive.google.com/uc?export=view&id=1VMOY_1cNAfgWoLK7yC1jco3rTcKJg-Ss'
   }
 } as const;
 
