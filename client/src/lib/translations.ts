@@ -39,7 +39,7 @@ export const translations = {
     available: 'Available',
     inUse: 'In Use',
     reserved: 'Reserved',
-    disabled: 'Disabled',
+    maintenance: 'Maintenance',
 
     // Reservations
     newReservation: 'New Reservation',
@@ -244,7 +244,7 @@ export const translations = {
     available: 'متاح',
     inUse: 'قيد الاستخدام',
     reserved: 'محجوز',
-    disabled: 'معطل',
+    maintenance: 'صيانة',
 
     // Reservations
     newReservation: 'حجز جديد',

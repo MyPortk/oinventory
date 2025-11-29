@@ -158,11 +158,10 @@ export class MemStorage implements IStorage {
   }
 
   async softDeleteItem(id: string, userId: string): Promise<boolean> {
-    const [item] = await db.update(items)
-      .set({ status: 'Disabled', updatedAt: new Date() })
+    const result = await db.delete(items)
       .where(eq(items.id, id))
       .returning();
-    return !!item;
+    return result.length > 0;
   }
 
   async getAllReservations(): Promise<Reservation[]> {

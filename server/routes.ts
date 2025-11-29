@@ -225,8 +225,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           action = 'Marked as Reserved';
         } else if (validatedData.status === 'Maintenance') {
           action = 'Sent to Maintenance';
-        } else if (validatedData.status === 'Disabled') {
-          action = 'Disabled';
         }
 
         try {

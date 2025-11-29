@@ -219,7 +219,7 @@ export type ReservationStatusHistory = typeof reservationStatusHistory.$inferSel
 export type InsertDamageReport = z.infer<typeof insertDamageReportSchema>;
 export type DamageReport = typeof damageReports.$inferSelect;
 
-export const ITEM_STATUSES = ['Available', 'In Use', 'Reserved', 'Maintenance', 'Disabled'] as const;
+export const ITEM_STATUSES = ['Available', 'In Use', 'Reserved', 'Maintenance'] as const;
 
 export const EQUIPMENT_CATEGORIES = {
   cameras: {
