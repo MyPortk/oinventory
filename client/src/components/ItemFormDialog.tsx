@@ -42,7 +42,6 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
     status: item?.status || 'Available',
     location: item?.location || '',
     notes: item?.notes || '',
-    quantity: (item as any)?.quantity || '1',
     isEquipment: item?.isEquipment !== undefined ? item.isEquipment : isEquipment
   });
 
@@ -78,7 +77,6 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
         status: item.status,
         location: item.location || '',
         notes: item.notes || '',
-        quantity: (item as any)?.quantity || '1',
         isEquipment: item.isEquipment !== undefined ? item.isEquipment : isEquipment
       });
     } else {
@@ -89,7 +87,6 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
         status: 'Available',
         location: '',
         notes: '',
-        quantity: '1',
         isEquipment: isEquipment
       });
     }
@@ -255,19 +252,6 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
               placeholder="Additional notes about the item"
               rows={3}
               data-testid="textarea-notes"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="quantity">{t('quantity_label')}</Label>
-            <Input
-              id="quantity"
-              type="number"
-              min="1"
-              value={formData.quantity}
-              onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-              placeholder="Enter quantity (e.g., 2 for 2 cameras)"
-              data-testid="input-quantity"
             />
           </div>
 

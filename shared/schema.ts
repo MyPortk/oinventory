@@ -22,7 +22,6 @@ export const items = pgTable("items", {
   status: text("status").notNull().default('Available'),
   location: text("location"),
   notes: text("notes"),
-  quantity: text("quantity").notNull().default('1'),
   isEquipment: boolean("is_equipment").notNull().default(true),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`)

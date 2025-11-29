@@ -62,7 +62,6 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   const [returnReservation, setReturnReservation] = useState<any>(null);
   const [returnCondition, setReturnCondition] = useState<'good' | 'damage'>('good');
   const [returnNotes, setReturnNotes] = useState("");
-  const [showQuantityColumn, setShowQuantityColumn] = useState(true);
   const [showLocationColumn, setShowLocationColumn] = useState(true);
   const [showColumnSettings, setShowColumnSettings] = useState(false);
 
@@ -627,17 +626,6 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                       <h4 className="font-medium text-sm">{t('columnVisibility')}</h4>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <label htmlFor="qty-toggle" className="text-sm cursor-pointer">
-                            {t('quantity')}
-                          </label>
-                          <Switch
-                            id="qty-toggle"
-                            checked={showQuantityColumn}
-                            onCheckedChange={setShowQuantityColumn}
-                            data-testid="switch-quantity-column"
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
                           <label htmlFor="location-toggle" className="text-sm cursor-pointer">
                             {t('location')}
                           </label>
@@ -705,7 +693,6 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     status={item.status}
                     location={item.location || undefined}
                     notes={item.notes || undefined}
-                    quantity={(item as any)?.quantity || 1}
                     userRole={userRole}
                     isEquipment={item.isEquipment}
                     language={currentLanguage}
@@ -733,7 +720,6 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                       <TableHead>{t('name')}</TableHead>
                       <TableHead>{t('type')}</TableHead>
                       <TableHead>{t('status')}</TableHead>
-                      {showQuantityColumn && <TableHead>{t('quantity')}</TableHead>}
                       {showLocationColumn && <TableHead>{t('location')}</TableHead>}
                       {userRole === 'admin' && <TableHead className="text-right">{t('actions')}</TableHead>}
                     </TableRow>
@@ -754,7 +740,6 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                             {item.status}
                           </span>
                         </TableCell>
-                        {showQuantityColumn && <TableCell className="font-medium">{(item as any)?.quantity || 1}</TableCell>}
                         {showLocationColumn && <TableCell>{item.location || '-'}</TableCell>}
                         {userRole === 'admin' && (
                           <TableCell className="text-right">
