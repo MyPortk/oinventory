@@ -46,7 +46,12 @@ export const reservations = pgTable("reservations", {
   itemConditionOnReturn: text("item_condition_on_return"),
   returnNotes: text("return_notes"),
   checkoutDate: timestamp("checkout_date"),
-  returnedDate: timestamp("returned_date")
+  returnedDate: timestamp("returned_date"),
+  deliveryRequired: text("delivery_required").default('no'),
+  deliveryLocation: text("delivery_location"),
+  deliveryStreet: text("delivery_street"),
+  deliveryArea: text("delivery_area"),
+  googleMapLink: text("google_map_link")
 });
 
 export const categories = pgTable("categories", {

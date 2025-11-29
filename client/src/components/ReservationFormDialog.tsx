@@ -16,7 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 interface ReservationFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: { itemId: string; startDate: Date; returnDate: Date; startTime?: string; returnTime?: string; purposeOfUse?: string; notes?: string }) => void;
+  onSubmit: (data: { itemId: string; startDate: Date; returnDate: Date; startTime?: string; returnTime?: string; purposeOfUse?: string; notes?: string; deliveryRequired?: string; deliveryLocation?: string; deliveryStreet?: string; deliveryArea?: string; googleMapLink?: string }) => void;
   items: Item[];
 }
 
@@ -33,6 +33,11 @@ export default function ReservationFormDialog({
   const [returnTime, setReturnTime] = useState("17:00");
   const [purposeOfUse, setPurposeOfUse] = useState("");
   const [notes, setNotes] = useState("");
+  const [showDelivery, setShowDelivery] = useState(false);
+  const [deliveryLocation, setDeliveryLocation] = useState("");
+  const [deliveryStreet, setDeliveryStreet] = useState("");
+  const [deliveryArea, setDeliveryArea] = useState("");
+  const [googleMapLink, setGoogleMapLink] = useState("");
 
   // Auto-select item if only one item is provided (from reserve button)
   useEffect(() => {
@@ -77,7 +82,12 @@ export default function ReservationFormDialog({
       startTime: startTime || undefined,
       returnTime: returnTime || undefined,
       purposeOfUse: purposeOfUse.trim(),
-      notes: notes.trim() || undefined
+      notes: notes.trim() || undefined,
+      deliveryRequired: showDelivery ? 'yes' : 'no',
+      deliveryLocation: deliveryLocation.trim() || undefined,
+      deliveryStreet: deliveryStreet.trim() || undefined,
+      deliveryArea: deliveryArea.trim() || undefined,
+      googleMapLink: googleMapLink.trim() || undefined
     });
     
     setItemId("");
@@ -87,6 +97,11 @@ export default function ReservationFormDialog({
     setReturnTime("17:00");
     setPurposeOfUse("");
     setNotes("");
+    setShowDelivery(false);
+    setDeliveryLocation("");
+    setDeliveryStreet("");
+    setDeliveryArea("");
+    setGoogleMapLink("");
   };
 
   const handleClose = () => {
@@ -97,6 +112,11 @@ export default function ReservationFormDialog({
     setReturnTime("17:00");
     setPurposeOfUse("");
     setNotes("");
+    setShowDelivery(false);
+    setDeliveryLocation("");
+    setDeliveryStreet("");
+    setDeliveryArea("");
+    setGoogleMapLink("");
     onClose();
   };
 
