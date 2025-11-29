@@ -61,7 +61,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
   const [checkoutNotes, setCheckoutNotes] = useState("");
 
   const createReservationMutation = useMutation({
-    mutationFn: (data: { itemId: string; startDate: Date; returnDate: Date; startTime?: string; returnTime?: string; purposeOfUse?: string; notes?: string }) => api.reservations.create(data),
+    mutationFn: (data: any) => api.reservations.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/reservations'] });
       queryClient.invalidateQueries({ queryKey: ['/api/items'] });
@@ -365,6 +365,31 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                     {reservation.notes && (
                       <div className="col-span-2 text-muted-foreground">
                         <strong>{t('notes')}:</strong> {reservation.notes}
+                      </div>
+                    )}
+                    {reservation.deliveryRequired === 'yes' && (
+                      <div className="col-span-2 border-t pt-3 mt-3 space-y-2">
+                        <div className="font-semibold text-foreground mb-2">📍 Delivery Information</div>
+                        <div className="text-muted-foreground">
+                          <strong>Location:</strong> {reservation.deliveryLocation}
+                        </div>
+                        {reservation.deliveryStreet && (
+                          <div className="text-muted-foreground">
+                            <strong>Street:</strong> {reservation.deliveryStreet}
+                          </div>
+                        )}
+                        {reservation.deliveryArea && (
+                          <div className="text-muted-foreground">
+                            <strong>Area:</strong> {reservation.deliveryArea}
+                          </div>
+                        )}
+                        {reservation.googleMapLink && (
+                          <div className="text-muted-foreground">
+                            <a href={reservation.googleMapLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                              View on Google Maps →
+                            </a>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

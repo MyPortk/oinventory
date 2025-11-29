@@ -309,6 +309,68 @@ export default function ReservationFormDialog({
             />
           </div>
 
+          <div className="space-y-3 border-t pt-4">
+            <div className="flex items-center gap-2">
+              <input 
+                type="checkbox" 
+                id="delivery" 
+                checked={showDelivery}
+                onChange={(e) => setShowDelivery(e.target.checked)}
+                className="w-4 h-4 rounded"
+              />
+              <Label htmlFor="delivery" className="cursor-pointer">Request Delivery</Label>
+            </div>
+
+            {showDelivery && (
+              <div className="space-y-3 bg-muted p-3 rounded">
+                <div className="space-y-2">
+                  <Label htmlFor="location">Delivery Location</Label>
+                  <input
+                    id="location"
+                    type="text"
+                    value={deliveryLocation}
+                    onChange={(e) => setDeliveryLocation(e.target.value)}
+                    placeholder="e.g., Building A, Studio 3"
+                    className="w-full border rounded-md px-3 py-2 text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="street">Street / Road</Label>
+                  <input
+                    id="street"
+                    type="text"
+                    value={deliveryStreet}
+                    onChange={(e) => setDeliveryStreet(e.target.value)}
+                    placeholder="e.g., Al Corniche Street"
+                    className="w-full border rounded-md px-3 py-2 text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="area">Area / District</Label>
+                  <input
+                    id="area"
+                    type="text"
+                    value={deliveryArea}
+                    onChange={(e) => setDeliveryArea(e.target.value)}
+                    placeholder="e.g., West Bay, Lusail"
+                    className="w-full border rounded-md px-3 py-2 text-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="maplink">Google Maps Link (Optional)</Label>
+                  <input
+                    id="maplink"
+                    type="url"
+                    value={googleMapLink}
+                    onChange={(e) => setGoogleMapLink(e.target.value)}
+                    placeholder="Paste Google Maps link..."
+                    className="w-full border rounded-md px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="flex gap-3 justify-end">
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
