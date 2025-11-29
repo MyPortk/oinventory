@@ -155,9 +155,9 @@ export default function Reports({
                   <div className="space-y-2 text-sm md:text-base">
                     <div><strong>Report Type:</strong> {report.reportType === 'user-damage' ? 'User Reported (Pickup)' : 'Admin Reported (Return)'}</div>
                     <div><strong>Reported Date:</strong> {format(new Date(report.createdAt), "PPP p")}</div>
-                    <div className="bg-muted p-3 rounded">
-                      <strong className="block mb-1">Description:</strong> 
-                      <p className="text-sm md:text-base">{report.description}</p>
+                    <div className="bg-red-50 dark:bg-red-950 p-3 rounded border border-red-200 dark:border-red-800">
+                      <strong className="block mb-1 text-red-700 dark:text-red-300">Description:</strong> 
+                      <p className="text-sm md:text-base text-red-600 dark:text-red-400">{report.description}</p>
                     </div>
                   </div>
                 </div>
