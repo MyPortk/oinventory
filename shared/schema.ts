@@ -225,7 +225,7 @@ export const EQUIPMENT_CATEGORIES = {
   cameras: {
     name: 'Cameras',
     subTypes: ['Camera', 'Action Cam'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1-Z87CTvH0wPvHS9_8kw8mLaKCKXjqil1'
+    image: 'https://lh3.googleusercontent.com/d/1-Z87CTvH0wPvHS9_8kw8mLaKCKXjqil1'
   },
   lenses: {
     name: 'Lenses',
@@ -235,52 +235,52 @@ export const EQUIPMENT_CATEGORIES = {
   tripods_stands: {
     name: 'Tripods & Stands',
     subTypes: ['Stands', 'Monopod', 'Small Tripods', 'Backdrop Stands'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1FaliGAGLkUnW9KDxxHMvw3KW2DfoH8c1'
+    image: 'https://lh3.googleusercontent.com/d/1FaliGAGLkUnW9KDxxHMvw3KW2DfoH8c1'
   },
   grips: {
     name: 'Grips',
     subTypes: ['Crane', 'Dolly / Wheels Tripod', 'Shoulder Rig', 'Spider Rig', 'Gimbal', 'Slider', 'Rig', 'Rig & Stabilization Gear', 'Camera Support Equipment'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1KRw5YhBCA88dYsDDyFZlp6DOnE2Awmfq'
+    image: 'https://lh3.googleusercontent.com/d/1KRw5YhBCA88dYsDDyFZlp6DOnE2Awmfq'
   },
   audio: {
     name: 'Audio',
     subTypes: ['Mic', 'Microphone', 'Wireless Device', 'Recorder', 'Mixer', 'Boom Arm', 'Transmitter', 'Receiver'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1gnem5s0ozRwdCf55Nix41RPyhawL6ZGH'
+    image: 'https://lh3.googleusercontent.com/d/1gnem5s0ozRwdCf55Nix41RPyhawL6ZGH'
   },
   lighting: {
     name: 'Lighting',
     subTypes: ['LED', 'LED Light', 'LED Ring', 'RGB Lights', 'Soft Box', 'Light', 'Lighting Equipment'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=15BnN5js0c8P5OlBODZuCb8JPAqY3lSOM'
+    image: 'https://lh3.googleusercontent.com/d/15BnN5js0c8P5OlBODZuCb8JPAqY3lSOM'
   },
   studio_accessories: {
     name: 'Studio Accessories',
     subTypes: ['Clapper', 'Reflector', 'Kit', 'Background Screen'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1YVvQZqFCuLWnmeRrh76Wrt7qjJAoi3kC'
+    image: 'https://lh3.googleusercontent.com/d/1YVvQZqFCuLWnmeRrh76Wrt7qjJAoi3kC'
   },
   bags_cases: {
     name: 'Bags & Cases',
     subTypes: ['Bag', 'Bags & Cases', 'Backpacks'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=18Am1k51Q8O37uMHwZhyo4UtjJbBaVJ8e'
+    image: 'https://lh3.googleusercontent.com/d/18Am1k51Q8O37uMHwZhyo4UtjJbBaVJ8e'
   },
   batteries_power: {
     name: 'Batteries & Power',
     subTypes: ['Battery', 'Charger', 'Power Bank', 'V-Mount Battery', 'Battery Power Tester', 'Power & Accessories', 'Inverter'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1OxWWTanWaURwvd30tdxuIiLkMNJVtdI2'
+    image: 'https://lh3.googleusercontent.com/d/1OxWWTanWaURwvd30tdxuIiLkMNJVtdI2'
   },
   cables_adapters: {
     name: 'Cables & Adapters',
     subTypes: ['Cable', 'Socket', 'Extension'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1y8yKviZfE6HrOH4AZ3tbO0DlC_wPf4YV'
+    image: 'https://lh3.googleusercontent.com/d/1y8yKviZfE6HrOH4AZ3tbO0DlC_wPf4YV'
   },
   monitors_displays: {
     name: 'Monitors & Displays',
     subTypes: ['Monitor', 'Screen', 'Computing & Display'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1YbxGiUSJi4evWIAjQ_9KjiZxjV6gRayG'
+    image: 'https://lh3.googleusercontent.com/d/1YbxGiUSJi4evWIAjQ_9KjiZxjV6gRayG'
   },
   storage_devices: {
     name: 'Storage Devices',
     subTypes: ['Storage Devices'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1ZIaWGZzBSZcap9GcNWA4mNxD4SSpsVju'
+    image: 'https://lh3.googleusercontent.com/d/1ZIaWGZzBSZcap9GcNWA4mNxD4SSpsVju'
   }
 } as const;
 
@@ -288,37 +288,37 @@ export const ASSET_CATEGORIES = {
   softwares: {
     name: 'Softwares',
     subTypes: ['Editing Software', 'Design Software', 'Office Software'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1Alz0ej_MoYq6cRlMhopITCC4Sg8Ot97k'
+    image: 'https://lh3.googleusercontent.com/d/1Alz0ej_MoYq6cRlMhopITCC4Sg8Ot97k'
   },
   office_supplies: {
     name: 'Office Supplies',
     subTypes: ['Stationery', 'Desk Items', 'Printer Supplies'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1RZriQu75nBvdDofV8tRk1sfwF1Ceujun'
+    image: 'https://lh3.googleusercontent.com/d/1RZriQu75nBvdDofV8tRk1sfwF1Ceujun'
   },
   pantry: {
     name: 'Pantry',
     subTypes: ['Snacks', 'Disposable Items'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1wwNa5v7FSsqzHBgO3X1GgVBqQ3Ph9E2E'
+    image: 'https://lh3.googleusercontent.com/d/1wwNa5v7FSsqzHBgO3X1GgVBqQ3Ph9E2E'
   },
   transportation: {
     name: 'Transportation',
     subTypes: ['Vehicles', 'Delivery Equipment', 'Travel Accessories'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1B61BfekuF03VybvTy_PrPbN4FOiPDrsR'
+    image: 'https://lh3.googleusercontent.com/d/1B61BfekuF03VybvTy_PrPbN4FOiPDrsR'
   },
   furniture: {
     name: 'Furniture',
     subTypes: ['Chairs', 'Tables', 'Storage Units'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1Xf2ofNhcv2ETW-VnE8aNiI15HWTWhMod'
+    image: 'https://lh3.googleusercontent.com/d/1Xf2ofNhcv2ETW-VnE8aNiI15HWTWhMod'
   },
   communication: {
     name: 'Communication',
     subTypes: ['SIM Cards', 'Mobile Devices', 'Internet Devices'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1PGXm8SL4bs3v5xYXhoEY5ojpKU1s7dL0'
+    image: 'https://lh3.googleusercontent.com/d/1PGXm8SL4bs3v5xYXhoEY5ojpKU1s7dL0'
   },
   uniforms_branding: {
     name: 'Uniforms & Branding',
     subTypes: ['Uniforms', 'Badges', 'Tags', 'T-Shirts', 'Tote Bags', 'Uniform Bags'] as const,
-    image: 'https://drive.google.com/uc?export=view&id=1VMOY_1cNAfgWoLK7yC1jco3rTcKJg-Ss'
+    image: 'https://lh3.googleusercontent.com/d/1VMOY_1cNAfgWoLK7yC1jco3rTcKJg-Ss'
   }
 } as const;
 
