@@ -86,61 +86,40 @@ export async function sendReservationRequestEmail(
           </div>
           
           <div class="body">
+            <p style="color: #555; margin-bottom: 20px;">A new reservation request has been submitted and is pending your approval.</p>
+
             <div class="section">
-              <div class="section-title">Equipment Details</div>
+              <div class="section-title">Request Details</div>
               <div class="details">
                 <div class="detail-row">
                   <div class="detail-label">Equipment:</div>
                   <div class="detail-value">${data.itemName}</div>
                 </div>
                 <div class="detail-row">
-                  <div class="detail-label">Request Status:</div>
-                  <div class="detail-value">Pending Approval</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="section">
-              <div class="section-title">Requester Information</div>
-              <div class="details">
-                <div class="detail-row">
-                  <div class="detail-label">Name:</div>
+                  <div class="detail-label">Requester:</div>
                   <div class="detail-value">${data.userName}</div>
                 </div>
                 <div class="detail-row">
                   <div class="detail-label">Email:</div>
                   <div class="detail-value"><a href="mailto:${data.userEmail}">${data.userEmail}</a></div>
                 </div>
-              </div>
-            </div>
-
-            <div class="section">
-              <div class="section-title">Reservation Dates</div>
-              <div class="details">
                 <div class="detail-row">
-                  <div class="detail-label">Start Date:</div>
+                  <div class="detail-label">Pickup Date:</div>
                   <div class="detail-value">${data.startDate}</div>
                 </div>
                 <div class="detail-row">
                   <div class="detail-label">Return Date:</div>
                   <div class="detail-value">${data.returnDate}</div>
                 </div>
-              </div>
-            </div>
-
-            ${data.notes ? `
-            <div class="section">
-              <div class="section-title">Purpose / Notes</div>
-              <div style="color: #555; background: #f9f9f9; padding: 12px; border-radius: 4px; border-left: 3px solid #667eea;">${data.notes}</div>
-            </div>
-            ` : ''}
-
-            ${data.deliveryRequired === 'yes' ? `
-            <div class="section">
-              <div class="section-title">Delivery Information</div>
-              <div class="details">
+                ${data.notes ? `
                 <div class="detail-row">
-                  <div class="detail-label">Location:</div>
+                  <div class="detail-label">Purpose:</div>
+                  <div class="detail-value">${data.notes}</div>
+                </div>
+                ` : ''}
+                ${data.deliveryRequired === 'yes' ? `
+                <div class="detail-row">
+                  <div class="detail-label">Delivery Location:</div>
                   <div class="detail-value">${data.deliveryLocation || 'Not specified'}</div>
                 </div>
                 <div class="detail-row">
@@ -151,13 +130,11 @@ export async function sendReservationRequestEmail(
                   <div class="detail-label">Area:</div>
                   <div class="detail-value">${data.deliveryArea || 'Not specified'}</div>
                 </div>
+                ` : ''}
               </div>
             </div>
-            ` : ''}
 
-            <div class="section" style="margin-top: 30px;">
-              <p style="color: #555;">Please log in to the inventory system to review, approve, or reject this reservation request.</p>
-            </div>
+            <p style="color: #555; margin-top: 25px; margin-bottom: 25px;">Please log in to the inventory system to review, approve, or reject this reservation request.</p>
           </div>
 
           <div class="footer">
