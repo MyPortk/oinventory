@@ -348,15 +348,6 @@ export async function sendReservationRejectedEmail(
             </div>
             ` : ''}
 
-            <div class="section">
-              <div class="section-title">What You Can Do</div>
-              <ul class="next-steps">
-                <li>Try requesting different dates</li>
-                <li>Look for alternative equipment</li>
-                <li>Contact the admin for more options</li>
-              </ul>
-            </div>
-
             <p style="color: #555; margin-top: 25px; margin-bottom: 25px;">Please log in to the system to explore other available equipment or submit a new request.</p>
           </div>
           
