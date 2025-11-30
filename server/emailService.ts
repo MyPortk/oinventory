@@ -243,16 +243,6 @@ export async function sendReservationApprovedEmail(
               </div>
             </div>
 
-            <div class="section">
-              <div class="section-title">Before You Pick Up</div>
-              <ul class="checklist">
-                <li>Inspect the equipment for any damage</li>
-                <li>Report any issues immediately</li>
-                <li>Use according to guidelines</li>
-                <li>Return in the same condition by the return date</li>
-              </ul>
-            </div>
-
             <p style="color: #555; margin-top: 25px; margin-bottom: 25px;">Please log in to the system to complete the pickup process.</p>
           </div>
           
