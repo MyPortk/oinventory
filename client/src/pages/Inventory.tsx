@@ -465,7 +465,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                   {viewMode === 'card' ? <TableIcon className="w-4 h-4 mr-2" /> : <LayoutGrid className="w-4 h-4 mr-2" />}
                   {viewMode === 'card' ? t('tableView') : t('cardView')}
                 </Button>
-                {userRole === 'admin' && (
+                {(userRole === 'admin' || userRole === 'developer') && (
                   <Button
                     onClick={() => {
                       setEditingCategory(null);
@@ -496,7 +496,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                         setItemTypeFilter(category.isEquipment ? 'equipment' : 'assets');
                       }}
                     />
-                    {userRole === 'admin' && (
+                    {(userRole === 'admin' || userRole === 'developer') && (
                       <div className="absolute top-3 left-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
                           size="sm"
@@ -536,7 +536,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                       <TableHead>{t('status')}</TableHead>
                       <TableHead>{t('totalItems')}</TableHead>
                       <TableHead>{t('available')}</TableHead>
-                      {userRole === 'admin' && <TableHead className="text-right">{t('actions')}</TableHead>}
+                      {(userRole === 'admin' || userRole === 'developer') && <TableHead className="text-right">{t('actions')}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -558,7 +558,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                         </TableCell>
                         <TableCell>{category.totalCount}</TableCell>
                         <TableCell>{category.availableCount}</TableCell>
-                        {userRole === 'admin' && (
+                        {(userRole === 'admin' || userRole === 'developer') && (
                           <TableCell className="text-right">
                             <div className="flex gap-2 justify-end">
                               <Button
@@ -641,7 +641,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     </div>
                   </PopoverContent>
                 </Popover>
-                {userRole === 'admin' && (
+                {(userRole === 'admin' || userRole === 'developer') && (
                   <>
                     {itemTypeFilter === 'equipment' && (
                       <Button
@@ -698,18 +698,18 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     userRole={userRole}
                     isEquipment={item.isEquipment}
                     language={currentLanguage}
-                    onEdit={userRole === 'admin' ? () => {
+                    onEdit={(userRole === 'admin' || userRole === 'developer') ? () => {
                       setEditingItem(item);
                       setShowItemForm(true);
                     } : undefined}
-                    onScan={item.isEquipment && userRole !== 'admin' ? () => {
+                    onScan={item.isEquipment && (userRole !== 'admin' && userRole !== 'developer') ? () => {
                       setShowQRScanner(true);
                     } : undefined}
-                    onReserve={item.isEquipment && userRole !== 'admin' ? () => handleReserveItem(item) : undefined}
-                    onCheckout={item.isEquipment && userRole === 'admin' ? () => handleCheckout(item) : undefined}
-                    onCheckin={item.isEquipment && userRole === 'admin' ? () => handleCheckin(item) : undefined}
-                    onReceiveEquipment={item.isEquipment && userRole !== 'admin' && getApprovedReservationForPickup(item.id) ? () => handleReceiveEquipment(item) : undefined}
-                    onMarkReturned={item.isEquipment && userRole === 'admin' && getPendingReturnReservation(item.id) ? () => handleMarkReturned(item) : undefined}
+                    onReserve={item.isEquipment && (userRole !== 'admin' && userRole !== 'developer') ? () => handleReserveItem(item) : undefined}
+                    onCheckout={item.isEquipment && (userRole === 'admin' || userRole === 'developer') ? () => handleCheckout(item) : undefined}
+                    onCheckin={item.isEquipment && (userRole === 'admin' || userRole === 'developer') ? () => handleCheckin(item) : undefined}
+                    onReceiveEquipment={item.isEquipment && (userRole !== 'admin' && userRole !== 'developer') && getApprovedReservationForPickup(item.id) ? () => handleReceiveEquipment(item) : undefined}
+                    onMarkReturned={item.isEquipment && (userRole === 'admin' || userRole === 'developer') && getPendingReturnReservation(item.id) ? () => handleMarkReturned(item) : undefined}
                   />
                 ))}
               </div>
@@ -723,7 +723,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                       <TableHead>{t('type')}</TableHead>
                       <TableHead>{t('status')}</TableHead>
                       {showLocationColumn && <TableHead>{t('location')}</TableHead>}
-                      {userRole === 'admin' && <TableHead className="text-right">{t('actions')}</TableHead>}
+                      {(userRole === 'admin' || userRole === 'developer') && <TableHead className="text-right">{t('actions')}</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -743,7 +743,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                           </span>
                         </TableCell>
                         {showLocationColumn && <TableCell>{item.location || '-'}</TableCell>}
-                        {userRole === 'admin' && (
+                        {(userRole === 'admin' || userRole === 'developer') && (
                           <TableCell className="text-right">
                             <div className="flex gap-2 justify-end">
                               <Button

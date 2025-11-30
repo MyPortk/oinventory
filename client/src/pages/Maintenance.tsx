@@ -198,11 +198,11 @@ export default function Maintenance({
                 location={item.location || undefined}
                 notes={item.notes || undefined}
                 userRole={userRole}
-                onEdit={userRole === 'admin' ? () => {
+                onEdit={(userRole === 'admin' || userRole === 'developer') ? () => {
                   setEditingItem(item);
                   setShowItemForm(true);
                 } : undefined}
-                onDelete={userRole === 'admin' ? () => handleDeleteItem(item.id) : undefined}
+                onDelete={(userRole === 'admin' || userRole === 'developer') ? () => handleDeleteItem(item.id) : undefined}
               />
             ))}
           </div>
@@ -217,7 +217,7 @@ export default function Maintenance({
                   <TableHead>{t('status')}</TableHead>
                   <TableHead>{t('location')}</TableHead>
                   <TableHead>{t('notes')}</TableHead>
-                  {userRole === 'admin' && <TableHead className="text-right">{t('actions')}</TableHead>}
+                  {(userRole === 'admin' || userRole === 'developer') && <TableHead className="text-right">{t('actions')}</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -233,7 +233,7 @@ export default function Maintenance({
                     </TableCell>
                     <TableCell data-testid={`text-location-${item.id}`}>{item.location || '-'}</TableCell>
                     <TableCell data-testid={`text-notes-${item.id}`}>{item.notes || '-'}</TableCell>
-                    {userRole === 'admin' && (
+                    {(userRole === 'admin' || userRole === 'developer') && (
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
                           <Button

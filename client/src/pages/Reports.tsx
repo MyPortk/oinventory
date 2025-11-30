@@ -76,7 +76,7 @@ export default function Reports({
     .filter(report => {
       const itemName = items.find(i => i.id === report.itemId)?.productName?.toLowerCase() || "";
       const matchesSearch = searchQuery === "" || itemName.includes(searchQuery.toLowerCase());
-      const matchesRole = userRole === 'admin' || report.reportedBy === userId;
+      const matchesRole = (userRole === 'admin' || userRole === 'developer') || report.reportedBy === userId;
       return matchesSearch && matchesRole;
     })
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -114,7 +114,7 @@ export default function Reports({
         <div className="text-center mb-10 p-6 md:p-10 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-2xl text-white">
           <h1 className="text-3xl md:text-4xl font-extrabold mb-3 md:mb-4">{t('damageReports')}</h1>
           <p className="text-sm md:text-lg opacity-90 max-w-2xl mx-auto">
-            {userRole === 'admin' 
+            {(userRole === 'admin' || userRole === 'developer')
               ? t('viewAllDamageReports')
               : t('viewDamageReportsReceived')}
           </p>

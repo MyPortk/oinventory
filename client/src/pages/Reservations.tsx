@@ -199,7 +199,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
       const itemName = getItemName(res.itemId).toLowerCase();
       const matchesSearch = searchQuery === "" || itemName.includes(searchQuery.toLowerCase());
       const matchesFilter = filterStatus === "all" || res.status === filterStatus;
-      const matchesUser = userRole === 'admin' || res.userId === userId;
+      const matchesUser = (userRole === 'admin' || userRole === 'developer') || res.userId === userId;
       return matchesSearch && matchesFilter && matchesUser;
     })
     .sort((a, b) => new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime());
@@ -394,7 +394,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                     )}
                   </div>
                 </div>
-                {userRole === 'admin' && reservation.status === 'pending' && (
+                {(userRole === 'admin' || userRole === 'developer') && reservation.status === 'pending' && (
                   <div className="flex gap-2">
                     <Button
                       size="sm"
@@ -418,7 +418,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                 )}
                 {reservation.status === 'approved' && (
                   <div className="flex gap-2 flex-col">
-                    {userRole !== 'admin' && (() => {
+                    {(userRole !== 'admin' && userRole !== 'developer') && (() => {
                       const today = new Date();
                       const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
                       
@@ -457,7 +457,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                         </Button>
                       );
                     })()}
-                    {userRole === 'admin' && (() => {
+                    {(userRole === 'admin' || userRole === 'developer') && (() => {
                       // Admin can mark as returned if:
                       // - Equipment has been checked out (itemConditionOnReceive is set)
                       // - Not already marked as returned (itemConditionOnReturn is not set)
