@@ -44,6 +44,8 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
     department: ''
   });
   const [editFormData, setEditFormData] = useState({
+    username: '',
+    password: '',
     email: '',
     name: '',
     role: 'user' as 'developer' | 'admin' | 'user',
@@ -85,7 +87,7 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
       queryClient.invalidateQueries({ queryKey: ['/api/users'] });
       setShowEditUser(false);
       setEditingUserId(null);
-      setEditFormData({ email: '', name: '', role: 'user', department: '' });
+      setEditFormData({ username: '', password: '', email: '', name: '', role: 'user', department: '' });
       toast({ title: "User updated successfully" });
     },
     onError: (error: any) => {
@@ -120,6 +122,8 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
   const handleEditUser = (user: any) => {
     setEditingUserId(user.id);
     setEditFormData({
+      username: user.username,
+      password: '',
       email: user.email,
       name: user.name,
       role: user.role,
@@ -130,7 +134,7 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingUserId && editFormData.email && editFormData.name) {
+    if (editingUserId && editFormData.email && editFormData.name && editFormData.username) {
       updateUserMutation.mutate({
         id: editingUserId,
         data: editFormData
@@ -360,6 +364,28 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
             <DialogTitle>{t('editUser')}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-username">{t('username')} *</Label>
+              <Input
+                id="edit-username"
+                value={editFormData.username}
+                onChange={(e) => setEditFormData({ ...editFormData, username: e.target.value })}
+                placeholder="e.g., jsmith"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-password">{t('password')} (leave blank to keep current)</Label>
+              <Input
+                id="edit-password"
+                type="password"
+                value={editFormData.password}
+                onChange={(e) => setEditFormData({ ...editFormData, password: e.target.value })}
+                placeholder="Leave blank to keep current password"
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="edit-name">{t('fullName')} *</Label>
               <Input
