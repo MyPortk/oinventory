@@ -105,7 +105,24 @@ Preferred communication style: Simple, everyday language.
 - Migration files in `./migrations` directory
 - Push-based deployment with `drizzle-kit push`
 
-### Recent Changes (Nov 23, 2025)
+### Recent Changes (Nov 30, 2025)
+
+**Developer Role Full Admin Access:**
+- Updated all frontend pages to include developer role in admin checks:
+  - Inventory.tsx: Add/edit categories, add items, edit/delete items, checkout/checkin
+  - Reservations.tsx: View all reservations, approve/reject pending, mark returns
+  - Maintenance.tsx: Edit and delete maintenance items
+  - Reports.tsx: View all damage reports
+- Updated InventoryHeader.tsx navigation menu to show admin-only items to developers:
+  - Activity Logs menu item
+  - QR Codes menu item
+  - Maintenance menu item
+  - User Management menu item
+- Backend already supported developer role in `requireAdmin` middleware (auth.ts line 50)
+- Developer credentials: username `developer`, password `omg`
+- Developer account (username: developer) now has complete admin access across the entire application
+
+### Previous Changes (Nov 23, 2025)
 
 **Email Notification System:**
 - Integrated nodemailer for transactional email sending
