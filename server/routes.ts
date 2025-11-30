@@ -950,7 +950,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               deliveryRequired: validatedData.deliveryRequired,
               deliveryLocation: validatedData.deliveryLocation,
               deliveryStreet: validatedData.deliveryStreet,
-              deliveryArea: validatedData.deliveryArea
+              deliveryArea: validatedData.deliveryArea,
+              googleMapLink: validatedData.googleMapLink
             });
           }
         }

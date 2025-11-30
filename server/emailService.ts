@@ -52,6 +52,7 @@ export async function sendReservationRequestEmail(
     deliveryLocation?: string;
     deliveryStreet?: string;
     deliveryArea?: string;
+    googleMapLink?: string;
   }
 ): Promise<boolean> {
   const html = `
@@ -119,7 +120,11 @@ export async function sendReservationRequestEmail(
                 ` : ''}
                 ${data.deliveryRequired === 'yes' ? `
                 <div class="detail-row">
-                  <div class="detail-label">Delivery Location:</div>
+                  <div class="detail-label">🚚 Delivery Required:</div>
+                  <div class="detail-value">Yes</div>
+                </div>
+                <div class="detail-row">
+                  <div class="detail-label">Location:</div>
                   <div class="detail-value">${data.deliveryLocation || 'Not specified'}</div>
                 </div>
                 <div class="detail-row">
@@ -130,6 +135,12 @@ export async function sendReservationRequestEmail(
                   <div class="detail-label">Area:</div>
                   <div class="detail-value">${data.deliveryArea || 'Not specified'}</div>
                 </div>
+                ${data.googleMapLink ? `
+                <div class="detail-row">
+                  <div class="detail-label">Map:</div>
+                  <div class="detail-value"><a href="${data.googleMapLink}" style="color: #3498db; text-decoration: none;">View on Google Maps</a></div>
+                </div>
+                ` : ''}
                 ` : ''}
               </div>
             </div>
