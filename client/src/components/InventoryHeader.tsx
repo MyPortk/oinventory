@@ -112,10 +112,12 @@ export default function InventoryHeader({
                 <DropdownMenuLabel>{t('navigation')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onClick={onNavigateToDashboard || (() => {})}>
-                  <Package className="w-4 h-4 mr-2" />
-                  {language === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
-                </DropdownMenuItem>
+                {(userRole === 'admin' || userRole === 'developer') && (
+                  <DropdownMenuItem onClick={onNavigateToDashboard || (() => {})}>
+                    <Package className="w-4 h-4 mr-2" />
+                    {language === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
+                  </DropdownMenuItem>
+                )}
 
                 <DropdownMenuItem onClick={() => onViewChange('categories')}>
                   <Package className="w-4 h-4 mr-2" />

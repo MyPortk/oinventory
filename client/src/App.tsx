@@ -31,7 +31,9 @@ function App() {
   const handleLogin = (user: any) => {
     setCurrentUser(user);
     setIsAuthenticated(true);
-    setCurrentView('dashboard');
+    // Only admin and developer can see dashboard, others see inventory
+    const initialView = (user.role === 'admin' || user.role === 'developer') ? 'dashboard' : 'inventory';
+    setCurrentView(initialView);
   };
 
   const handleLogout = () => {
@@ -42,7 +44,10 @@ function App() {
   };
 
   const handleNavigateToDashboard = () => {
-    setCurrentView('dashboard');
+    // Only admin and developer can navigate to dashboard
+    if (currentUser?.role === 'admin' || currentUser?.role === 'developer') {
+      setCurrentView('dashboard');
+    }
   };
 
   const handleNavigateToInventory = () => {
@@ -135,7 +140,7 @@ function App() {
         <div className="min-h-screen bg-background">
           {!isAuthenticated ? (
             <Login onLogin={handleLogin} />
-          ) : currentView === 'dashboard' ? (
+          ) : currentView === 'dashboard' && (currentUser?.role === 'admin' || currentUser?.role === 'developer') ? (
             <Dashboard
               userName={currentUser?.name || 'User'}
               userRole={currentUser?.role || 'user'}
