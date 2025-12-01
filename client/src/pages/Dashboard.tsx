@@ -130,8 +130,9 @@ export default function Dashboard({
     }
   });
 
-  // Sort by reservations first, then by item count
+  // Sort by reservations first, then by item count, only show categories with items or reservations
   const topCategories = Object.values(categoryStats)
+    .filter((cat: any) => cat.items > 0 || cat.reservations > 0)
     .sort((a, b) => {
       if (b.reservations !== a.reservations) {
         return b.reservations - a.reservations;
