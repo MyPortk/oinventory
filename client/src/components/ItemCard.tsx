@@ -128,7 +128,7 @@ export default function ItemCard({
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <span className="text-muted-foreground">{t('type')}:</span>
-                <span className="ml-2 font-medium" data-testid={`text-type-${id}`}>{translatedType}</span>
+                <span className="ml-2 font-medium" data-testid={`text-type-${id}`}>{displayType}</span>
               </div>
               {location && (
                 <div>

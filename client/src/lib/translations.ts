@@ -557,7 +557,6 @@ export const translations = {
     'Equipment Receipt Confirmed': 'تم تأكيد استلام المعدات',
 
     // Other missing translations
-    maintenance: 'الصيانة',
     Maintenance: 'صيانة',
     developer: 'مطور',
     developer_mode: 'وضع المطور',
