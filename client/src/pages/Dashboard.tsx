@@ -80,7 +80,7 @@ export default function Dashboard({
     })
     .filter((data: any) => data.name !== `Equipment ${equipmentRequestCount}`)
     .sort((a, b) => b.requests - a.requests)
-    .slice(0, 8); // Top 8 most requested
+    .slice(0, 5); // Top 5 most requested
 
   // Calculate by category
   const equipmentCount = (items as any[]).filter((i: any) => i.isEquipment === true).length;
@@ -294,22 +294,22 @@ export default function Dashboard({
             </CardHeader>
             <CardContent>
               {mostRequestedData.length > 0 ? (
-                <div className="flex items-end justify-center gap-1 h-36 py-2">
+                <div className="flex items-end justify-center h-36 py-2" style={{ gap: '0.25rem' }}>
                   {mostRequestedData.map((item: any, index: number) => {
                     const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
                     const heightPercent = (item.requests / maxRequests) * 100;
                     return (
                       <div key={index} className="flex flex-col items-center gap-1 flex-1">
                         <span className="text-xs font-semibold text-foreground">{item.requests}</span>
-                        <div className="w-5 bg-muted rounded-t-sm relative flex items-end justify-center"
-                          style={{ height: '100px' }}>
+                        <div className="bg-muted rounded-t-sm relative flex items-end justify-center"
+                          style={{ height: '100px', width: '32px' }}>
                           <div
                             className="w-full bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-sm transition-all hover:opacity-80 cursor-pointer"
                             style={{ height: `${heightPercent}%`, minHeight: '4px' }}
                             title={`${item.name}: ${item.requests} requests`}
                           ></div>
                         </div>
-                        <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[35px]">{item.name}</span>
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[40px]">{item.name}</span>
                       </div>
                     );
                   })}
