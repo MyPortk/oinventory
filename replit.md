@@ -20,6 +20,13 @@ A full-stack inventory management system built for equipment tracking and reserv
 
 Preferred communication style: Simple, everyday language.
 
+**CRITICAL DATA INTEGRITY RULES:**
+- ⚠️ **Categories and items visible in the Inventory page are the user's ACTUAL data - these must NEVER be modified or duplicated**
+- ⚠️ **NEVER add new categories or items to the database without explicit permission**
+- ⚠️ **Only work with categories/items that already exist in the Inventory**
+- The user has 12 equipment categories with Google Drive images - these are sacred and must be preserved
+- Dashboard Top Categories feature dynamically shows the top 4 checked-out categories from the user's existing inventory
+
 ## System Architecture
 
 ### Frontend Architecture
