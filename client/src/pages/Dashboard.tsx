@@ -299,7 +299,7 @@ export default function Dashboard({
                     const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
                     const heightPercent = (item.requests / maxRequests) * 100;
                     return (
-                      <div key={index} className="flex flex-col items-center gap-1 flex-1">
+                      <div key={index} className="flex flex-col items-center gap-1">
                         <span className="text-xs font-semibold text-foreground">{item.requests}</span>
                         <div className="bg-muted rounded-t-sm relative flex items-end justify-center"
                           style={{ height: '100px', width: '32px' }}>
