@@ -329,38 +329,61 @@ export default function Dashboard({
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Most Requested Bar Chart - Left (50%) */}
           <Card className="hover-elevate" data-testid="card-most-requested">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-sm">
-                <TrendingUp className="w-4 h-4" />
-                {currentLanguage === 'ar' ? 'الأكثر طلباً' : 'Most Requested'}
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5" />
+                {currentLanguage === 'ar' ? 'الأكثر طلباً' : 'Most Requested Equipment'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {mostRequestedData.length > 0 ? (
-                <div className="flex items-end justify-center h-36 py-2" style={{ gap: '0' }}>
-                  {mostRequestedData.map((item: any, index: number) => {
-                    const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
-                    const heightPercent = (item.requests / maxRequests) * 100;
-                    return (
-                      <div key={index} className="flex flex-col items-center gap-1">
-                        <span className="text-xs font-semibold text-foreground">{item.requests}</span>
-                        <div className="bg-muted rounded-t-sm relative flex items-end justify-center"
-                          style={{ height: '100px', width: '32px' }}>
-                          <div
-                            className="w-full bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-sm transition-all hover:opacity-80 cursor-pointer"
-                            style={{ height: `${heightPercent}%`, minHeight: '4px' }}
-                            title={`${item.name}: ${item.requests} requests`}
-                          ></div>
-                        </div>
-                        <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[40px]">{item.name}</span>
-                      </div>
-                    );
-                  })}
-                </div>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={mostRequestedData}
+                    margin={{ top: 20, right: 30, left: 0, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="currentColor" opacity={0.1} />
+                    <XAxis
+                      dataKey="name"
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 12 }}
+                      label={{ value: currentLanguage === 'ar' ? 'الطلبات' : 'Requests', angle: -90, position: 'insideLeft' }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--background))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        padding: '10px'
+                      }}
+                      labelStyle={{ color: 'hsl(var(--foreground))' }}
+                      formatter={(value: any) => [`${value} ${currentLanguage === 'ar' ? 'طلب' : 'request'}${value !== 1 ? 's' : ''}`, currentLanguage === 'ar' ? 'الطلبات' : 'Requests']}
+                    />
+                    <Bar
+                      dataKey="requests"
+                      fill="url(#colorGradient)"
+                      radius={[8, 8, 0, 0]}
+                      animationDuration={1000}
+                    />
+                    <defs>
+                      <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#667eea" />
+                        <stop offset="95%" stopColor="#764ba2" />
+                      </linearGradient>
+                    </defs>
+                  </BarChart>
+                </ResponsiveContainer>
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  {currentLanguage === 'ar' ? 'لا توجد بيانات' : 'No data available'}
-                </p>
+                <div className="h-64 flex items-center justify-center">
+                  <p className="text-sm text-muted-foreground">
+                    {currentLanguage === 'ar' ? 'لا توجد بيانات' : 'No data available'}
+                  </p>
+                </div>
               )}
             </CardContent>
           </Card>
