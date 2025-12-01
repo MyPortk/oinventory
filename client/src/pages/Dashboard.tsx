@@ -12,6 +12,8 @@ interface DashboardProps {
   userRole: string;
   userId: string;
   onLogout: () => void;
+  onNavigateToDashboard?: () => void;
+  onNavigateToInventory?: () => void;
   onNavigateToReservations?: () => void;
   onNavigateToActivityLogs?: () => void;
   onNavigateToQRCodes?: () => void;
@@ -26,6 +28,8 @@ export default function Dashboard({
   userRole,
   userId,
   onLogout,
+  onNavigateToDashboard,
+  onNavigateToInventory,
   onNavigateToReservations,
   onNavigateToActivityLogs,
   onNavigateToQRCodes,
@@ -56,34 +60,15 @@ export default function Dashboard({
   const pendingReservations = reservations.filter(r => r.status === 'pending').length;
   const approvedReservations = reservations.filter(r => r.status === 'approved').length;
 
-  // Pie chart data
-  const pieChartData = [
-    { name: t('available'), value: availableItems, fill: '#22c55e' },
-    { name: t('inUse'), value: inUseItems, fill: '#3b82f6' },
-    { name: t('reserved'), value: reservedItems, fill: '#f59e0b' },
-    { name: t('maintenance'), value: maintenanceItems, fill: '#ef4444' }
-  ];
-
-  // Category distribution
-  const categoryDistribution = items.reduce((acc: any, item) => {
-    const category = item.category || 'Other';
-    const existing = acc.find((c: any) => c.name === category);
-    if (existing) {
-      existing.value += 1;
-    } else {
-      acc.push({ name: category, value: 1 });
-    }
-    return acc;
-  }, []).slice(0, 5);
-
   return (
     <div className="min-h-screen bg-background">
       <InventoryHeader
         userName={userName}
         userRole={userRole}
         currentView={currentView}
-        onViewChange={() => {}}
+        onViewChange={() => onNavigateToInventory?.()}
         onLogout={onLogout}
+        onNavigateToDashboard={onNavigateToDashboard}
         onNavigateToReservations={onNavigateToReservations}
         onNavigateToActivityLogs={onNavigateToActivityLogs}
         onNavigateToQRCodes={onNavigateToQRCodes}

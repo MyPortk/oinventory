@@ -142,6 +142,7 @@ function App() {
               userId={currentUser?.id || ''}
               onLogout={handleLogout}
               onNavigateToDashboard={handleNavigateToDashboard}
+              onNavigateToInventory={handleNavigateToInventory}
               onNavigateToReservations={handleNavigateToReservations}
               onNavigateToActivityLogs={handleNavigateToActivityLogs}
               onNavigateToQRCodes={handleNavigateToQRCodes}
