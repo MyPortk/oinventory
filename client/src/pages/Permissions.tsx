@@ -190,6 +190,31 @@ export default function Permissions({
               </div>
             </CardContent>
           </Card>
+
+          {/* Sidebar Auto-Hide Toggle */}
+          <Card className="hover-elevate" data-testid="card-permission-sidebar-autohide">
+            <CardHeader>
+              <CardTitle className="text-lg">Sidebar Auto-Hide</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                When enabled, the sidebar automatically hides after 2 seconds when the mouse moves away from it. It automatically reappears when the mouse moves near the left edge of the screen.
+              </p>
+              <div className="flex items-center gap-4">
+                <Switch
+                  checked={permissions.sidebar_auto_hide === true}
+                  onCheckedChange={() =>
+                    handleToggle('sidebar_auto_hide', permissions.sidebar_auto_hide === true)
+                  }
+                  disabled={updatePermissionMutation.isPending}
+                  data-testid="switch-permission-sidebar-autohide"
+                />
+                <span className="text-sm font-medium">
+                  {permissions.sidebar_auto_hide === true ? 'Enabled' : 'Disabled'}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </div>

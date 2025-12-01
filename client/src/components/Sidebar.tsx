@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { LayoutDashboard, Package, Calendar, ClipboardList, QrCode, Wrench, Users, FileText, LogOut, Shield, ChevronLeft } from "lucide-react";
 import { useTranslation, type Language } from "@/lib/translations";
@@ -38,21 +38,62 @@ export default function Sidebar({
 }: SidebarProps) {
   const t = useTranslation(language);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const autoHideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: permissions = {} } = useQuery({
     queryKey: ['/api/permissions'],
     queryFn: async () => {
       try {
         const response = await fetch('/api/permissions', { credentials: 'include' });
-        if (!response.ok) return { hide_sidebar_toggle: true };
+        if (!response.ok) return { hide_sidebar_toggle: true, sidebar_auto_hide: false };
         return response.json();
       } catch {
-        return { hide_sidebar_toggle: true };
+        return { hide_sidebar_toggle: true, sidebar_auto_hide: false };
       }
     },
   });
 
   const showCollapseButton = permissions.hide_sidebar_toggle !== false;
+  const enableAutoHide = permissions.sidebar_auto_hide === true;
+
+  useEffect(() => {
+    if (!enableAutoHide) {
+      if (autoHideTimeoutRef.current) {
+        clearTimeout(autoHideTimeoutRef.current);
+      }
+      return;
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const mouseX = e.clientX;
+      
+      if (autoHideTimeoutRef.current) {
+        clearTimeout(autoHideTimeoutRef.current);
+      }
+
+      if (mouseX < 20) {
+        // Mouse is near left edge, show sidebar
+        setIsCollapsed(false);
+      } else if (isCollapsed) {
+        // Mouse is not near left edge and sidebar is already collapsed, keep it collapsed
+        return;
+      } else if (mouseX > 280) {
+        // Mouse is outside sidebar area, schedule auto-hide
+        autoHideTimeoutRef.current = setTimeout(() => {
+          setIsCollapsed(true);
+        }, 2000); // 2 second delay before auto-hiding
+      }
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      if (autoHideTimeoutRef.current) {
+        clearTimeout(autoHideTimeoutRef.current);
+      }
+    };
+  }, [isCollapsed, enableAutoHide]);
 
   const isAdmin = userRole === 'admin' || userRole === 'developer';
   const isDeveloper = userRole === 'developer';
@@ -100,7 +141,10 @@ export default function Sidebar({
       )}
 
       {/* Main Sidebar */}
-      <div className={`bg-gradient-to-b from-[#667eea] to-[#764ba2] text-white flex flex-col fixed h-screen overflow-y-auto transition-all duration-300 ease-in-out ${isCollapsed ? 'w-0 -translate-x-60 opacity-0' : 'w-60 translate-x-0 opacity-100'}`}>
+      <div 
+        ref={sidebarRef}
+        className={`bg-gradient-to-b from-[#667eea] to-[#764ba2] text-white flex flex-col fixed h-screen overflow-y-auto transition-all duration-300 ease-in-out ${isCollapsed ? 'w-0 -translate-x-60 opacity-0' : 'w-60 translate-x-0 opacity-100'}`}
+      >
         {showCollapseButton && (
           <div className="p-3 flex justify-end">
             <button
