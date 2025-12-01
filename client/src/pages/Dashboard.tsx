@@ -264,32 +264,31 @@ export default function Dashboard({
         {/* Most Requested Equipment Chart */}
         {mostRequestedData.length > 0 && (
           <Card className="hover-elevate" data-testid="card-most-requested">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-sm">
-                <TrendingUp className="w-4 h-4" />
-                {currentLanguage === 'ar' ? 'الأكثر طلباً' : 'Most Requested'}
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                {currentLanguage === 'ar' ? 'الأكثر طلباً' : 'Most Requested Equipment'}
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-end justify-start gap-0 h-40 px-2 overflow-x-auto">
-                {mostRequestedData.map((item: any, index: number) => {
-                  const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
-                  const heightPercent = (item.requests / maxRequests) * 100;
-                  return (
-                    <div key={index} className="flex flex-col items-center gap-1 shrink-0">
-                      <div className="relative h-28 flex items-end justify-center">
-                        <div
-                          className="bg-gradient-to-t from-[#667eea] to-[#764ba2] transition-all hover:opacity-80 cursor-pointer"
-                          style={{ height: `${heightPercent}%`, width: '18px', minHeight: '4px' }}
-                          title={`${item.name}: ${item.requests} requests`}
-                        ></div>
-                      </div>
-                      <span className="text-xs font-bold text-foreground">{item.requests}</span>
-                      <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[48px] break-words">{item.name}</span>
+            <CardContent className="space-y-4">
+              {mostRequestedData.map((item: any, index: number) => {
+                const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
+                const widthPercent = (item.requests / maxRequests) * 100;
+                return (
+                  <div key={index} className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-foreground truncate">{item.name}</span>
+                      <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{item.requests}</span>
                     </div>
-                  );
-                })}
-              </div>
+                    <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-[#667eea] to-[#764ba2] h-3 rounded-full transition-all duration-300"
+                        style={{ width: `${widthPercent}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
         )}
