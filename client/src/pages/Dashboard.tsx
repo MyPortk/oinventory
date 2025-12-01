@@ -103,23 +103,42 @@ export default function Dashboard({
     .sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 5);
 
-  // Calculate most requested categories (by reservation count)
-  const categoryRequestCount: { [key: string]: { name: string; count: number; image: string } } = {};
+  // Calculate categories with reservation count and item count
+  const categoryStats: { [key: string]: { name: string; reservations: number; items: number; image: string } } = {};
+  
+  // Initialize all categories
+  (categories as any[]).forEach((cat: any) => {
+    categoryStats[cat.id] = { name: cat.name, reservations: 0, items: 0, image: cat.image };
+  });
+
+  // Count items per category
+  (items as any[]).forEach((item: any) => {
+    const category = (categories as any[]).find((c: any) => c.name === item.productType);
+    if (category && categoryStats[category.id]) {
+      categoryStats[category.id].items += 1;
+    }
+  });
+
+  // Count reservations per category
   (reservations as any[]).forEach((reservation: any) => {
     const item = (items as any[]).find((i: any) => String(i.id) === String(reservation.itemId));
     if (item) {
       const category = (categories as any[]).find((c: any) => c.name === item.productType);
-      if (category) {
-        if (!categoryRequestCount[category.id]) {
-          categoryRequestCount[category.id] = { name: category.name, count: 0, image: category.image };
-        }
-        categoryRequestCount[category.id].count += 1;
+      if (category && categoryStats[category.id]) {
+        categoryStats[category.id].reservations += 1;
       }
     }
   });
 
-  const topCategories = Object.values(categoryRequestCount)
-    .sort((a, b) => b.count - a.count)
+  // Sort by reservations first, then by item count, and filter to only categories with items
+  const topCategories = Object.values(categoryStats)
+    .filter((cat: any) => cat.items > 0)
+    .sort((a, b) => {
+      if (b.reservations !== a.reservations) {
+        return b.reservations - a.reservations;
+      }
+      return b.items - a.items;
+    })
     .slice(0, 4);
 
   return (
