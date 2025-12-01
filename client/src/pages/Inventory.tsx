@@ -29,6 +29,7 @@ interface InventoryPageProps {
   userRole: string;
   userId: string;
   onLogout: () => void;
+  onNavigateToDashboard?: () => void;
   onNavigateToReservations?: () => void;
   onNavigateToActivityLogs?: () => void;
   onNavigateToQRCodes?: () => void;
@@ -38,7 +39,7 @@ interface InventoryPageProps {
   onLanguageChange: (lang: Language) => void;
 }
 
-export default function Inventory({ userName, userRole, userId, onLogout, onNavigateToReservations, onNavigateToActivityLogs, onNavigateToQRCodes, onNavigateToMaintenance, onNavigateToReports, currentLanguage, onLanguageChange }: InventoryPageProps) {
+export default function Inventory({ userName, userRole, userId, onLogout, onNavigateToDashboard, onNavigateToReservations, onNavigateToActivityLogs, onNavigateToQRCodes, onNavigateToMaintenance, onNavigateToReports, currentLanguage, onLanguageChange }: InventoryPageProps) {
   const { toast } = useToast();
   const t = useTranslation(currentLanguage);
   const [currentView, setCurrentView] = useState<'categories' | 'inventory'>('categories');
@@ -404,6 +405,7 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
           setSelectedCategory(null);
         }}
         onLogout={handleLogout}
+        onNavigateToDashboard={onNavigateToDashboard}
         onNavigateToReservations={onNavigateToReservations}
         onNavigateToActivityLogs={onNavigateToActivityLogs}
         onNavigateToQRCodes={onNavigateToQRCodes}
