@@ -103,25 +103,34 @@ export default function Dashboard({
     .sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 5);
 
-  // Calculate checkout count for each product type (from checked out items)
-  const productTypeCheckouts: { [key: string]: number } = {};
+  // Mapping from product_type to category name
+  const productTypeToCategory: { [key: string]: string } = {
+    'Camera': 'Cameras',
+    'Lenses': 'Lens',
+    'Backdrop Stands': 'Tripods & Stands',
+    // Add more mappings as needed
+  };
+
+  // Calculate checkout count for each category
+  const categoryCheckouts: { [key: string]: number } = {};
   
-  // Count checkouts per product type (only items that have been actually checked out)
+  // Count checkouts per category (only items that have been actually checked out)
   (reservations as any[]).forEach((reservation: any) => {
     if (reservation.checkoutDate) {
       const item = (items as any[]).find((i: any) => String(i.id) === String(reservation.itemId));
       if (item && item.productType) {
-        productTypeCheckouts[item.productType] = (productTypeCheckouts[item.productType] || 0) + 1;
+        const categoryName = productTypeToCategory[item.productType] || item.productType;
+        categoryCheckouts[categoryName] = (categoryCheckouts[categoryName] || 0) + 1;
       }
     }
   });
 
-  // Get top 4 product types by checkout count, sorted by popularity
-  const topCategories = Object.entries(productTypeCheckouts)
-    .map(([productType, checkouts]) => ({
-      name: productType,
+  // Get top 4 categories by checkout count, sorted by popularity
+  const topCategories = Object.entries(categoryCheckouts)
+    .map(([categoryName, checkouts]) => ({
+      name: categoryName,
       checkouts: checkouts,
-      image: null // No image for now, just show the category names
+      image: null
     }))
     .sort((a, b) => b.checkouts - a.checkouts)
     .slice(0, 4);
