@@ -264,54 +264,43 @@ export default function Dashboard({
         {/* Most Requested Equipment Chart */}
         {mostRequestedData.length > 0 && (
           <Card className="hover-elevate" data-testid="card-most-requested">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 {currentLanguage === 'ar' ? 'المعدات الأكثر طلباً' : 'Most Requested Equipment'}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="w-full h-80">
+              <div className="w-full h-56">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={mostRequestedData} margin={{ top: 20, right: 30, left: 0, bottom: 80 }}>
+                  <BarChart data={mostRequestedData} margin={{ top: 10, right: 10, left: -20, bottom: 60 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="currentColor" opacity={0.1} />
                     <XAxis 
                       dataKey="name" 
                       angle={-45} 
                       textAnchor="end" 
-                      height={100}
-                      style={{ fontSize: '12px' }}
+                      height={80}
+                      style={{ fontSize: '11px' }}
                     />
-                    <YAxis 
-                      label={{ value: currentLanguage === 'ar' ? 'عدد الطلبات' : 'Number of Requests', angle: -90, position: 'insideLeft' }}
-                    />
+                    <YAxis style={{ fontSize: '11px' }} />
                     <Tooltip 
                       contentStyle={{ 
                         backgroundColor: 'var(--background)',
                         border: '1px solid var(--border)',
-                        borderRadius: '8px'
+                        borderRadius: '6px',
+                        fontSize: '12px'
                       }}
                       labelStyle={{ color: 'var(--foreground)' }}
-                      formatter={(value: any) => [value, currentLanguage === 'ar' ? 'الطلبات' : 'Requests']}
-                    />
-                    <Legend 
-                      wrapperStyle={{ paddingTop: '20px' }}
+                      formatter={(value: any) => [value, currentLanguage === 'ar' ? 'طلبات' : 'Requests']}
                     />
                     <Bar 
                       dataKey="requests" 
                       fill="#667eea" 
-                      name={currentLanguage === 'ar' ? 'الطلبات' : 'Requests'}
-                      radius={[8, 8, 0, 0]}
+                      radius={[4, 4, 0, 0]}
                     />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-              <p className="text-xs text-muted-foreground mt-4">
-                {currentLanguage === 'ar' 
-                  ? 'يعرض أكثر 8 معدات تم طلبها من قبل المستخدمين'
-                  : 'Shows the top 8 most requested equipment by users'
-                }
-              </p>
             </CardContent>
           </Card>
         )}
