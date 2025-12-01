@@ -111,9 +111,9 @@ export default function Dashboard({
     categoryCheckouts[cat.id] = { name: cat.name, checkouts: 0, image: cat.image };
   });
 
-  // Count checkouts per category (active and completed reservations)
+  // Count checkouts per category (only items that have been actually checked out)
   (reservations as any[]).forEach((reservation: any) => {
-    if (reservation.status === 'active' || reservation.status === 'completed' || reservation.checkoutDate) {
+    if (reservation.checkoutDate) {
       const item = (items as any[]).find((i: any) => String(i.id) === String(reservation.itemId));
       if (item) {
         const category = (categories as any[]).find((c: any) => c.name === item.productType);
