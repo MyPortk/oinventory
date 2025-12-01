@@ -57,7 +57,7 @@ export default function Sidebar({
 
   return (
     <div className="flex h-screen bg-background">
-      <div className="w-64 bg-gradient-to-b from-[#667eea] to-[#764ba2] text-white flex flex-col fixed h-screen overflow-y-auto">
+      <div className="w-56 bg-gradient-to-b from-[#667eea] to-[#764ba2] text-white flex flex-col fixed h-screen overflow-y-auto">
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {menuItems.map((item) => {
             const IconComponent = item.icon;
@@ -92,7 +92,7 @@ export default function Sidebar({
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto" style={{ marginLeft: '16rem' }} />
+      <div className="flex-1 overflow-auto" style={{ marginLeft: '14rem' }} />
     </div>
   );
 }
