@@ -388,11 +388,11 @@ export default function Dashboard({
             </CardHeader>
             <CardContent>
               {topCategories.length > 0 ? (
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 gap-4">
                   {topCategories.slice(0, 4).map((cat: any, index: number) => (
                     <div
                       key={index}
-                      className="relative h-24 rounded-md overflow-hidden cursor-pointer group"
+                      className="relative h-32 rounded-md overflow-hidden cursor-pointer group"
                       onClick={onNavigateToInventory}
                       data-testid={`box-category-${cat.name}`}
                       style={{
