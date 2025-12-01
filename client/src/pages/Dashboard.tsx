@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import InventoryHeader from "@/components/InventoryHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import { useTranslation, type Language } from "@/lib/translations";
 import { Package, Clock, AlertCircle, CheckCircle2, TrendingUp, Activity, Zap, BarChart3 } from "lucide-react";
@@ -38,6 +40,7 @@ export default function Dashboard({
   onLanguageChange
 }: DashboardProps) {
   const t = useTranslation(currentLanguage);
+  const [activeTab, setActiveTab] = useState('most-requested');
 
   const { data: items = [] } = useQuery({
     queryKey: ['/api/items'],
@@ -282,87 +285,69 @@ export default function Dashboard({
           </Card>
         </div>
 
-        {/* Most Requested Equipment Chart */}
-        {mostRequestedData.length > 0 && (
-          <Card className="hover-elevate" data-testid="card-most-requested">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-sm">
-                <TrendingUp className="w-4 h-4" />
-                {currentLanguage === 'ar' ? 'الأكثر طلباً' : 'Most Requested'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-end justify-center gap-3 h-36 py-2">
-                {mostRequestedData.map((item: any, index: number) => {
-                  const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
-                  const heightPercent = (item.requests / maxRequests) * 100;
-                  return (
-                    <div key={index} className="flex flex-col items-center gap-1 flex-1">
-                      <span className="text-xs font-semibold text-foreground">{item.requests}</span>
-                      <div className="w-8 bg-muted rounded-t-sm relative flex items-end justify-center"
-                        style={{ height: '100px' }}>
-                        <div
-                          className="w-full bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-sm transition-all hover:opacity-80 cursor-pointer"
-                          style={{ height: `${heightPercent}%`, minHeight: '4px' }}
-                          title={`${item.name}: ${item.requests} requests`}
-                        ></div>
-                      </div>
-                      <span className="text-[11px] text-muted-foreground text-center leading-tight max-w-[50px]">{item.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Most Requested & Overdue Tabs */}
+        <Card className="hover-elevate" data-testid="card-most-requested">
+          <CardHeader className="pb-2">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="most-requested" className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  {currentLanguage === 'ar' ? 'الأكثر طلباً' : 'Most Requested'}
+                </TabsTrigger>
+                <TabsTrigger value="overdue" className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4" />
+                  {currentLanguage === 'ar' ? 'متأخر' : 'Overdue'}
+                </TabsTrigger>
+              </TabsList>
 
-        {/* Overdue Items & Recent Activities */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="hover-elevate">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
-                {currentLanguage === 'ar' ? 'متأخر' : 'Overdue'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="text-center p-6 bg-red-50 dark:bg-red-950/30 rounded-lg">
-                  <p className="text-4xl font-bold text-red-600 dark:text-red-400">{overdueItems}</p>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {currentLanguage === 'ar' ? 'عناصر متأخرة الإرجاع' : 'Items overdue for return'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Activities */}
-          <Card className="hover-elevate">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Activity className="w-4 h-4" />
-                {currentLanguage === 'ar' ? 'أنشطة حديثة' : 'Recent Activities'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 max-h-48 overflow-y-auto">
-              {recentActivities.length > 0 ? (
-                recentActivities.map((log: any, idx: number) => (
-                  <div key={idx} className="text-xs pb-2 border-b border-muted last:border-b-0">
-                    <p className="font-medium text-foreground truncate">{log.action}</p>
-                    <p className="text-muted-foreground text-[11px]">
-                      {new Date(log.timestamp).toLocaleString(currentLanguage === 'ar' ? 'ar-SA' : 'en-US')}
-                    </p>
+              <TabsContent value="most-requested" className="mt-4">
+                {mostRequestedData.length > 0 ? (
+                  <div className="flex items-end justify-center gap-3 h-36 py-2">
+                    {mostRequestedData.map((item: any, index: number) => {
+                      const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
+                      const heightPercent = (item.requests / maxRequests) * 100;
+                      return (
+                        <div key={index} className="flex flex-col items-center gap-1 flex-1">
+                          <span className="text-xs font-semibold text-foreground">{item.requests}</span>
+                          <div className="w-8 bg-muted rounded-t-sm relative flex items-end justify-center"
+                            style={{ height: '100px' }}>
+                            <div
+                              className="w-full bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-sm transition-all hover:opacity-80 cursor-pointer"
+                              style={{ height: `${heightPercent}%`, minHeight: '4px' }}
+                              title={`${item.name}: ${item.requests} requests`}
+                            ></div>
+                          </div>
+                          <span className="text-[11px] text-muted-foreground text-center leading-tight max-w-[50px]">{item.name}</span>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))
-              ) : (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  {currentLanguage === 'ar' ? 'لا توجد أنشطة' : 'No activities yet'}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-8">
+                    {currentLanguage === 'ar' ? 'لا توجد بيانات' : 'No data available'}
+                  </p>
+                )}
+              </TabsContent>
+
+              <TabsContent value="overdue" className="mt-4">
+                {overdueItems > 0 ? (
+                  <div className="space-y-4">
+                    <div className="text-center p-6 bg-red-50 dark:bg-red-950/30 rounded-lg">
+                      <p className="text-4xl font-bold text-red-600 dark:text-red-400">{overdueItems}</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        {currentLanguage === 'ar' ? 'عناصر متأخرة الإرجاع' : 'Items overdue for return'}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-8">
+                    {currentLanguage === 'ar' ? 'لا توجد عناصر متأخرة' : 'No overdue items'}
+                  </p>
+                )}
+              </TabsContent>
+            </Tabs>
+          </CardHeader>
+        </Card>
 
         {/* Summary Footer */}
         <Card data-testid="card-summary-footer">

@@ -109,21 +109,21 @@ Preferred communication style: Simple, everyday language.
 
 **Dashboard Enhancements:**
 - **Purple gradient header**: Dashboard title uses purple gradient design matching "Add Category" button (from-[#667eea] to-[#764ba2])
-- **Vertical Bar Chart**: Top 6 most requested equipment displayed as vertical bars with purple gradient
-  - Bars scale proportionally based on request count
-  - Hover effects and tooltips
-  - Compact and professional design
-- **By Category Card**: Shows Equipment vs Assets count breakdown
-  - Color-coded boxes (blue for Equipment, purple for Assets)
-  - Quick overview of inventory split
-- **Overdue Items Card**: Displays count of items overdue for return
-  - Red highlighted alert style
-  - Shows items with checkout past return date
-- **Recent Activities Card**: Shows last 5 system activities
-  - Scrollable activity list
-  - Timestamps for each action
-  - Bilingual support
-- **Enhanced metrics display**: 4-column metric cards with colored icon badges (blue, green, purple, amber)
+- **Tabbed Most Requested & Overdue Section**: Single card with two tabs
+  - **Most Requested Tab**: Top 6 most requested equipment as vertical bars with purple gradient
+    - Bars scale proportionally based on request count
+    - Hover effects and tooltips
+    - Compact and professional design
+  - **Overdue Tab**: Shows count of items overdue for return
+    - Red highlighted alert style
+    - Items with checkout past return date
+- **System Summary Footer**: 6-column metrics grid
+  - Equipment and Assets counts
+  - Usage Rate, Active Reservations, Alerts, Overdue
+- **Metric Cards**: 4-column display (Total Items, Available, In Use, Pending)
+  - Color-coded icons (blue, green, purple, amber)
+  - Percentage indicators for Available and In Use
+- **Detailed Stats Grid**: 3-column section (Maintenance, Reservations, System Health)
 - **Professional layout**: Improved spacing, hierarchy, and visual consistency throughout the dashboard
 
 ### Previous Changes (Nov 30, 2025)
