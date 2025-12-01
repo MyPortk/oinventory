@@ -151,7 +151,8 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export const insertItemSchema = createInsertSchema(items).omit({
   id: true,
   createdAt: true,
-  updatedAt: true
+  updatedAt: true,
+  checkoutCount: true
 });
 
 export const insertReservationSchema = createInsertSchema(reservations).omit({

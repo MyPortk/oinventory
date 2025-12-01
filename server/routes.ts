@@ -1084,6 +1084,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to log return confirmation:', logError);
         }
       } else if (validatedData.checkoutDate && validatedData.itemConditionOnReceive !== undefined) {
+        // Increment checkout count when item is checked out
+        const currentCheckoutCount = parseInt(item?.checkoutCount || '0');
+        await storage.updateItem(reservation.itemId, { checkoutCount: String(currentCheckoutCount + 1) });
+
         // Only record the receipt condition - do NOT change item status
         // Log activity for receipt confirmation (condition only, no status change)
         try {
