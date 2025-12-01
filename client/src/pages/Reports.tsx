@@ -100,17 +100,6 @@ export default function Reports({
       />
 
       <main className="max-w-[1400px] mx-auto px-3 md:px-5 py-4 md:py-8">
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={onNavigateToInventory}
-            className="gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t('backToInventory')}
-          </Button>
-        </div>
-
         <div className="text-center mb-10 p-10 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-2xl text-white">
           <h1 className="text-4xl font-extrabold mb-4" data-testid="text-reports-title">
             {t('damageReports')}

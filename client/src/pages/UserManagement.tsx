@@ -167,17 +167,6 @@ export default function UserManagement({ userName, userRole, onLogout, onNavigat
       />
 
       <main className="max-w-[1400px] mx-auto px-5 py-8">
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={onNavigateToInventory}
-            className="gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t('backToInventory')}
-          </Button>
-        </div>
-
         <div className="text-center mb-10 p-10 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-2xl text-white">
           <h1 className="text-4xl font-extrabold mb-4">{t('userManagement')}</h1>
           <p className="text-lg opacity-90 max-w-2xl mx-auto">

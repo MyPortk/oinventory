@@ -91,18 +91,6 @@ export default function Permissions({
       />
 
       <main className="max-w-[1400px] mx-auto px-5 py-8">
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={onNavigateToInventory}
-            className="gap-2"
-            data-testid="button-back-to-inventory"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t('backToInventory')}
-          </Button>
-        </div>
-
         <div className="text-center mb-10 p-10 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-2xl text-white">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Shield className="w-10 h-10" />
