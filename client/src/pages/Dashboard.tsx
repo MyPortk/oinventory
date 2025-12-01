@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import InventoryHeader from "@/components/InventoryHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { api, type Item } from "@/lib/api";
+import { api } from "@/lib/api";
 import { useTranslation, type Language } from "@/lib/translations";
 import { Package, Clock, AlertCircle, CheckCircle2, TrendingUp, Activity } from "lucide-react";
 
@@ -38,7 +36,6 @@ export default function Dashboard({
   currentLanguage,
   onLanguageChange
 }: DashboardProps) {
-  const [currentView] = useState<'categories' | 'inventory'>('categories');
   const t = useTranslation(currentLanguage);
 
   const { data: items = [] } = useQuery({
@@ -65,7 +62,7 @@ export default function Dashboard({
       <InventoryHeader
         userName={userName}
         userRole={userRole}
-        currentView={currentView}
+        currentView="categories"
         onViewChange={() => onNavigateToInventory?.()}
         onLogout={onLogout}
         onNavigateToDashboard={onNavigateToDashboard}
@@ -157,61 +154,6 @@ export default function Dashboard({
                 <div className="text-3xl font-bold text-amber-600 dark:text-amber-400" data-testid="text-pending-actions">{pendingReservations}</div>
                 <p className="text-xs text-muted-foreground">{pendingReservations} {currentLanguage === 'ar' ? 'حجز معلق' : 'pending reservations'}</p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Pie Chart - Status Distribution */}
-          <Card data-testid="card-status-pie">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className="w-1 h-6 rounded bg-gradient-to-b from-[#667eea] to-[#764ba2]"></div>
-                {currentLanguage === 'ar' ? 'توزيع حالة المعدات' : 'Equipment Status Distribution'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={280}>
-                <PieChart>
-                  <Pie
-                    data={pieChartData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, value }) => `${name}: ${value}`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {pieChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-
-          {/* Top Categories */}
-          <Card data-testid="card-top-categories">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className="w-1 h-6 rounded bg-gradient-to-b from-[#667eea] to-[#764ba2]"></div>
-                {currentLanguage === 'ar' ? 'أكثر الفئات استخداماً' : 'Top Categories'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={categoryDistribution}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" fontSize={12} />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#667eea" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
             </CardContent>
           </Card>
         </div>

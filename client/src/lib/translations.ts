@@ -456,7 +456,6 @@ export const translations = {
     
     // Notifications
     notifications: 'الإشعارات',
-    markAllRead: 'تحديد الكل كمقروء',
     noNotificationsFound: 'لا توجد إشعارات',
 
     // Equipment Categories
