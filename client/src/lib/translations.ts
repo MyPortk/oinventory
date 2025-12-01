@@ -104,6 +104,17 @@ export const translations = {
     allEquipmentWorking: 'All equipment is in working order',
     searchMaintenanceItems: 'Search maintenance items...',
     
+    // Dashboard
+    dashboard: 'Dashboard',
+    overviewInventory: 'Overview of your inventory system',
+    availabilityRate: 'Availability Rate',
+    usageRate: 'Usage Rate',
+    reservedItems: 'Reserved Items',
+    maintenanceNeeded: 'Maintenance Needed',
+    quickActions: 'Quick Actions',
+    statusDistribution: 'Status Distribution',
+    quickSummary: 'Quick Summary',
+
     // Inventory Page
     equipmentCategories: 'Equipment Categories',
     browseInventory: 'Browse our complete inventory organized by equipment type',
@@ -332,6 +343,17 @@ export const translations = {
     noItemsInMaintenance: 'لا توجد عناصر قيد الصيانة',
     allEquipmentWorking: 'جميع المعدات تعمل بشكل صحيح',
     searchMaintenanceItems: 'البحث عن عناصر الصيانة...',
+    
+    // Dashboard
+    dashboard: 'لوحة التحكم',
+    overviewInventory: 'نظرة عامة على نظام المخزون الخاص بك',
+    availabilityRate: 'معدل التوفر',
+    usageRate: 'معدل الاستخدام',
+    reservedItems: 'العناصر المحجوزة',
+    maintenanceNeeded: 'الصيانة المطلوبة',
+    quickActions: 'إجراءات سريعة',
+    statusDistribution: 'توزيع الحالة',
+    quickSummary: 'ملخص سريع',
     
     // Inventory Page
     equipmentCategories: 'فئات المعدات',

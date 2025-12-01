@@ -66,6 +66,10 @@ function App() {
     setCurrentView('reports');
   };
 
+  const handleNavigateToDashboard = () => {
+    setCurrentView('dashboard');
+  };
+
   const checkSession = async () => {
     try {
       const response = await fetch('/api/auth/session');
@@ -140,6 +144,14 @@ function App() {
           </div>
         ) : !isAuthenticated ? (
           <Login onLogin={handleLogin} language={language} onLanguageChange={handleLanguageChange} />
+        ) : currentView === 'dashboard' ? (
+          <Dashboard
+            language={language}
+            onNavigateToInventory={handleNavigateToInventory}
+            onNavigateToReservations={handleNavigateToReservations}
+            onNavigateToMaintenance={handleNavigateToMaintenance}
+            userRole={currentUser?.role}
+          />
         ) : currentView === 'inventory' ? (
           <Inventory
             userName={currentUser?.name || ''}
