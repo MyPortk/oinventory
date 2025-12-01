@@ -75,7 +75,7 @@ export default function Dashboard({
     })
     .filter((data: any) => data.name !== `Equipment ${equipmentRequestCount}`)
     .sort((a, b) => b.requests - a.requests)
-    .slice(0, 4); // Top 4 most requested
+    .slice(0, 10); // Top 10 most requested
 
   return (
     <div className="min-h-screen bg-background">
@@ -271,7 +271,7 @@ export default function Dashboard({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-end justify-around gap-2 h-40 px-4">
+              <div className="flex items-end justify-between gap-0.5 h-40 px-2">
                 {mostRequestedData.map((item: any, index: number) => {
                   const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
                   const heightPercent = (item.requests / maxRequests) * 100;
@@ -279,13 +279,13 @@ export default function Dashboard({
                     <div key={index} className="flex flex-col items-center gap-1 flex-1">
                       <div className="relative h-28 flex items-end justify-center w-full">
                         <div
-                          className="bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-sm transition-all hover:opacity-80 cursor-pointer"
-                          style={{ height: `${heightPercent}%`, width: '32px', minHeight: '6px' }}
+                          className="bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-xs transition-all hover:opacity-80 cursor-pointer"
+                          style={{ height: `${heightPercent}%`, width: '20px', minHeight: '4px' }}
                           title={`${item.name}: ${item.requests} requests`}
                         ></div>
                       </div>
-                      <span className="text-base font-bold text-foreground">{item.requests}</span>
-                      <span className="text-xs text-muted-foreground text-center leading-tight max-w-[60px] break-words">{item.name}</span>
+                      <span className="text-xs font-bold text-foreground">{item.requests}</span>
+                      <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[50px] break-words">{item.name}</span>
                     </div>
                   );
                 })}
