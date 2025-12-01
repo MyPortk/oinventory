@@ -127,11 +127,15 @@ export default function Dashboard({
 
   // Get top 4 categories by checkout count, sorted by popularity
   const topCategories = Object.entries(categoryCheckouts)
-    .map(([categoryName, checkouts]) => ({
-      name: categoryName,
-      checkouts: checkouts,
-      image: null
-    }))
+    .map(([categoryName, checkouts]) => {
+      // Find the category image from the categories data
+      const categoryData = (categories as any[]).find((c: any) => c.name === categoryName);
+      return {
+        name: categoryName,
+        checkouts: checkouts,
+        image: categoryData?.image || null
+      };
+    })
     .sort((a, b) => b.checkouts - a.checkouts)
     .slice(0, 4);
 
