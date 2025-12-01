@@ -80,7 +80,7 @@ export default function Dashboard({
     })
     .filter((data: any) => data.name !== `Equipment ${equipmentRequestCount}`)
     .sort((a, b) => b.requests - a.requests)
-    .slice(0, 6); // Top 6 most requested
+    .slice(0, 8); // Top 8 most requested
 
   // Calculate by category
   const equipmentCount = (items as any[]).filter((i: any) => i.isEquipment === true).length;
@@ -282,10 +282,10 @@ export default function Dashboard({
           </Card>
         </div>
 
-        {/* Most Requested & Overdue Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Most Requested Bar Chart - Left */}
-          <Card className="hover-elevate" data-testid="card-most-requested">
+        {/* Most Requested & Overdue Grid - 70/30 Split */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-10">
+          {/* Most Requested Bar Chart - Left (70%) - 7 cols */}
+          <Card className="hover-elevate lg:col-span-7" data-testid="card-most-requested">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm">
                 <TrendingUp className="w-4 h-4" />
@@ -294,14 +294,14 @@ export default function Dashboard({
             </CardHeader>
             <CardContent>
               {mostRequestedData.length > 0 ? (
-                <div className="flex items-end justify-center gap-3 h-36 py-2">
+                <div className="flex items-end justify-center gap-1 h-36 py-2">
                   {mostRequestedData.map((item: any, index: number) => {
                     const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
                     const heightPercent = (item.requests / maxRequests) * 100;
                     return (
                       <div key={index} className="flex flex-col items-center gap-1 flex-1">
                         <span className="text-xs font-semibold text-foreground">{item.requests}</span>
-                        <div className="w-8 bg-muted rounded-t-sm relative flex items-end justify-center"
+                        <div className="w-5 bg-muted rounded-t-sm relative flex items-end justify-center"
                           style={{ height: '100px' }}>
                           <div
                             className="w-full bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-sm transition-all hover:opacity-80 cursor-pointer"
@@ -309,7 +309,7 @@ export default function Dashboard({
                             title={`${item.name}: ${item.requests} requests`}
                           ></div>
                         </div>
-                        <span className="text-[11px] text-muted-foreground text-center leading-tight max-w-[50px]">{item.name}</span>
+                        <span className="text-[10px] text-muted-foreground text-center leading-tight max-w-[35px]">{item.name}</span>
                       </div>
                     );
                   })}
@@ -322,8 +322,8 @@ export default function Dashboard({
             </CardContent>
           </Card>
 
-          {/* Overdue Items - Right */}
-          <Card className="hover-elevate">
+          {/* Overdue Items - Right (30%) - 3 cols */}
+          <Card className="hover-elevate lg:col-span-3">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm">
                 <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
