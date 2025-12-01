@@ -4,6 +4,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Login from "@/pages/Login";
+import Dashboard from "@/pages/Dashboard";
 import Inventory from "@/pages/Inventory";
 import Reservations from "@/pages/Reservations";
 import ActivityLogs from "@/pages/ActivityLogs";
@@ -13,7 +14,7 @@ import UserManagement from "@/pages/UserManagement";
 import Reports from "@/pages/Reports";
 import type { Language } from "@/lib/translations";
 
-type View = 'login' | 'inventory' | 'reservations' | 'activity-logs' | 'qr-codes' | 'maintenance' | 'users' | 'reports';
+type View = 'login' | 'dashboard' | 'inventory' | 'reservations' | 'activity-logs' | 'qr-codes' | 'maintenance' | 'users' | 'reports';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,8 +31,8 @@ function App() {
   const handleLogin = (user: any) => {
     setCurrentUser(user);
     setIsAuthenticated(true);
-    // Admin sees inventory (categories) first, users see inventory too
-    setCurrentView('inventory');
+    // All users see dashboard first
+    setCurrentView('dashboard');
   };
 
   const handleLogout = () => {

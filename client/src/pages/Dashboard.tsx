@@ -1,0 +1,234 @@
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { api, type Item, type Reservation } from "@/lib/api";
+import { useTranslation, type Language } from "@/lib/translations";
+import { Package, Clock, AlertCircle, CheckCircle2, BookOpen, TrendingUp } from "lucide-react";
+
+interface DashboardProps {
+  language?: Language;
+  onNavigateToInventory?: () => void;
+  onNavigateToReservations?: () => void;
+  onNavigateToMaintenance?: () => void;
+  userRole?: string;
+}
+
+export default function Dashboard({
+  language = 'en',
+  onNavigateToInventory,
+  onNavigateToReservations,
+  onNavigateToMaintenance,
+  userRole
+}: DashboardProps) {
+  const t = useTranslation(language);
+
+  const { data: items = [] } = useQuery({
+    queryKey: ['/api/items'],
+    queryFn: () => api.items.getAll(),
+  });
+
+  const { data: reservations = [] } = useQuery({
+    queryKey: ['/api/reservations'],
+    queryFn: () => api.reservations.getAll(),
+  });
+
+  // Calculate stats
+  const totalItems = items.length;
+  const availableItems = items.filter(item => item.status === 'Available').length;
+  const inUseItems = items.filter(item => item.status === 'In Use').length;
+  const reservedItems = items.filter(item => item.status === 'Reserved').length;
+  const maintenanceItems = items.filter(item => item.status === 'Maintenance').length;
+  const pendingReservations = reservations.filter(r => r.status === 'pending').length;
+
+  // Status distribution data for chart
+  const statusChartData = [
+    { name: t('available'), value: availableItems, fill: '#22c55e' },
+    { name: t('inUse'), value: inUseItems, fill: '#3b82f6' },
+    { name: t('reserved'), value: reservedItems, fill: '#f59e0b' },
+    { name: t('maintenance'), value: maintenanceItems, fill: '#ef4444' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white" data-testid="text-dashboard-title">
+            {language === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            {language === 'ar' ? 'نظرة عامة على نظام المخزون الخاص بك' : 'Overview of your inventory system'}
+          </p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          {/* Total Items */}
+          <Card className="hover-elevate" data-testid="card-total-items">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                <Package className="w-4 h-4" />
+                {t('totalItems')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-total-items">{totalItems}</div>
+            </CardContent>
+          </Card>
+
+          {/* Available */}
+          <Card className="hover-elevate bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900" data-testid="card-available">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-green-700 dark:text-green-400 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4" />
+                {t('available')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-700 dark:text-green-400" data-testid="text-available">{availableItems}</div>
+            </CardContent>
+          </Card>
+
+          {/* In Use */}
+          <Card className="hover-elevate bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900" data-testid="card-in-use">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-blue-700 dark:text-blue-400 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4" />
+                {t('inUse')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-700 dark:text-blue-400" data-testid="text-in-use">{inUseItems}</div>
+            </CardContent>
+          </Card>
+
+          {/* Reserved */}
+          <Card className="hover-elevate bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900" data-testid="card-reserved">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-amber-700 dark:text-amber-400 flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                {t('reserved')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-amber-700 dark:text-amber-400" data-testid="text-reserved">{reservedItems}</div>
+            </CardContent>
+          </Card>
+
+          {/* Maintenance */}
+          <Card className="hover-elevate bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900" data-testid="card-maintenance">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-red-700 dark:text-red-400 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4" />
+                {t('maintenance')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-700 dark:text-red-400" data-testid="text-maintenance">{maintenanceItems}</div>
+            </CardContent>
+          </Card>
+
+          {/* Pending Reservations */}
+          <Card className="hover-elevate bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-900" data-testid="card-pending">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-purple-700 dark:text-purple-400 flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                {language === 'ar' ? 'قيد الانتظار' : 'Pending'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-700 dark:text-purple-400" data-testid="text-pending">{pendingReservations}</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts and Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Status Distribution Chart */}
+          <Card className="lg:col-span-2" data-testid="card-status-chart">
+            <CardHeader>
+              <CardTitle>{language === 'ar' ? 'توزيع الحالة' : 'Status Distribution'}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={statusChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#667eea" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card data-testid="card-quick-actions">
+            <CardHeader>
+              <CardTitle>{language === 'ar' ? 'إجراءات سريعة' : 'Quick Actions'}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button
+                onClick={onNavigateToInventory}
+                className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:from-[#5568d3] hover:to-[#6a4291]"
+                data-testid="button-view-inventory"
+              >
+                {t('inventory')}
+              </Button>
+              <Button
+                onClick={onNavigateToReservations}
+                variant="outline"
+                className="w-full"
+                data-testid="button-view-reservations"
+              >
+                {t('reservations')}
+              </Button>
+              {(userRole === 'admin' || userRole === 'developer') && (
+                <Button
+                  onClick={onNavigateToMaintenance}
+                  variant="outline"
+                  className="w-full"
+                  data-testid="button-view-maintenance"
+                >
+                  {t('maintenance')}
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Summary Section */}
+        <Card data-testid="card-summary">
+          <CardHeader>
+            <CardTitle>{language === 'ar' ? 'ملخص سريع' : 'Quick Summary'}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div className="flex justify-between py-2 border-b dark:border-gray-700">
+                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'معدل التوفر' : 'Availability Rate'}</span>
+                <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-availability-rate">
+                  {totalItems > 0 ? Math.round((availableItems / totalItems) * 100) : 0}%
+                </span>
+              </div>
+              <div className="flex justify-between py-2 border-b dark:border-gray-700">
+                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'معدل الاستخدام' : 'Usage Rate'}</span>
+                <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-usage-rate">
+                  {totalItems > 0 ? Math.round((inUseItems / totalItems) * 100) : 0}%
+                </span>
+              </div>
+              <div className="flex justify-between py-2">
+                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'العناصر المحجوزة' : 'Reserved Items'}</span>
+                <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-reserved-items">{reservedItems}</span>
+              </div>
+              <div className="flex justify-between py-2">
+                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'الصيانة المطلوبة' : 'Maintenance Needed'}</span>
+                <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-maintenance-needed">{maintenanceItems}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
