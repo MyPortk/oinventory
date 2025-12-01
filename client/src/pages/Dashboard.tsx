@@ -175,17 +175,13 @@ export default function Dashboard({
     }
   });
 
-  // Get top 4 categories by checkout count, sorted by popularity
-  const topCategories = Object.entries(categoryCheckouts)
-    .map(([categoryName, checkouts]) => {
-      // Find the category image from the categories data
-      const categoryData = (categories as any[]).find((c: any) => c.name === categoryName);
-      return {
-        name: categoryName,
-        checkouts: checkouts,
-        image: categoryData?.image || null
-      };
-    })
+  // Get top 4 categories from all categories, sorted by checkout count
+  const topCategories = (categories as any[])
+    .map((cat: any) => ({
+      name: cat.name,
+      checkouts: categoryCheckouts[cat.name] || 0,
+      image: cat.image
+    }))
     .sort((a, b) => b.checkouts - a.checkouts)
     .slice(0, 4);
 
