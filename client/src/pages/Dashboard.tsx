@@ -294,7 +294,7 @@ export default function Dashboard({
             </CardHeader>
             <CardContent>
               {mostRequestedData.length > 0 ? (
-                <div className="flex items-end justify-center h-36 py-2" style={{ gap: '0.25rem' }}>
+                <div className="flex items-end justify-center h-36 py-2" style={{ gap: '0' }}>
                   {mostRequestedData.map((item: any, index: number) => {
                     const maxRequests = Math.max(...mostRequestedData.map((d: any) => d.requests), 1);
                     const heightPercent = (item.requests / maxRequests) * 100;
