@@ -103,16 +103,22 @@ export default function Dashboard({
     .sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 5);
 
-  // Calculate items per category
-  const categoryItemCount: { [key: string]: { name: string; count: number; image: string } } = {};
-  (categories as any[]).forEach((cat: any) => {
-    const count = (items as any[]).filter((item: any) => item.productType === cat.name).length;
-    if (count > 0) {
-      categoryItemCount[cat.id] = { name: cat.name, count, image: cat.image };
+  // Calculate most requested categories (by reservation count)
+  const categoryRequestCount: { [key: string]: { name: string; count: number; image: string } } = {};
+  (reservations as any[]).forEach((reservation: any) => {
+    const item = (items as any[]).find((i: any) => String(i.id) === String(reservation.itemId));
+    if (item) {
+      const category = (categories as any[]).find((c: any) => c.name === item.productType);
+      if (category) {
+        if (!categoryRequestCount[category.id]) {
+          categoryRequestCount[category.id] = { name: category.name, count: 0, image: category.image };
+        }
+        categoryRequestCount[category.id].count += 1;
+      }
     }
   });
 
-  const topCategories = Object.values(categoryItemCount)
+  const topCategories = Object.values(categoryRequestCount)
     .sort((a, b) => b.count - a.count)
     .slice(0, 4);
 
@@ -356,16 +362,21 @@ export default function Dashboard({
             </CardHeader>
             <CardContent>
               {topCategories.length > 0 ? (
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   {topCategories.map((cat: any, index: number) => (
                     <div
                       key={index}
-                      className="p-3 bg-muted rounded-lg hover-elevate cursor-pointer"
+                      className="relative h-32 rounded-lg overflow-hidden hover-elevate cursor-pointer group"
                       onClick={onNavigateToInventory}
                       data-testid={`box-category-${cat.name}`}
+                      style={{
+                        backgroundImage: cat.image ? `url(${cat.image})` : 'none',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
                     >
-                      <p className="text-xs font-semibold text-foreground truncate">{cat.name}</p>
-                      <p className="text-lg font-bold text-primary mt-1">{cat.count}</p>
+                      {/* Dark overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all"></div>
                     </div>
                   ))}
                 </div>
