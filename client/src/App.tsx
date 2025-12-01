@@ -12,10 +12,11 @@ import QRCodes from "@/pages/QRCodes";
 import Maintenance from "@/pages/Maintenance";
 import UserManagement from "@/pages/UserManagement";
 import Reports from "@/pages/Reports";
+import Permissions from "@/pages/Permissions";
 import Sidebar from "@/components/Sidebar";
 import type { Language } from "@/lib/translations";
 
-type View = 'login' | 'dashboard' | 'inventory' | 'reservations' | 'activity-logs' | 'qr-codes' | 'maintenance' | 'users' | 'reports';
+type View = 'login' | 'dashboard' | 'inventory' | 'reservations' | 'activity-logs' | 'qr-codes' | 'maintenance' | 'users' | 'reports' | 'permissions';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -73,6 +74,12 @@ function App() {
 
   const handleNavigateToReports = () => {
     setCurrentView('reports');
+  };
+
+  const handleNavigateToPermissions = () => {
+    if (currentUser?.role === 'developer') {
+      setCurrentView('permissions');
+    }
   };
 
   const handleLanguageChange = (lang: Language) => {

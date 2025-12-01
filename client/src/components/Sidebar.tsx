@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, Calendar, ClipboardList, QrCode, Wrench, Users, FileText, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Calendar, ClipboardList, QrCode, Wrench, Users, FileText, LogOut, Shield } from "lucide-react";
 import { useTranslation, type Language } from "@/lib/translations";
 
 interface SidebarProps {
@@ -13,6 +13,7 @@ interface SidebarProps {
   onNavigateToMaintenance?: () => void;
   onNavigateToReports?: () => void;
   onNavigateToUsers?: () => void;
+  onNavigateToPermissions?: () => void;
   onLogout: () => void;
   language: Language;
 }
@@ -29,12 +30,14 @@ export default function Sidebar({
   onNavigateToMaintenance,
   onNavigateToReports,
   onNavigateToUsers,
+  onNavigateToPermissions,
   onLogout,
   language,
 }: SidebarProps) {
   const t = useTranslation(language);
 
   const isAdmin = userRole === 'admin' || userRole === 'developer';
+  const isDeveloper = userRole === 'developer';
 
   const menuItems = [
     ...(isAdmin
@@ -55,6 +58,11 @@ export default function Sidebar({
     ...(isAdmin
       ? [
           { icon: Users, label: 'user_management', action: onNavigateToUsers, view: 'users' },
+        ]
+      : []),
+    ...(isDeveloper
+      ? [
+          { icon: Shield, label: 'permissions', action: onNavigateToPermissions, view: 'permissions' },
         ]
       : []),
   ];

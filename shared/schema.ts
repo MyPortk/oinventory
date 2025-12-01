@@ -125,6 +125,13 @@ export const damageReports = pgTable("damage_reports", {
   resolvedAt: timestamp("resolved_at")
 });
 
+export const systemPermissions = pgTable("system_permissions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  key: text("key").notNull().unique(),
+  enabled: boolean("enabled").notNull().default(true),
+  updatedAt: timestamp("updated_at").notNull().default(sql`CURRENT_TIMESTAMP`)
+});
+
 export const damageReportsRelations = relations(damageReports, ({ one }) => ({
   reportedByUser: one(users, {
     fields: [damageReports.reportedBy],
@@ -226,6 +233,12 @@ export type InsertReservationStatusHistory = z.infer<typeof insertReservationSta
 export type ReservationStatusHistory = typeof reservationStatusHistory.$inferSelect;
 export type InsertDamageReport = z.infer<typeof insertDamageReportSchema>;
 export type DamageReport = typeof damageReports.$inferSelect;
+export type SystemPermission = typeof systemPermissions.$inferSelect;
+
+export const SYSTEM_PERMISSIONS = {
+  SHOW_ASSETS: 'show_assets',
+  SHOW_LANGUAGE_TOGGLE: 'show_language_toggle'
+} as const;
 
 export const ITEM_STATUSES = ['Available', 'In Use', 'Reserved', 'Maintenance'] as const;
 
