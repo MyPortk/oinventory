@@ -384,13 +384,13 @@ export default function Dashboard({
                 {currentLanguage === 'ar' ? 'عرض الكل' : 'View All'}
               </button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="w-full">
               {topCategories.length > 0 ? (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 w-full">
                   {topCategories.slice(0, 4).map((cat: any, index: number) => (
                     <div
                       key={index}
-                      className="relative h-32 rounded-md overflow-hidden cursor-pointer group"
+                      className="relative h-24 w-full rounded-md overflow-hidden cursor-pointer group"
                       onClick={onNavigateToInventory}
                       data-testid={`box-category-${cat.name}`}
                       style={{
