@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import InventoryHeader from "@/components/InventoryHeader";
@@ -66,6 +66,23 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
   const [returnNotes, setReturnNotes] = useState("");
   const [showLocationColumn, setShowLocationColumn] = useState(true);
   const [showColumnSettings, setShowColumnSettings] = useState(false);
+
+  const { data: permissions = {} } = useQuery({
+    queryKey: ['/api/permissions'],
+    queryFn: async () => {
+      try {
+        const response = await fetch('/api/permissions', { credentials: 'include' });
+        if (!response.ok) return { show_assets: true };
+        return response.json();
+      } catch {
+        return { show_assets: true };
+      }
+    },
+  });
+
+  useEffect(() => {
+    setShowAssetsOption(permissions.show_assets !== false);
+  }, [permissions]);
 
   const { data: categories = [] } = useQuery({
     queryKey: ['/api/categories', itemTypeFilter],
