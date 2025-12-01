@@ -86,15 +86,28 @@ export default function Sidebar({
   ];
 
   return (
-    <div className="flex h-screen bg-background">
-      <div className={`bg-gradient-to-b from-[#667eea] to-[#764ba2] text-white flex flex-col fixed h-screen overflow-y-auto transition-all duration-300 ${isCollapsed ? 'w-0 -left-60' : 'w-60'}`}>
+    <div className="flex h-screen bg-background relative">
+      {/* Floating Expand Button - appears when sidebar is hidden */}
+      {showCollapseButton && isCollapsed && (
+        <button
+          onClick={() => setIsCollapsed(false)}
+          className="fixed left-2 top-4 z-50 p-2 rounded-lg bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white hover:shadow-lg transition-all duration-300 backdrop-blur-sm hover:scale-110"
+          data-testid="button-expand-sidebar"
+          title="Expand sidebar"
+        >
+          <ChevronLeft className="w-5 h-5 rotate-180" />
+        </button>
+      )}
+
+      {/* Main Sidebar */}
+      <div className={`bg-gradient-to-b from-[#667eea] to-[#764ba2] text-white flex flex-col fixed h-screen overflow-y-auto transition-all duration-300 ease-in-out ${isCollapsed ? 'w-0 -translate-x-60 opacity-0' : 'w-60 translate-x-0 opacity-100'}`}>
         {showCollapseButton && (
           <div className="p-3 flex justify-end">
             <button
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all backdrop-blur-sm"
+              onClick={() => setIsCollapsed(true)}
+              className="p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all backdrop-blur-sm hover:scale-110"
               data-testid="button-collapse-sidebar"
-              title="Toggle sidebar"
+              title="Collapse sidebar"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -134,7 +147,13 @@ export default function Sidebar({
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto" style={{ marginLeft: isCollapsed ? '0' : '15rem', transition: 'margin-left 0.3s' }} />
+      {/* Main Content Area */}
+      <div 
+        className="flex-1 overflow-auto transition-all duration-300 ease-in-out" 
+        style={{ 
+          marginLeft: isCollapsed ? '0' : '15rem'
+        }} 
+      />
     </div>
   );
 }
