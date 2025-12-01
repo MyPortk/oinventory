@@ -105,22 +105,24 @@ Preferred communication style: Simple, everyday language.
 - Migration files in `./migrations` directory
 - Push-based deployment with `drizzle-kit push`
 
-### Recent Changes (Nov 30, 2025)
+### Recent Changes (Dec 1, 2025)
+
+**Dashboard Enhancements:**
+- **Purple gradient header**: Dashboard title now uses same purple gradient design as "Add Category" button (from-[#667eea] to-[#764ba2])
+- **Most Requested Equipment Bar Chart**: Added interactive bar chart showing top 8 most requested equipment with recharts integration
+  - Chart displays reservation request counts per equipment
+  - Bilingual support (English/Arabic) for chart labels and axis titles
+  - Responsive design with proper margins and styling
+  - Shows only when there are reservations in the system
+- **Enhanced metrics display**: 4-column metric cards with colored icon badges (blue, green, purple, amber)
+- **Professional layout**: Improved spacing, hierarchy, and visual consistency throughout the dashboard
+
+### Previous Changes (Nov 30, 2025)
 
 **Developer Role Full Admin Access:**
-- Updated all frontend pages to include developer role in admin checks:
-  - Inventory.tsx: Add/edit categories, add items, edit/delete items, checkout/checkin
-  - Reservations.tsx: View all reservations, approve/reject pending, mark returns
-  - Maintenance.tsx: Edit and delete maintenance items
-  - Reports.tsx: View all damage reports
-- Updated InventoryHeader.tsx navigation menu to show admin-only items to developers:
-  - Activity Logs menu item
-  - QR Codes menu item
-  - Maintenance menu item
-  - User Management menu item
-- Backend already supported developer role in `requireAdmin` middleware (auth.ts line 50)
+- Updated all frontend pages to include developer role in admin checks
 - Developer credentials: username `developer`, password `omg`
-- Developer account (username: developer) now has complete admin access across the entire application
+- Developer account now has complete admin access across the entire application
 
 ### Previous Changes (Nov 23, 2025)
 

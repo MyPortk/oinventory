@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/lib/api";
 import { useTranslation, type Language } from "@/lib/translations";
 import { Package, Clock, AlertCircle, CheckCircle2, TrendingUp, Activity, Zap, BarChart3 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 interface DashboardProps {
   userName: string;
@@ -41,21 +42,40 @@ export default function Dashboard({
   const { data: items = [] } = useQuery({
     queryKey: ['/api/items'],
     queryFn: () => api.items.getAll(),
-  });
+  }) as any;
 
   const { data: reservations = [] } = useQuery({
     queryKey: ['/api/reservations'],
     queryFn: () => api.reservations.getAll(),
-  });
+  }) as any;
 
   // Calculate stats
-  const totalItems = items.length;
-  const availableItems = items.filter(item => item.status === 'Available').length;
-  const inUseItems = items.filter(item => item.status === 'In Use').length;
-  const reservedItems = items.filter(item => item.status === 'Reserved').length;
-  const maintenanceItems = items.filter(item => item.status === 'Maintenance').length;
-  const pendingReservations = reservations.filter(r => r.status === 'pending').length;
-  const approvedReservations = reservations.filter(r => r.status === 'approved').length;
+  const totalItems = (items as any[]).length;
+  const availableItems = (items as any[]).filter((item: any) => item.status === 'Available').length;
+  const inUseItems = (items as any[]).filter((item: any) => item.status === 'In Use').length;
+  const reservedItems = (items as any[]).filter((item: any) => item.status === 'Reserved').length;
+  const maintenanceItems = (items as any[]).filter((item: any) => item.status === 'Maintenance').length;
+  const pendingReservations = (reservations as any[]).filter((r: any) => r.status === 'pending').length;
+  const approvedReservations = (reservations as any[]).filter((r: any) => r.status === 'approved').length;
+
+  // Calculate most requested equipment
+  const equipmentRequestCount: { [key: number]: number } = {};
+  (reservations as any[]).forEach((reservation: any) => {
+    const itemId = Number(reservation.itemId);
+    equipmentRequestCount[itemId] = (equipmentRequestCount[itemId] || 0) + 1;
+  });
+
+  const mostRequestedData = Object.entries(equipmentRequestCount)
+    .map(([itemId, count]) => {
+      const item = (items as any[]).find((i: any) => i.id === parseInt(itemId));
+      return {
+        itemId: parseInt(itemId),
+        name: item?.productName || 'Unknown Item',
+        requests: count,
+      };
+    })
+    .sort((a, b) => b.requests - a.requests)
+    .slice(0, 8); // Top 8 most requested
 
   return (
     <div className="min-h-screen bg-background">
@@ -240,6 +260,61 @@ export default function Dashboard({
             </CardContent>
           </Card>
         </div>
+
+        {/* Most Requested Equipment Chart */}
+        {mostRequestedData.length > 0 && (
+          <Card className="hover-elevate" data-testid="card-most-requested">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                {currentLanguage === 'ar' ? 'المعدات الأكثر طلباً' : 'Most Requested Equipment'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="w-full h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={mostRequestedData} margin={{ top: 20, right: 30, left: 0, bottom: 80 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="currentColor" opacity={0.1} />
+                    <XAxis 
+                      dataKey="name" 
+                      angle={-45} 
+                      textAnchor="end" 
+                      height={100}
+                      style={{ fontSize: '12px' }}
+                    />
+                    <YAxis 
+                      label={{ value: currentLanguage === 'ar' ? 'عدد الطلبات' : 'Number of Requests', angle: -90, position: 'insideLeft' }}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'var(--background)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '8px'
+                      }}
+                      labelStyle={{ color: 'var(--foreground)' }}
+                      formatter={(value: any) => [value, currentLanguage === 'ar' ? 'الطلبات' : 'Requests']}
+                    />
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '20px' }}
+                    />
+                    <Bar 
+                      dataKey="requests" 
+                      fill="#667eea" 
+                      name={currentLanguage === 'ar' ? 'الطلبات' : 'Requests'}
+                      radius={[8, 8, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <p className="text-xs text-muted-foreground mt-4">
+                {currentLanguage === 'ar' 
+                  ? 'يعرض أكثر 8 معدات تم طلبها من قبل المستخدمين'
+                  : 'Shows the top 8 most requested equipment by users'
+                }
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Summary Footer */}
         <Card data-testid="card-summary-footer">
