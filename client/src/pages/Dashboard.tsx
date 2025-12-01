@@ -1,27 +1,42 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import InventoryHeader from "@/components/InventoryHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { api, type Item, type Reservation } from "@/lib/api";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { api, type Item } from "@/lib/api";
 import { useTranslation, type Language } from "@/lib/translations";
 import { Package, Clock, AlertCircle, CheckCircle2, BookOpen, TrendingUp } from "lucide-react";
 
 interface DashboardProps {
-  language?: Language;
-  onNavigateToInventory?: () => void;
+  userName: string;
+  userRole: string;
+  userId: string;
+  onLogout: () => void;
   onNavigateToReservations?: () => void;
+  onNavigateToActivityLogs?: () => void;
+  onNavigateToQRCodes?: () => void;
   onNavigateToMaintenance?: () => void;
-  userRole?: string;
+  onNavigateToReports?: () => void;
+  currentLanguage: Language;
+  onLanguageChange: (lang: Language) => void;
 }
 
 export default function Dashboard({
-  language = 'en',
-  onNavigateToInventory,
+  userName,
+  userRole,
+  userId,
+  onLogout,
   onNavigateToReservations,
+  onNavigateToActivityLogs,
+  onNavigateToQRCodes,
   onNavigateToMaintenance,
-  userRole
+  onNavigateToReports,
+  currentLanguage,
+  onLanguageChange
 }: DashboardProps) {
-  const t = useTranslation(language);
+  const [currentView] = useState<'categories' | 'inventory'>('categories');
+  const t = useTranslation(currentLanguage);
 
   const { data: items = [] } = useQuery({
     queryKey: ['/api/items'],
@@ -50,15 +65,31 @@ export default function Dashboard({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white" data-testid="text-dashboard-title">
-            {language === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
+    <div className="min-h-screen bg-background">
+      <InventoryHeader
+        userName={userName}
+        userRole={userRole}
+        currentView={currentView}
+        onViewChange={() => {}}
+        onLogout={onLogout}
+        onNavigateToReservations={onNavigateToReservations}
+        onNavigateToActivityLogs={onNavigateToActivityLogs}
+        onNavigateToQRCodes={onNavigateToQRCodes}
+        onNavigateToMaintenance={onNavigateToMaintenance}
+        onNavigateToReports={onNavigateToReports}
+        hideViewToggle={true}
+        language={currentLanguage}
+        onLanguageChange={onLanguageChange}
+      />
+      
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-8">
+        {/* Page Title */}
+        <div className="space-y-1">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground" data-testid="text-dashboard-title">
+            {t('dashboard')}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            {language === 'ar' ? 'نظرة عامة على نظام المخزون الخاص بك' : 'Overview of your inventory system'}
+          <p className="text-muted-foreground">
+            {t('overviewInventory')}
           </p>
         </div>
 
@@ -170,7 +201,6 @@ export default function Dashboard({
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
-                onClick={onNavigateToInventory}
                 className="w-full bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:from-[#5568d3] hover:to-[#6a4291]"
                 data-testid="button-view-inventory"
               >

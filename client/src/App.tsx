@@ -146,11 +146,17 @@ function App() {
           <Login onLogin={handleLogin} language={language} onLanguageChange={handleLanguageChange} />
         ) : currentView === 'dashboard' ? (
           <Dashboard
-            language={language}
-            onNavigateToInventory={handleNavigateToInventory}
+            userName={currentUser?.name || ''}
+            userRole={currentUser?.role || ''}
+            userId={currentUser?.id || ''}
+            onLogout={handleLogout}
             onNavigateToReservations={handleNavigateToReservations}
+            onNavigateToActivityLogs={handleNavigateToActivityLogs}
+            onNavigateToQRCodes={handleNavigateToQRCodes}
             onNavigateToMaintenance={handleNavigateToMaintenance}
-            userRole={currentUser?.role}
+            onNavigateToReports={handleNavigateToReports}
+            currentLanguage={language}
+            onLanguageChange={handleLanguageChange}
           />
         ) : currentView === 'inventory' ? (
           <Inventory
