@@ -49,6 +49,11 @@ export default function Dashboard({
     queryFn: () => api.reservations.getAll(),
   }) as any;
 
+  const { data: activityLogs = [] } = useQuery({
+    queryKey: ['/api/activity-logs'],
+    queryFn: () => api.activityLogs.getAll(),
+  }) as any;
+
   // Calculate stats
   const totalItems = (items as any[]).length;
   const availableItems = (items as any[]).filter((item: any) => item.status === 'Available').length;
@@ -76,6 +81,22 @@ export default function Dashboard({
     .filter((data: any) => data.name !== `Equipment ${equipmentRequestCount}`)
     .sort((a, b) => b.requests - a.requests)
     .slice(0, 6); // Top 6 most requested
+
+  // Calculate by category
+  const equipmentCount = (items as any[]).filter((i: any) => i.isEquipment === true).length;
+  const assetsCount = (items as any[]).filter((i: any) => i.isEquipment === false).length;
+
+  // Calculate overdue items
+  const today = new Date().toISOString().split('T')[0];
+  const overdueItems = (reservations as any[]).filter((r: any) => {
+    const returnDate = r.returnDate ? new Date(r.returnDate).toISOString().split('T')[0] : null;
+    return returnDate && returnDate < today && (r.status === 'active' || r.status === 'approved');
+  }).length;
+
+  // Calculate recent activities
+  const recentActivities = (activityLogs as any[])
+    .sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 5);
 
   return (
     <div className="min-h-screen bg-background">
@@ -294,6 +315,76 @@ export default function Dashboard({
             </CardContent>
           </Card>
         )}
+
+        {/* By Category */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="hover-elevate">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Package className="w-4 h-4" />
+                {currentLanguage === 'ar' ? 'حسب الفئة' : 'By Category'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg">
+                  <span className="text-sm font-medium text-foreground">{currentLanguage === 'ar' ? 'معدات' : 'Equipment'}</span>
+                  <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">{equipmentCount}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-purple-50 dark:bg-purple-950/30 rounded-lg">
+                  <span className="text-sm font-medium text-foreground">{currentLanguage === 'ar' ? 'أصول' : 'Assets'}</span>
+                  <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">{assetsCount}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Overdue Items */}
+          <Card className="hover-elevate">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
+                {currentLanguage === 'ar' ? 'متأخر' : 'Overdue'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="text-center p-6 bg-red-50 dark:bg-red-950/30 rounded-lg">
+                  <p className="text-4xl font-bold text-red-600 dark:text-red-400">{overdueItems}</p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {currentLanguage === 'ar' ? 'عناصر متأخرة الإرجاع' : 'Items overdue for return'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Activities */}
+          <Card className="hover-elevate">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Activity className="w-4 h-4" />
+                {currentLanguage === 'ar' ? 'أنشطة حديثة' : 'Recent Activities'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 max-h-48 overflow-y-auto">
+              {recentActivities.length > 0 ? (
+                recentActivities.map((log: any, idx: number) => (
+                  <div key={idx} className="text-xs pb-2 border-b border-muted last:border-b-0">
+                    <p className="font-medium text-foreground truncate">{log.action}</p>
+                    <p className="text-muted-foreground text-[11px]">
+                      {new Date(log.timestamp).toLocaleString(currentLanguage === 'ar' ? 'ar-SA' : 'en-US')}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-muted-foreground text-center py-4">
+                  {currentLanguage === 'ar' ? 'لا توجد أنشطة' : 'No activities yet'}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Summary Footer */}
         <Card data-testid="card-summary-footer">

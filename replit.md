@@ -108,12 +108,21 @@ Preferred communication style: Simple, everyday language.
 ### Recent Changes (Dec 1, 2025)
 
 **Dashboard Enhancements:**
-- **Purple gradient header**: Dashboard title now uses same purple gradient design as "Add Category" button (from-[#667eea] to-[#764ba2])
-- **Most Requested Equipment Bar Chart**: Added interactive bar chart showing top 8 most requested equipment with recharts integration
-  - Chart displays reservation request counts per equipment
-  - Bilingual support (English/Arabic) for chart labels and axis titles
-  - Responsive design with proper margins and styling
-  - Shows only when there are reservations in the system
+- **Purple gradient header**: Dashboard title uses purple gradient design matching "Add Category" button (from-[#667eea] to-[#764ba2])
+- **Vertical Bar Chart**: Top 6 most requested equipment displayed as vertical bars with purple gradient
+  - Bars scale proportionally based on request count
+  - Hover effects and tooltips
+  - Compact and professional design
+- **By Category Card**: Shows Equipment vs Assets count breakdown
+  - Color-coded boxes (blue for Equipment, purple for Assets)
+  - Quick overview of inventory split
+- **Overdue Items Card**: Displays count of items overdue for return
+  - Red highlighted alert style
+  - Shows items with checkout past return date
+- **Recent Activities Card**: Shows last 5 system activities
+  - Scrollable activity list
+  - Timestamps for each action
+  - Bilingual support
 - **Enhanced metrics display**: 4-column metric cards with colored icon badges (blue, green, purple, amber)
 - **Professional layout**: Improved spacing, hierarchy, and visual consistency throughout the dashboard
 
