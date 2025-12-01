@@ -572,3 +572,19 @@ export const useTranslation = (language?: Language) => {
     return translations[lang]?.[key] || key;
   };
 };
+
+export const getItemName = (productName: string, productNameAr?: string, language: Language = 'en'): string => {
+  if (language === 'ar' && productNameAr) {
+    return productNameAr;
+  }
+  return productName;
+};
+
+export const getItemType = (productType: string, productTypeAr?: string, language: Language = 'en'): string => {
+  if (language === 'ar' && productTypeAr) {
+    return productTypeAr;
+  }
+  // Try to translate from the translation dictionary
+  const t = useTranslation(language);
+  return t(productType as any) || productType;
+};

@@ -6,13 +6,15 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useTranslation } from "@/lib/translations";
+import { useTranslation, getItemName, getItemType } from "@/lib/translations";
 
 interface ItemCardProps {
   id: string;
   barcode: string;
   productName: string;
+  productNameAr?: string;
   productType: string;
+  productTypeAr?: string;
   status: string;
   location?: string;
   notes?: string;
@@ -41,7 +43,9 @@ export default function ItemCard({
   id,
   barcode,
   productName,
+  productNameAr,
   productType,
+  productTypeAr,
   status,
   location,
   notes,
@@ -59,7 +63,8 @@ export default function ItemCard({
   isEquipment = true,
 }: ItemCardProps) {
   const t = useTranslation(language);
-  const translatedType = t(productType as any) || productType;
+  const displayName = getItemName(productName, productNameAr, language);
+  const displayType = getItemType(productType, productTypeAr, language);
   const translatedStatus = t(status as any) || status;
   const [showQRDialog, setShowQRDialog] = useState(false);
 

@@ -239,6 +239,26 @@ export default function ItemFormDialog({ open, onClose, onSubmit, item, mode, us
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="productTypeAr">{t('type')} (AR)</Label>
+              {mode === 'edit' ? (
+                <div className="bg-muted p-2 rounded text-sm text-muted-foreground" dir="rtl">
+                  {formData.productTypeAr || 'Not specified'}
+                </div>
+              ) : (
+                <Input
+                  id="productTypeAr"
+                  value={formData.productTypeAr}
+                  onChange={(e) => setFormData({ ...formData, productTypeAr: e.target.value })}
+                  placeholder="e.g., كاميرا"
+                  data-testid="input-product-type-ar"
+                  dir="rtl"
+                />
+              )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="status">{t('status')} *</Label>
               <Select
