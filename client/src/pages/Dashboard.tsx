@@ -179,7 +179,7 @@ export default function Dashboard({
           {/* Status Distribution Chart */}
           <Card className="lg:col-span-2" data-testid="card-status-chart">
             <CardHeader>
-              <CardTitle>{language === 'ar' ? 'توزيع الحالة' : 'Status Distribution'}</CardTitle>
+              <CardTitle>{currentLanguage === 'ar' ? 'توزيع الحالة' : 'Status Distribution'}</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
@@ -197,7 +197,7 @@ export default function Dashboard({
           {/* Quick Actions */}
           <Card data-testid="card-quick-actions">
             <CardHeader>
-              <CardTitle>{language === 'ar' ? 'إجراءات سريعة' : 'Quick Actions'}</CardTitle>
+              <CardTitle>{currentLanguage === 'ar' ? 'إجراءات سريعة' : 'Quick Actions'}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
@@ -231,28 +231,28 @@ export default function Dashboard({
         {/* Summary Section */}
         <Card data-testid="card-summary">
           <CardHeader>
-            <CardTitle>{language === 'ar' ? 'ملخص سريع' : 'Quick Summary'}</CardTitle>
+            <CardTitle>{currentLanguage === 'ar' ? 'ملخص سريع' : 'Quick Summary'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div className="flex justify-between py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'معدل التوفر' : 'Availability Rate'}</span>
+                <span className="text-gray-600 dark:text-gray-400">{currentLanguage === 'ar' ? 'معدل التوفر' : 'Availability Rate'}</span>
                 <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-availability-rate">
                   {totalItems > 0 ? Math.round((availableItems / totalItems) * 100) : 0}%
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b dark:border-gray-700">
-                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'معدل الاستخدام' : 'Usage Rate'}</span>
+                <span className="text-gray-600 dark:text-gray-400">{currentLanguage === 'ar' ? 'معدل الاستخدام' : 'Usage Rate'}</span>
                 <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-usage-rate">
                   {totalItems > 0 ? Math.round((inUseItems / totalItems) * 100) : 0}%
                 </span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'العناصر المحجوزة' : 'Reserved Items'}</span>
+                <span className="text-gray-600 dark:text-gray-400">{currentLanguage === 'ar' ? 'العناصر المحجوزة' : 'Reserved Items'}</span>
                 <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-reserved-items">{reservedItems}</span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-gray-600 dark:text-gray-400">{language === 'ar' ? 'الصيانة المطلوبة' : 'Maintenance Needed'}</span>
+                <span className="text-gray-600 dark:text-gray-400">{currentLanguage === 'ar' ? 'الصيانة المطلوبة' : 'Maintenance Needed'}</span>
                 <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-maintenance-needed">{maintenanceItems}</span>
               </div>
             </div>

@@ -457,7 +457,7 @@ export const translations = {
     // Notifications
     notifications: 'الإشعارات',
     markAllRead: 'تحديد الكل كمقروء',
-    noNotifications: 'لا توجد إشعارات',
+    noNotificationsFound: 'لا توجد إشعارات',
 
     // Equipment Categories
     Cameras: 'الكاميرات',
