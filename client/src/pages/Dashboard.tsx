@@ -70,7 +70,7 @@ export default function Dashboard({
 
   // Get most checked out equipment from checkoutCount field
   const mostRequestedData = (items as any[])
-    .filter((item: any) => item.isEquipment && parseInt(item.checkoutCount || '0') > 0)
+    .filter((item: any) => item.isEquipment)
     .map((item: any) => ({
       name: item.productName,
       requests: parseInt(item.checkoutCount || '0'),
