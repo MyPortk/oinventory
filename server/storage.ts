@@ -147,22 +147,18 @@ export class MemStorage implements IStorage {
   }
 
   async updateItem(id: string, updates: Partial<InsertItem>): Promise<Item | undefined> {
-    // Clean up empty strings for nullable fields and convert to null
+    // Clean up empty strings for nullable/date fields - convert to undefined so Drizzle skips them
     const cleanedUpdates: Record<string, any> = {};
-    const dateFields = ['checkoutDate', 'returnedDate'];
-    const nullableFields = ['location', 'notes'];
+    const dateFields = ['maintenanceAvailableDate', 'checkoutDate', 'returnedDate'];
+    const nullableFields = ['location', 'notes', 'productNameAr', 'productTypeAr'];
     
     for (const [key, value] of Object.entries(updates)) {
-      if (value === '') {
-        // Convert empty strings to null for date and nullable fields
-        if ([...dateFields, ...nullableFields].includes(key)) {
-          cleanedUpdates[key] = null;
-        } else {
-          cleanedUpdates[key] = value;
-        }
-      } else {
-        cleanedUpdates[key] = value;
+      // Skip empty strings for date and nullable fields completely
+      if (value === '' && ([...dateFields, ...nullableFields].includes(key))) {
+        // Don't include in cleanedUpdates - this way Drizzle won't try to update it
+        continue;
       }
+      cleanedUpdates[key] = value;
     }
 
     const [item] = await db.update(items)
