@@ -231,6 +231,22 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
     return matchesSearch;
   });
 
+  // Define category order for equipment section
+  const equipmentCategoryOrder = [
+    "Cameras",
+    "Lens",
+    "Tripods & Stands",
+    "Grips",
+    "Audio",
+    "Lighting",
+    "Studio Accessories",
+    "Bags & Cases",
+    "Batteries & Power",
+    "Cables & Adapters",
+    "Monitors & Displays",
+    "Storage Devices"
+  ];
+
   // Filter categories by both equipment type AND search query for complete separation
   const filteredCategories = categories.filter(cat => {
     // Only show categories matching the current equipment type filter
@@ -239,6 +255,16 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
     
     // Then filter by search query
     return cat.name.toLowerCase().includes(searchQuery.toLowerCase());
+  }).sort((a, b) => {
+    // Sort equipment categories by defined order, keep assets in natural order
+    if (itemTypeFilter === 'equipment') {
+      const indexA = equipmentCategoryOrder.indexOf(a.name);
+      const indexB = equipmentCategoryOrder.indexOf(b.name);
+      const orderA = indexA >= 0 ? indexA : 999;
+      const orderB = indexB >= 0 ? indexB : 999;
+      return orderA - orderB;
+    }
+    return 0;
   });
 
   const handleAddItem = (itemData: any) => {
