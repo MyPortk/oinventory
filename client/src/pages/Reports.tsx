@@ -82,7 +82,7 @@ export default function Reports({
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       <InventoryHeader
         userName={userName}
         userRole={userRole}
@@ -130,7 +130,7 @@ export default function Reports({
         {filteredReports.length === 0 ? (
           <div className="text-center py-12 bg-muted/30 rounded-lg">
             <AlertCircle className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
-            <p className="text-lg font-medium text-muted-foreground">No reports found</p>
+            <p className="text-lg font-medium text-muted-foreground">{t('noItemsFound')}</p>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -139,15 +139,15 @@ export default function Reports({
                 <div className="space-y-3">
                   <div>
                     <h3 className="text-lg md:text-xl font-bold">
-                      {items.find(i => i.id === report.itemId)?.productName || 'Unknown Item'}
+                      {items.find(i => i.id === report.itemId)?.productName || t('noItems')}
                     </h3>
                   </div>
                   
                   <div className="space-y-2 text-sm md:text-base">
-                    <div><strong>Report Type:</strong> {report.reportType === 'user-damage' ? 'User Reported (Pickup)' : 'Admin Reported (Return)'}</div>
-                    <div><strong>Reported Date:</strong> {format(new Date(report.createdAt), "PPP p")}</div>
+                    <div><strong>{t('type')}:</strong> {report.reportType === 'user-damage' ? t('user') + ' (' + t('pickupDateTime') + ')' : t('admin') + ' (' + t('returnDateTime') + ')'}</div>
+                    <div><strong>{t('requested')}:</strong> {format(new Date(report.createdAt), "PPP p")}</div>
                     <div className="bg-red-50 dark:bg-red-950 p-3 rounded border border-red-200 dark:border-red-800">
-                      <strong className="block mb-1 text-red-700 dark:text-red-300">Description:</strong> 
+                      <strong className="block mb-1 text-red-700 dark:text-red-300">{t('describeDamage')}:</strong> 
                       <p className="text-sm md:text-base text-red-600 dark:text-red-400">{report.description}</p>
                     </div>
                   </div>

@@ -224,7 +224,7 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       <InventoryHeader
         userName={userName}
         userRole={userRole}
@@ -314,12 +314,12 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <User className="w-4 h-4" />
                       <span>
-                        <strong>Employee:</strong> {getUserName(reservation.userId)}
+                        <strong>{language === 'en' ? 'Employee' : 'الموظف'}:</strong> {getUserName(reservation.userId)}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <span>
-                        <strong>Department:</strong> {allUsers.find(u => u.id === reservation.userId)?.department || '-'}
+                        <strong>{t('department')}:</strong> {allUsers.find(u => u.id === reservation.userId)?.department || '-'}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
@@ -330,19 +330,19 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                     </div>
                     {reservation.purposeOfUse && (
                       <div className="col-span-2 text-muted-foreground">
-                        <strong>Purpose of Use:</strong> {reservation.purposeOfUse}
+                        <strong>{t('purpose')}:</strong> {reservation.purposeOfUse}
                       </div>
                     )}
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="w-4 h-4" />
                       <span>
-                        <strong>Pickup:</strong> {format(new Date(reservation.startDate), "PPP")} {reservation.startTime || "09:00"}
+                        <strong>{language === 'en' ? 'Pickup' : 'الاستلام'}:</strong> {format(new Date(reservation.startDate), "PPP")} {reservation.startTime || "09:00"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Calendar className="w-4 h-4" />
                       <span>
-                        <strong>Return:</strong> {format(new Date(reservation.returnDate), "PPP")} {reservation.returnTime || "17:00"}
+                        <strong>{language === 'en' ? 'Return' : 'الإرجاع'}:</strong> {format(new Date(reservation.returnDate), "PPP")} {reservation.returnTime || "17:00"}
                       </span>
                     </div>
                     {reservation.approvalDate && (
@@ -357,24 +357,24 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                     )}
                     {reservation.deliveryRequired === 'yes' && (
                       <div className="col-span-2 border-t pt-3 mt-3 space-y-2">
-                        <div className="font-semibold text-foreground mb-2">📍 Delivery Information</div>
+                        <div className="font-semibold text-foreground mb-2">📍 {language === 'en' ? 'Delivery Information' : 'معلومات التوصيل'}</div>
                         <div className="text-muted-foreground">
-                          <strong>Location:</strong> {reservation.deliveryLocation}
+                          <strong>{language === 'en' ? 'Location' : 'الموقع'}:</strong> {reservation.deliveryLocation}
                         </div>
                         {reservation.deliveryStreet && (
                           <div className="text-muted-foreground">
-                            <strong>Street:</strong> {reservation.deliveryStreet}
+                            <strong>{language === 'en' ? 'Street' : 'الشارع'}:</strong> {reservation.deliveryStreet}
                           </div>
                         )}
                         {reservation.deliveryArea && (
                           <div className="text-muted-foreground">
-                            <strong>Area:</strong> {reservation.deliveryArea}
+                            <strong>{language === 'en' ? 'Area' : 'المنطقة'}:</strong> {reservation.deliveryArea}
                           </div>
                         )}
                         {reservation.googleMapLink && (
                           <div className="text-muted-foreground">
                             <a href={reservation.googleMapLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                              View on Google Maps →
+                              {language === 'en' ? 'View on Google Maps →' : 'عرض على خرائط جوجل ←'}
                             </a>
                           </div>
                         )}
@@ -423,10 +423,10 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                             variant="outline"
                             className="bg-gray-100 text-gray-600 border-gray-300 cursor-not-allowed"
                             disabled
-                            title="Equipment already received"
+                            title={language === 'en' ? 'Equipment already received' : 'تم استلام المعدات'}
                           >
                             <CheckCircle className="w-4 h-4 mr-1" />
-                            Equipment Received ✓
+                            {language === 'en' ? 'Equipment Received ✓' : 'تم الاستلام ✓'}
                           </Button>
                         );
                       }
@@ -438,10 +438,10 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                           className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
                           onClick={() => handleCheckout(reservation)}
                           disabled={!isPickupDay}
-                          title={isPickupDay ? "Click to confirm receipt" : `Available on ${format(new Date(reservation.startDate), "MMM dd, yyyy")}`}
+                          title={isPickupDay ? (language === 'en' ? 'Click to confirm receipt' : 'انقر للتأكيد') : `${language === 'en' ? 'Available on' : 'متاح في'} ${format(new Date(reservation.startDate), "MMM dd, yyyy")}`}
                         >
                           <CheckCircle className="w-4 h-4 mr-1" />
-                          Receive Equipment {!isPickupDay && "(Not Available)"}
+                          {language === 'en' ? 'Receive Equipment' : 'استلام المعدات'} {!isPickupDay && (language === 'en' ? '(Not Available)' : '(غير متاح)')}
                         </Button>
                       );
                     })()}
@@ -463,10 +463,10 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
                           className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
                           onClick={() => handleComplete(reservation.id, reservation.itemId)}
                           disabled={!hasCheckedOut}
-                          title={hasCheckedOut ? "Click to confirm return" : "Equipment must be checked out first"}
+                          title={hasCheckedOut ? (language === 'en' ? 'Click to confirm return' : 'انقر لتأكيد الإرجاع') : (language === 'en' ? 'Equipment must be checked out first' : 'يجب استلام المعدات أولاً')}
                         >
                           <CheckCircle className="w-4 h-4 mr-1" />
-                          {t('markReturned')} {!hasCheckedOut && "(Not Available)"}
+                          {t('markReturned')} {!hasCheckedOut && (language === 'en' ? '(Not Available)' : '(غير متاح)')}
                         </Button>
                       );
                     })()}
@@ -512,8 +512,8 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
             <div className="space-y-6">
               <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg space-y-2 border border-blue-200 dark:border-blue-800">
                 <div><strong>{t('equipment')}:</strong> {getItemName(checkoutReservation.itemId)}</div>
-                <div><strong>{t('pickupDateTime')}:</strong> {format(new Date(checkoutReservation.startDate), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
-                <div><strong>{t('returnDateTime')}:</strong> {format(new Date(checkoutReservation.returnDate), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
+                <div><strong>{language === 'en' ? 'Pickup Date & Time' : 'تاريخ ووقت الاستلام'}:</strong> {format(new Date(checkoutReservation.startDate), "PPP")} {checkoutReservation.startTime || "09:00"}</div>
+                <div><strong>{language === 'en' ? 'Return Date & Time' : 'تاريخ ووقت الإرجاع'}:</strong> {format(new Date(checkoutReservation.returnDate), "PPP")} {checkoutReservation.returnTime || "17:00"}</div>
                 <div><strong>{t('purpose')}:</strong> {checkoutReservation.purposeOfUse}</div>
               </div>
 
@@ -568,13 +568,13 @@ export default function Reservations({ userName, userRole, userId, onLogout, onN
 
               <div className="flex gap-3 justify-end pt-4 border-t">
                 <Button variant="outline" onClick={() => setShowCheckoutDialog(false)}>
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button 
                   onClick={handleConfirmCheckout}
                   className="bg-gradient-to-r from-[#667eea] to-[#764ba2]"
                 >
-                  Confirm Receipt
+                  {t('confirmReceipt')}
                 </Button>
               </div>
             </div>

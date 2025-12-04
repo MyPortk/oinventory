@@ -111,7 +111,7 @@ export default function Maintenance({
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       <InventoryHeader
         userName={userName}
         userRole={userRole}
@@ -217,7 +217,7 @@ export default function Maintenance({
                   <TableHead>{t('status')}</TableHead>
                   <TableHead>{t('location')}</TableHead>
                   <TableHead>{t('notes')}</TableHead>
-                  {(userRole === 'admin' || userRole === 'developer') && <TableHead className="text-right">{t('actions')}</TableHead>}
+                  {(userRole === 'admin' || userRole === 'developer') && <TableHead className={language === 'ar' ? 'text-left' : 'text-right'}>{t('actions')}</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -234,8 +234,8 @@ export default function Maintenance({
                     <TableCell data-testid={`text-location-${item.id}`}>{item.location || '-'}</TableCell>
                     <TableCell data-testid={`text-notes-${item.id}`}>{item.notes || '-'}</TableCell>
                     {(userRole === 'admin' || userRole === 'developer') && (
-                      <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
+                      <TableCell className={language === 'ar' ? 'text-left' : 'text-right'}>
+                        <div className={`flex gap-2 ${language === 'ar' ? 'justify-start' : 'justify-end'}`}>
                           <Button
                             size="sm"
                             variant="outline"

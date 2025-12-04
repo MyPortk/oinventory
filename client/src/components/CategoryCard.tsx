@@ -22,6 +22,7 @@ export default function CategoryCard({
   language = 'en'
 }: CategoryCardProps) {
   const t = useTranslation(language);
+  // Try to translate category name, fallback to original if not found
   const translatedName = t(name as any) || name;
   const translatedSubTypes = subTypes.map(subType => t(subType as any) || subType);
 

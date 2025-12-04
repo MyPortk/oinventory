@@ -46,28 +46,28 @@ export async function seedDatabase() {
   const users = [
     {
       username: 'developer',
-      password: await hashPassword('afaq17'),
+      password: await hashPassword('omg'),
       role: 'developer',
       email: 'developer@company.com',
       name: 'System Developer'
     },
     {
       username: 'admin',
-      password: await hashPassword('afaq'),
+      password: await hashPassword('omg'),
       role: 'admin',
       email: 'omg.inventorysystem@gmail.com',
       name: 'System Administrator'
     },
     {
       username: 'staff1',
-      password: await hashPassword('afaq'),
+      password: await hashPassword('omg'),
       role: 'user',
       email: 'staff1@company.com',
       name: 'Staff Member 1'
     },
     {
       username: 'staff2',
-      password: await hashPassword('afaq'),
+      password: await hashPassword('omg'),
       role: 'user',
       email: 'staff2@company.com',
       name: 'Staff Member 2'

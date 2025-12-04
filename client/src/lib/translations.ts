@@ -71,7 +71,7 @@ export const translations = {
     users: 'Users',
     add_user: 'Add User',
     activity_logs: 'Activity Logs',
-    
+
     // Activity Logs
     activityLogHistory: 'Activity Log & History',
     completeAuditTrail: 'Complete audit trail of all inventory activities',
@@ -82,7 +82,7 @@ export const translations = {
     errorLoadingLogs: 'Error loading activity logs. Please try again.',
     noActivityLogs: 'No activity logs found.',
     by: 'by',
-    
+
     // QR Codes
     qrCodeGeneration: 'QR Code Generation',
     generateAllQRCodes: 'Generate All QR Codes',
@@ -92,7 +92,7 @@ export const translations = {
     generatingQRCodes: 'Generating QR codes...',
     noItemsFound: 'No items found',
     scanQRCodes: 'Scan QR codes to check items in/out instantly',
-    
+
     // Maintenance
     maintenanceManagement: 'Maintenance Management',
     itemsInMaintenance: 'Items in Maintenance',
@@ -103,7 +103,7 @@ export const translations = {
     noItemsInMaintenance: 'No items in maintenance',
     allEquipmentWorking: 'All equipment is in working order',
     searchMaintenanceItems: 'Search maintenance items...',
-    
+
     // Dashboard
     dashboard: 'Dashboard',
     overviewInventory: 'Overview of your inventory system',
@@ -131,7 +131,7 @@ export const translations = {
     noItems: 'No items',
     location: 'Location',
     name: 'Name',
-    
+
     // Reservations Page
     equipmentReservations: 'Equipment Reservations',
     requestManageReservations: 'Request and manage equipment reservations professionally',
@@ -146,7 +146,7 @@ export const translations = {
     requested: 'Requested',
     responded: 'Responded',
     markReturned: 'Mark Returned',
-    
+
     // User Management
     createManageUsers: 'Create and manage user accounts for your team',
     totalUsers: 'Total Users',
@@ -160,49 +160,49 @@ export const translations = {
     creating: 'Creating...',
     createUser: 'Create User',
     areYouSureDeleteUser: 'Are you sure you want to delete user',
-    
+
     // Maintenance Additional
     maintenance_title: 'Maintenance Management',
     maintenance_subtitle: 'Items currently undergoing maintenance or repair',
     item_count_maintenance: 'item(s) in maintenance',
     no_items_in_maintenance: 'No items in maintenance',
     all_equipment_in_order: 'All equipment is in working order',
-    
+
     // Additional Common
     checkout: 'Check Out',
     checkin: 'Check In',
     reserve: 'Reserve',
-    
+
     // Column Visibility
     columnVisibility: 'Column Visibility',
     quantity: 'Quantity',
-    
+
     // Item Form
     quantity_label: 'Quantity *',
     location_label: 'Location',
-    
+
     // Item Card
     quantity_display: 'Quantity:',
     notes_display: 'Notes:',
-    
+
     // Reservations
     confirmEquipmentPickup: 'Confirm Equipment Pickup',
     describeDamage: 'Please describe the damage or missing items *',
     confirmReceipt: 'Confirm Receipt',
-    
+
     // Maintenance
     areYouSureDeleteItem: 'Are you sure you want to delete this item?',
-    
+
     // User Management Confirmations
     areYouSureDeleteUserMessage: 'Are you sure you want to delete user',
     loginFailedMessage: 'Login failed. Please try again.',
     tryAgain: 'Please try again',
-    
+
     // Reports Page
     damageReports: 'Damage Reports',
     viewAllDamageReports: 'View all damage reports from equipment checkout and return inspections',
     viewDamageReportsReceived: 'View damage reports for equipment you received',
-    
+
     // Checkout/Return Dialog
     equipment: 'Equipment',
     pickupDateTime: 'Pickup Date & Time',
@@ -213,7 +213,7 @@ export const translations = {
     damageOrMissing: 'Damage or Missing',
     describeDamageDetails: 'Describe what damage or items are missing...',
     all_items: 'All Items',
-    
+
     // Notifications
     notifications: 'Notifications',
     markAllRead: 'Mark all read',
@@ -240,6 +240,14 @@ export const translations = {
     // Missing filter keys
     assets: 'Assets',
     assetCategories: 'Asset Categories',
+
+    // User Management page
+    editUser: 'Edit User',
+    updating: 'Updating...',
+    updateUser: 'Update User',
+
+    // Additional missing keys
+    department: 'Department',
   },
   ar: {
     // Header
@@ -279,7 +287,6 @@ export const translations = {
     available: 'متاح',
     inUse: 'قيد الاستخدام',
     reserved: 'محجوز',
-    maintenance: 'صيانة',
     maintenanceAvailableDate: 'التاريخ المتاح من',
     maintenanceMessage: 'سيكون هذا العنصر متاحًا للاستخدام من',
 
@@ -311,7 +318,7 @@ export const translations = {
     users: 'المستخدمون',
     add_user: 'إضافة مستخدم',
     activity_logs: 'سجلات النشاط',
-    
+
     // Activity Logs
     activityLogHistory: 'سجل النشاط والتاريخ',
     completeAuditTrail: 'سجل تدقيق كامل لجميع أنشطة المخزون',
@@ -322,7 +329,7 @@ export const translations = {
     errorLoadingLogs: 'خطأ في تحميل سجلات النشاط. يرجى المحاولة مرة أخرى.',
     noActivityLogs: 'لم يتم العثور على سجلات نشاط.',
     by: 'بواسطة',
-    
+
     // QR Codes
     qrCodeGeneration: 'إنشاء رمز الاستجابة السريعة',
     generateAllQRCodes: 'إنشاء جميع رموز QR',
@@ -332,7 +339,7 @@ export const translations = {
     generatingQRCodes: 'جار إنشاء رموز QR...',
     noItemsFound: 'لم يتم العثور على عناصر',
     scanQRCodes: 'امسح رموز QR لتسجيل دخول/خروج العناصر فوراً',
-    
+
     // Maintenance
     maintenanceManagement: 'إدارة الصيانة',
     itemsInMaintenance: 'العناصر قيد الصيانة',
@@ -343,7 +350,8 @@ export const translations = {
     noItemsInMaintenance: 'لا توجد عناصر قيد الصيانة',
     allEquipmentWorking: 'جميع المعدات تعمل بشكل صحيح',
     searchMaintenanceItems: 'البحث عن عناصر الصيانة...',
-    
+    maintenancePage: 'الصيانة',
+
     // Dashboard
     dashboard: 'لوحة التحكم',
     overviewInventory: 'نظرة عامة على نظام المخزون الخاص بك',
@@ -354,7 +362,7 @@ export const translations = {
     quickActions: 'إجراءات سريعة',
     statusDistribution: 'توزيع الحالة',
     quickSummary: 'ملخص سريع',
-    
+
     // Inventory Page
     equipmentCategories: 'فئات المعدات',
     browseInventory: 'تصفح المخزون الكامل منظم حسب نوع المعدات',
@@ -371,7 +379,7 @@ export const translations = {
     noItems: 'لا توجد عناصر',
     location: 'الموقع',
     name: 'الاسم',
-    
+
     // Reservations Page
     equipmentReservations: 'حجوزات المعدات',
     requestManageReservations: 'طلب وإدارة حجوزات المعدات بشكل احترافي',
@@ -386,7 +394,7 @@ export const translations = {
     responded: 'تمت الإجابة',
     decline: 'رفض',
     markReturned: 'وضع علامة كمرجع',
-    
+
     // User Management
     createManageUsers: 'إنشاء وإدارة حسابات المستخدمين لفريقك',
     totalUsers: 'إجمالي المستخدمين',
@@ -400,49 +408,49 @@ export const translations = {
     creating: 'جار الإنشاء...',
     createUser: 'إنشاء مستخدم',
     areYouSureDeleteUser: 'هل أنت متأكد من حذف المستخدم',
-    
+
     // Maintenance Additional
     maintenance_title: 'إدارة الصيانة',
     maintenance_subtitle: 'العناصر التي تخضع حالياً للصيانة أو الإصلاح',
     item_count_maintenance: 'عنصر قيد الصيانة',
     no_items_in_maintenance: 'لا توجد عناصر قيد الصيانة',
     all_equipment_in_order: 'جميع المعدات تعمل بشكل صحيح',
-    
+
     // Additional Common
     checkout: 'تسجيل خروج',
     checkin: 'تسجيل دخول',
     reserve: 'حجز',
-    
+
     // Column Visibility
     columnVisibility: 'رؤية الأعمدة',
     quantity: 'الكمية',
-    
+
     // Item Form
     quantity_label: 'الكمية *',
     location_label: 'الموقع',
-    
+
     // Item Card
     quantity_display: 'الكمية:',
     notes_display: 'ملاحظات:',
-    
+
     // Reservations
     confirmEquipmentPickup: 'تأكيد استلام المعدات',
     describeDamage: 'يرجى وصف الضرر أو العناصر المفقودة *',
     confirmReceipt: 'تأكيد الاستلام',
-    
+
     // Maintenance
     areYouSureDeleteItem: 'هل أنت متأكد من حذف هذا العنصر؟',
-    
+
     // User Management Confirmations
     areYouSureDeleteUserMessage: 'هل أنت متأكد من حذف المستخدم',
     loginFailedMessage: 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.',
     tryAgain: 'يرجى المحاولة مرة أخرى',
-    
+
     // Reports Page
     damageReports: 'تقارير الأضرار',
     viewAllDamageReports: 'عرض جميع تقارير الأضرار من عمليات فحص الاستلام والإرجاع للمعدات',
     viewDamageReportsReceived: 'عرض تقارير الأضرار للمعدات التي استلمتها',
-    
+
     // Checkout/Return Dialog
     equipment: 'المعدات',
     pickupDateTime: 'تاريخ وقت الالتقاط',
@@ -453,13 +461,13 @@ export const translations = {
     damageOrMissing: 'تالفة أو مفقودة',
     describeDamageDetails: 'صف الضرر أو العناصر المفقودة...',
     all_items: 'جميع العناصر',
-    
+
     // Notifications
-    notifications: 'الإشعارات',
     noNotificationsFound: 'لا توجد إشعارات',
 
     // Equipment Categories
     Cameras: 'الكاميرات',
+    Lens: 'العدسات',
     Lenses: 'العدسات',
     'Tripods & Stands': 'الحوامل والأرجل',
     Grips: 'أجهزة التثبيت',
@@ -578,11 +586,16 @@ export const translations = {
     'Equipment Receipt Confirmed': 'تم تأكيد استلام المعدات',
 
     // Other missing translations
-    Maintenance: 'صيانة',
-    developer: 'مطور',
-    developer_mode: 'وضع المطور',
-    assetCategories: 'فئات الأصول',
     assets: 'أصول',
+    assetCategories: 'فئات الأصول',
+
+    // User Management page
+    editUser: 'تعديل المستخدم',
+    updating: 'جار التحديث...',
+    updateUser: 'تحديث المستخدم',
+
+    // Additional missing keys
+    department: 'القسم',
   }
 };
 

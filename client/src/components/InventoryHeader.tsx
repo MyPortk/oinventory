@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import NotificationBell from "./NotificationBell";
+import ThemeToggle from "./ThemeToggle";
 import { useTranslation, Language } from "@/lib/translations";
 
 interface InventoryHeaderProps {
@@ -53,6 +54,9 @@ export default function InventoryHeader({
       <div className="flex items-center justify-end gap-4 w-full">
         {/* Notification Bell */}
         <NotificationBell language={language} />
+        
+        {/* Dark Mode Toggle */}
+        <ThemeToggle />
 
         {/* Language Toggle */}
         {showLanguageToggle && (

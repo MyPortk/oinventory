@@ -738,7 +738,9 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     id={item.id}
                     barcode={item.barcode}
                     productName={item.productName}
+                    productNameAr={item.productNameAr}
                     productType={item.productType}
+                    productTypeAr={item.productTypeAr}
                     status={item.status}
                     location={item.location || undefined}
                     notes={item.notes || undefined}
@@ -778,8 +780,12 @@ export default function Inventory({ userName, userRole, userId, onLogout, onNavi
                     {filteredItems.map((item) => (
                       <TableRow key={item.id}>
                         <TableCell className="font-mono">{item.barcode}</TableCell>
-                        <TableCell className="font-medium">{item.productName}</TableCell>
-                        <TableCell>{t(item.productType as any) || item.productType}</TableCell>
+                        <TableCell className="font-medium">
+                          {currentLanguage === 'ar' && item.productNameAr ? item.productNameAr : item.productName}
+                        </TableCell>
+                        <TableCell>
+                          {currentLanguage === 'ar' && item.productTypeAr ? item.productTypeAr : (t(item.productType as any) || item.productType)}
+                        </TableCell>
                         <TableCell>
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             item.status === 'Available' ? 'bg-green-100 text-green-800' :

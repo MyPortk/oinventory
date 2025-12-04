@@ -113,7 +113,7 @@ export default function ItemCard({
       <Card className="hover:shadow-md transition-shadow" data-testid={`card-item-${id}`}>
         <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-3">
           <div className="flex-1">
-            <h3 className="font-bold text-lg" data-testid={`text-product-name-${id}`}>{productName}</h3>
+            <h3 className="font-bold text-lg" data-testid={`text-product-name-${id}`}>{displayName}</h3>
             <p className="text-sm text-muted-foreground" data-testid={`text-barcode-${id}`}>{t('barcode')}: {barcode}</p>
           </div>
           <Badge
@@ -151,7 +151,7 @@ export default function ItemCard({
                 <p className="text-lg font-bold text-blue-900 dark:text-blue-100">{formatDate(maintenanceAvailableDate)}</p>
               </div>
             )}
-            
+
             {isEquipment ? (
               <>
                 {userRole === 'admin' && (
